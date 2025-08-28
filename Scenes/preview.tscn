@@ -16,6 +16,12 @@ sky = SubResource("Sky_e5mf5")
 tonemap_mode = 3
 ssao_enabled = true
 ssil_enabled = true
+sdfgi_enabled = true
+sdfgi_min_cell_size = 0.1
+sdfgi_y_scale = 0
+glow_enabled = true
+glow_hdr_threshold = 0.5
+glow_hdr_scale = 1.5
 
 [node name="Preview" type="Node3D"]
 
