@@ -34,13 +34,29 @@ animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={
 "meshes": {
+"Assets_black flat_001": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 60.0,
+"save_to_file/enabled": true,
+"save_to_file/path": "res://Assets/imported/black flat.res"
+},
 "Assets_square": {
 "generate/lightmap_uv": 0,
 "generate/lods": 0,
 "generate/shadow_meshes": 0,
 "lods/normal_merge_angle": 60.0,
-"save_to_file/enabled": false,
-"save_to_file/path": "res://Assets/square.res"
+"save_to_file/enabled": true,
+"save_to_file/path": "res://Assets/imported/square.res"
+},
+"Assets_white flat_001": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 60.0,
+"save_to_file/enabled": true,
+"save_to_file/path": "res://Assets/imported/white flat.res"
 }
 }
 }

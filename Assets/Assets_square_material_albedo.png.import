@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://befem5bqy6y7m"
-path.s3tc="res://.godot/imported/Assets_Ucupaint Square Color.png-cae71d040986fb142971ca11aed41db5.s3tc.ctex"
+uid="uid://dow8ld8ys515l"
+path.s3tc="res://.godot/imported/Assets_square_material_albedo.png-f923626e9df98cea573b5b9d45b533df.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "03ae2e24f7f1c6c895d6bb72d73356f3"
+"md5": "5a27ecfba59c24f498a55db5dd70767a"
 }
 
 [deps]
 
-source_file="res://Assets/Assets_Ucupaint Square Color.png"
-dest_files=["res://.godot/imported/Assets_Ucupaint Square Color.png-cae71d040986fb142971ca11aed41db5.s3tc.ctex"]
+source_file="res://Assets/Assets_square_material_albedo.png"
+dest_files=["res://.godot/imported/Assets_square_material_albedo.png-f923626e9df98cea573b5b9d45b533df.s3tc.ctex"]
 
 [params]
 
