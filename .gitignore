@@ -2,3 +2,5 @@
 .godot/
 /android/
 *.blend1
+/tmp/
+/export/
