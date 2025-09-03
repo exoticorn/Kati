@@ -21,4 +21,5 @@ import/blender/enabled=false
 
 [rendering]
 
-anti_aliasing/quality/use_taa=true
+scaling_3d/mode=2
+scaling_3d/scale=0.5
