@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://qja87y8qw1sc"]
+[gd_scene load_steps=12 format=3 uid="uid://qja87y8qw1sc"]
 
 [ext_resource type="ArrayMesh" uid="uid://jqlqaowxo5qp" path="res://Assets/imported/square.res" id="1_0nmea"]
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_s4qi8"]
 [ext_resource type="ArrayMesh" uid="uid://ct5wiwvoqq2c7" path="res://Assets/imported/white flat.res" id="2_e5mf5"]
 [ext_resource type="Texture2D" uid="uid://bu1ukiu6t4ran" path="res://Assets/medieval_cafe_4k.exr" id="2_sfrw1"]
 [ext_resource type="ArrayMesh" uid="uid://b3vkf85inwx36" path="res://Assets/imported/black flat.res" id="3_sfrw1"]
+[ext_resource type="Material" uid="uid://dv324n3u1s6tb" path="res://Shaders/highlight.tres" id="5_1vhyc"]
 [ext_resource type="ArrayMesh" uid="uid://cnt817tmlromd" path="res://Assets/imported/white capstone.res" id="5_ckmux"]
 [ext_resource type="ArrayMesh" uid="uid://wittpc8xl4wl" path="res://Assets/imported/black capstone.res" id="6_s4qi8"]
 
@@ -227,7 +228,7 @@ environment = SubResource("Environment_sfrw1")
 [node name="Pieces" type="Node3D" parent="."]
 
 [node name="WhiteFlat" type="MeshInstance3D" parent="Pieces"]
-transform = Transform3D(0.999802, 0, 0.0199129, 0, 1, 0, -0.0199129, 0, 0.999802, 2.03656, 0.0528804, 0.0161019)
+transform = Transform3D(0.999802, 0, 0.0199129, 0, 1, 0, -0.0199129, 0, 0.999802, 2.03661, 0.058916, 0.0124331)
 mesh = ExtResource("2_e5mf5")
 skeleton = NodePath("../..")
 
@@ -248,6 +249,7 @@ skeleton = NodePath("../..")
 
 [node name="WhiteFlat4" type="MeshInstance3D" parent="Pieces"]
 transform = Transform3D(0.996995, 0, -0.0774673, 0, 1, 0, 0.0774673, 0, 0.996995, 2.02285, 0.0661243, -1.00174)
+material_overlay = ExtResource("5_1vhyc")
 mesh = ExtResource("2_e5mf5")
 skeleton = NodePath("../..")
 
@@ -338,6 +340,7 @@ skeleton = NodePath("../..")
 
 [node name="BlackFlat8" type="MeshInstance3D" parent="Pieces"]
 transform = Transform3D(0.00530682, -0.000213036, 0.999986, 0.00135506, 0.999999, 0.000205867, -0.999985, 0.00135395, 0.00530715, 3.00763, 0.0690793, -0.976903)
+material_overlay = ExtResource("5_1vhyc")
 mesh = ExtResource("3_sfrw1")
 skeleton = NodePath("../..")
 
