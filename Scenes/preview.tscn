@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://qja87y8qw1sc"]
+[gd_scene load_steps=11 format=3 uid="uid://qja87y8qw1sc"]
 
 [ext_resource type="ArrayMesh" uid="uid://jqlqaowxo5qp" path="res://Assets/imported/square.res" id="1_0nmea"]
+[ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_s4qi8"]
 [ext_resource type="ArrayMesh" uid="uid://ct5wiwvoqq2c7" path="res://Assets/imported/white flat.res" id="2_e5mf5"]
 [ext_resource type="Texture2D" uid="uid://bu1ukiu6t4ran" path="res://Assets/medieval_cafe_4k.exr" id="2_sfrw1"]
 [ext_resource type="ArrayMesh" uid="uid://b3vkf85inwx36" path="res://Assets/imported/black flat.res" id="3_sfrw1"]
@@ -32,6 +33,7 @@ glow_hdr_scale = 1.5
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.655374, 0.755305, 0, -0.755305, 0.655374, 2.43244, 4.34394, 2.32639)
 fov = 45.0
+script = ExtResource("1_s4qi8")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.397009, 0.492324, -0.774597, 0.0640313, 0.827045, 0.558478, 0.915579, -0.271319, 0.29682, 0, 3.24316, 0)
@@ -225,7 +227,7 @@ environment = SubResource("Environment_sfrw1")
 [node name="Pieces" type="Node3D" parent="."]
 
 [node name="WhiteFlat" type="MeshInstance3D" parent="Pieces"]
-transform = Transform3D(0.999802, 0, 0.0199129, 0, 1, 0, -0.0199129, 0, 0.999802, 2.01539, 0.0661243, -0.0142312)
+transform = Transform3D(0.999802, 0, 0.0199129, 0, 1, 0, -0.0199129, 0, 0.999802, 2.03656, 0.0528804, 0.0161019)
 mesh = ExtResource("2_e5mf5")
 skeleton = NodePath("../..")
 
