@@ -1,7 +1,7 @@
 extends Camera3D
 
 var rot := Vector2(0, 0.8)
-var distance := 7.0
+var distance := 8.0
 var target := Vector3(2.5, 0.0, -2.5)
 
 var last_drag_pos = null
