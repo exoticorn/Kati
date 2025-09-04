@@ -1,0 +1,26 @@
+[gd_scene load_steps=7 format=3 uid="uid://ces18xbufkjt7"]
+
+[ext_resource type="Shader" uid="uid://1u76r1nma2ur" path="res://Shaders/square_highlight_front.gdshader" id="1_7vyc8"]
+[ext_resource type="Texture2D" uid="uid://3105edhaoxkm" path="res://Assets/square_highlight.svg" id="2_0txnb"]
+[ext_resource type="Shader" uid="uid://d0i0ov5b6o2wf" path="res://Shaders/square_highlight.gdshader" id="3_esyg6"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cylw3"]
+render_priority = 1
+shader = ExtResource("1_7vyc8")
+shader_parameter/mask = ExtResource("2_0txnb")
+shader_parameter/color = Vector3(0.065, 0.34, 0.11)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a2nlk"]
+render_priority = 1
+next_pass = SubResource("ShaderMaterial_cylw3")
+shader = ExtResource("3_esyg6")
+shader_parameter/mask = ExtResource("2_0txnb")
+shader_parameter/color = Vector3(0.065, 0.34, 0.11)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_hvssd"]
+material = SubResource("ShaderMaterial_a2nlk")
+size = Vector2(1, 1)
+center_offset = Vector3(0, 0.01, 0)
+
+[node name="SquareHighlight" type="MeshInstance3D"]
+mesh = SubResource("PlaneMesh_hvssd")

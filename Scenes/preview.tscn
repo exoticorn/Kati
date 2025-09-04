@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://qja87y8qw1sc"]
+[gd_scene load_steps=13 format=3 uid="uid://qja87y8qw1sc"]
 
 [ext_resource type="ArrayMesh" uid="uid://jqlqaowxo5qp" path="res://Assets/imported/square.res" id="1_0nmea"]
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_s4qi8"]
@@ -8,6 +8,7 @@
 [ext_resource type="Material" uid="uid://dv324n3u1s6tb" path="res://Shaders/highlight.tres" id="5_1vhyc"]
 [ext_resource type="ArrayMesh" uid="uid://cnt817tmlromd" path="res://Assets/imported/white capstone.res" id="5_ckmux"]
 [ext_resource type="ArrayMesh" uid="uid://wittpc8xl4wl" path="res://Assets/imported/black capstone.res" id="6_s4qi8"]
+[ext_resource type="PackedScene" uid="uid://ces18xbufkjt7" path="res://Scenes/square_highlight.tscn" id="9_icjxw"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ckmux"]
 panorama = ExtResource("2_sfrw1")
@@ -19,7 +20,8 @@ sky_material = SubResource("PanoramaSkyMaterial_ckmux")
 [sub_resource type="Environment" id="Environment_sfrw1"]
 background_mode = 2
 sky = SubResource("Sky_e5mf5")
-tonemap_mode = 3
+tonemap_mode = 1
+tonemap_white = 0.66
 ssao_enabled = true
 ssil_enabled = true
 sdfgi_enabled = true
@@ -356,3 +358,6 @@ mesh = ExtResource("5_ckmux")
 [node name="BlackCapstone" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.0430963, 0, -0.999071, 0, 1, 0, 0.999071, 0, 0.0430963, 1.99969, 0.411589, -1.99258)
 mesh = ExtResource("6_s4qi8")
+
+[node name="SquareHighlight" parent="." instance=ExtResource("9_icjxw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -2)
