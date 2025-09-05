@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://qja87y8qw1sc"]
+[gd_scene load_steps=14 format=3 uid="uid://qja87y8qw1sc"]
 
 [ext_resource type="ArrayMesh" uid="uid://jqlqaowxo5qp" path="res://Assets/imported/square.res" id="1_0nmea"]
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_s4qi8"]
@@ -10,9 +10,11 @@
 [ext_resource type="ArrayMesh" uid="uid://wittpc8xl4wl" path="res://Assets/imported/black capstone.res" id="6_s4qi8"]
 [ext_resource type="PackedScene" uid="uid://ces18xbufkjt7" path="res://Scenes/square_highlight.tscn" id="9_icjxw"]
 
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_icjxw"]
+exposure_multiplier = 0.3
+
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ckmux"]
 panorama = ExtResource("2_sfrw1")
-energy_multiplier = 0.2
 
 [sub_resource type="Sky" id="Sky_e5mf5"]
 sky_material = SubResource("PanoramaSkyMaterial_ckmux")
@@ -21,26 +23,27 @@ sky_material = SubResource("PanoramaSkyMaterial_ckmux")
 background_mode = 2
 sky = SubResource("Sky_e5mf5")
 tonemap_mode = 1
-tonemap_white = 0.66
+tonemap_white = 6.0
 ssao_enabled = true
 ssil_enabled = true
 sdfgi_enabled = true
 sdfgi_min_cell_size = 0.1
 sdfgi_y_scale = 0
 glow_enabled = true
-glow_hdr_threshold = 0.5
-glow_hdr_scale = 1.5
+adjustment_saturation = 1.33
 
 [node name="Preview" type="Node3D"]
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.655374, 0.755305, 0, -0.755305, 0.655374, 2.43244, 4.34394, 2.32639)
+attributes = SubResource("CameraAttributesPractical_icjxw")
 fov = 45.0
 script = ExtResource("1_s4qi8")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.397009, 0.492324, -0.774597, 0.0640313, 0.827045, 0.558478, 0.915579, -0.271319, 0.29682, 0, 3.24316, 0)
 light_color = Color(0.894501, 0.865235, 0.771228, 1)
+light_energy = 8.0
 shadow_enabled = true
 
 [node name="Board" type="Node" parent="."]
