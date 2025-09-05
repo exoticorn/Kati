@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Catak"
-run/main_scene="uid://qja87y8qw1sc"
+run/main_scene="uid://ckm3kb4aosxb4"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8u4rgsbtnlkc"]
+
+[ext_resource type="ArrayMesh" uid="uid://jqlqaowxo5qp" path="res://Assets/imported/square.res" id="1_7naj2"]
+
+[node name="Square" type="MeshInstance3D"]
+mesh = ExtResource("1_7naj2")

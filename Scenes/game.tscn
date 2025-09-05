@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckm3kb4aosxb4"]
+
+[ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_ebmjs"]
+[ext_resource type="Script" uid="uid://dgduyultasupv" path="res://Scripts/game.gd" id="1_qxrlw"]
+
+[node name="Game" type="Node3D"]
+script = ExtResource("1_qxrlw")
+
+[node name="Camera" type="Camera3D" parent="."]
+fov = 45.0
+script = ExtResource("1_ebmjs")
+
+[node name="Board" type="Node3D" parent="."]
+
+[node name="Pieces" type="Node3D" parent="."]
