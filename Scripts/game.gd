@@ -27,13 +27,25 @@ func create_board():
 				piece_node.place(Vector3i(x, i, y))
 				
 	var center = (game_state.size - 1.0) / 2
-	$Camera.target = Vector3(center, 0, -center)	
+	$Camera.target = Vector3(center, 0, -center)
 
 func setup_quality():
 	var env: Environment
-	match config.get_value("display", "quality", "low"):
+	var light_energy := 6.0
+	var quality: String = config.get_value("display", "quality", "high")
+	var rendering_method := RenderingServer.get_current_rendering_method()
+	if rendering_method == "gl_compatibility":
+		quality = "compatibility"
+	match quality:
 		"high":
 			env = load("res://Scenes/env_high.tres")
+		"compatibility":
+			env = load("res://Scenes/env_compat.tres")
+			light_energy = 1.0
 		_:
 			env = load("res://Scenes/env_low.tres")
 	$WorldEnvironment.environment = env
+	$Light.light_energy = light_energy
+	match rendering_method:
+		"gl_compatibility", "mobile":
+			get_viewport().scaling_3d_scale = 1.0

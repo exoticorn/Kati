@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_ebmjs"]
 [ext_resource type="Script" uid="uid://dgduyultasupv" path="res://Scripts/game.gd" id="1_qxrlw"]
-[ext_resource type="Environment" uid="uid://cuxidajrib3es" path="res://Scenes/env_low.tres" id="3_wrm1d"]
+[ext_resource type="Environment" uid="uid://gio35wn5euew" path="res://Scenes/env_compat.tres" id="3_wrm1d"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_wrm1d"]
 exposure_multiplier = 0.5
@@ -22,7 +22,7 @@ script = ExtResource("1_ebmjs")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("3_wrm1d")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="Light" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.548357, 0.521232, -0.653928, 0.1261, 0.721501, 0.680835, 0.826682, -0.4558, 0.329913, 0, 0, 0)
 light_energy = 6.0
 shadow_enabled = true
