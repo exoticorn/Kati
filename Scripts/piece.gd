@@ -25,10 +25,11 @@ func setup(color: GameState.Col, type: GameState.Type):
 			mesh = white_cap_mesh
 		[GameState.Col.BLACK, GameState.Type.CAP]:
 			mesh = black_cap_mesh
-	base_rotation = Quaternion.IDENTITY
+	var flip = randi_range(0, 1) if type != GameState.Type.CAP else 0
+	base_rotation = Quaternion.from_euler(Vector3(flip * PI, randi_range(0, 3) * PI / 2, 0))
 	if type == GameState.Type.WALL:
-		var dir = 1.0 if color == GameState.Col.WHITE else -1
-		base_rotation *= Quaternion.from_euler(Vector3(PI / 2, PI / 4 * dir, 0))
+		var dir = 1 if color == GameState.Col.WHITE else -1
+		base_rotation = Quaternion.from_euler(Vector3(PI / 2, PI / 4 * dir, 0)) * base_rotation
 
 func place(pos: Vector3i):
 	var offset = 0.0
@@ -38,4 +39,4 @@ func place(pos: Vector3i):
 		offset = flat_aabb.size.x * 0.5
 	var base_pos = Vector3(pos.x, pos.y * flat_aabb.size.y, -pos.z)
 	position = base_pos + Vector3(randf_range(-0.03, 0.03), offset, randf_range(-0.03, 0.03))
-	quaternion = base_rotation * Quaternion.from_euler(Vector3(0, randf_range(-0.1, 0.1), 0))
+	quaternion = Quaternion.from_euler(Vector3(0, randf_range(-0.1, 0.1), 0)) * base_rotation

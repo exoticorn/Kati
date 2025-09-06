@@ -5,7 +5,9 @@ var piece_scene = preload("res://Scenes/piece.tscn")
 
 var config: ConfigFile
 
-var game_state = GameState.new(5, 21, 1)
+#var game_state = GameState.new(5, 21, 1)
+var game_state = GameState.from_tps("x3,1121,x,2/x2,1,1,121S,x/x2,1,x,2C,12S/x,212,112221C,x,2,221/1112,11,x,2,x2/1,1,112S,2,2,x 2 34", 30, 1)
+
 func _ready():
 	config = ConfigFile.new()
 	config.load("user://catak.cfg")
