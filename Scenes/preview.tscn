@@ -1,9 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://qja87y8qw1sc"]
+[gd_scene load_steps=11 format=3 uid="uid://qja87y8qw1sc"]
 
 [ext_resource type="ArrayMesh" uid="uid://jqlqaowxo5qp" path="res://Assets/imported/square.res" id="1_0nmea"]
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_s4qi8"]
 [ext_resource type="ArrayMesh" uid="uid://ct5wiwvoqq2c7" path="res://Assets/imported/white flat.res" id="2_e5mf5"]
-[ext_resource type="Texture2D" uid="uid://bu1ukiu6t4ran" path="res://Assets/medieval_cafe_4k.exr" id="2_sfrw1"]
+[ext_resource type="Environment" uid="uid://d0ebljyvi6xab" path="res://Scenes/env_high.tres" id="3_icjxw"]
 [ext_resource type="ArrayMesh" uid="uid://b3vkf85inwx36" path="res://Assets/imported/black flat.res" id="3_sfrw1"]
 [ext_resource type="Material" uid="uid://dv324n3u1s6tb" path="res://Shaders/highlight.tres" id="5_1vhyc"]
 [ext_resource type="ArrayMesh" uid="uid://cnt817tmlromd" path="res://Assets/imported/white capstone.res" id="5_ckmux"]
@@ -12,25 +12,6 @@
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_icjxw"]
 exposure_multiplier = 0.3
-
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ckmux"]
-panorama = ExtResource("2_sfrw1")
-
-[sub_resource type="Sky" id="Sky_e5mf5"]
-sky_material = SubResource("PanoramaSkyMaterial_ckmux")
-
-[sub_resource type="Environment" id="Environment_sfrw1"]
-background_mode = 2
-sky = SubResource("Sky_e5mf5")
-tonemap_mode = 1
-tonemap_white = 6.0
-ssao_enabled = true
-ssil_enabled = true
-sdfgi_enabled = true
-sdfgi_min_cell_size = 0.1
-sdfgi_y_scale = 0
-glow_enabled = true
-adjustment_saturation = 1.33
 
 [node name="Preview" type="Node3D"]
 
@@ -228,7 +209,7 @@ mesh = ExtResource("1_0nmea")
 skeleton = NodePath("../..")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_sfrw1")
+environment = ExtResource("3_icjxw")
 
 [node name="Pieces" type="Node3D" parent="."]
 

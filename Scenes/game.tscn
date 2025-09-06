@@ -1,15 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://ckm3kb4aosxb4"]
+[gd_scene load_steps=5 format=3 uid="uid://ckm3kb4aosxb4"]
 
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_ebmjs"]
 [ext_resource type="Script" uid="uid://dgduyultasupv" path="res://Scripts/game.gd" id="1_qxrlw"]
+[ext_resource type="Environment" uid="uid://cuxidajrib3es" path="res://Scenes/env_low.tres" id="3_wrm1d"]
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_wrm1d"]
+exposure_multiplier = 0.5
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_qxrlw")
 
 [node name="Camera" type="Camera3D" parent="."]
+attributes = SubResource("CameraAttributesPractical_wrm1d")
 fov = 45.0
 script = ExtResource("1_ebmjs")
 
 [node name="Board" type="Node3D" parent="."]
 
 [node name="Pieces" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("3_wrm1d")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.548357, 0.521232, -0.653928, 0.1261, 0.721501, 0.680835, 0.826682, -0.4558, 0.329913, 0, 0, 0)
+light_energy = 6.0
+shadow_enabled = true

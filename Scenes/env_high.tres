@@ -1,0 +1,23 @@
+[gd_resource type="Environment" load_steps=4 format=3 uid="uid://d0ebljyvi6xab"]
+
+[ext_resource type="Texture2D" uid="uid://bu1ukiu6t4ran" path="res://Assets/medieval_cafe_4k.exr" id="1_gl1fw"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ckmux"]
+panorama = ExtResource("1_gl1fw")
+
+[sub_resource type="Sky" id="Sky_e5mf5"]
+sky_material = SubResource("PanoramaSkyMaterial_ckmux")
+
+[resource]
+background_mode = 2
+sky = SubResource("Sky_e5mf5")
+tonemap_mode = 3
+tonemap_exposure = 0.6
+tonemap_white = 6.0
+ssao_enabled = true
+ssil_enabled = true
+sdfgi_enabled = true
+sdfgi_min_cell_size = 0.1
+sdfgi_y_scale = 0
+glow_enabled = true
+adjustment_saturation = 1.33

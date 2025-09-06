@@ -3,8 +3,13 @@ extends Node3D
 var square_scene = preload("res://Scenes/square.tscn")
 var piece_scene = preload("res://Scenes/piece.tscn")
 
+var config: ConfigFile
+
 var game_state = GameState.new(5, 21, 1)
 func _ready():
+	config = ConfigFile.new()
+	config.load("user://catak.cfg")
+	setup_quality()
 	create_board()
 
 func create_board():
@@ -23,3 +28,12 @@ func create_board():
 				
 	var center = (game_state.size - 1.0) / 2
 	$Camera.target = Vector3(center, 0, -center)	
+
+func setup_quality():
+	var env: Environment
+	match config.get_value("display", "quality", "low"):
+		"high":
+			env = load("res://Scenes/env_high.tres")
+		_:
+			env = load("res://Scenes/env_low.tres")
+	$WorldEnvironment.environment = env
