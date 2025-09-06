@@ -26,6 +26,9 @@ func setup(color: GameState.Col, type: GameState.Type):
 		[GameState.Col.BLACK, GameState.Type.CAP]:
 			mesh = black_cap_mesh
 	base_rotation = Quaternion.IDENTITY
+	if type == GameState.Type.WALL:
+		var dir = 1.0 if color == GameState.Col.WHITE else -1
+		base_rotation *= Quaternion.from_euler(Vector3(PI / 2, PI / 4 * dir, 0))
 
 func place(pos: Vector3i):
 	var offset = 0.0

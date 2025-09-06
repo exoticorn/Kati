@@ -38,3 +38,6 @@ func _init(size: int, flats: int, caps: int):
 	board[1][1].push_back(Piece.new(Col.WHITE, Type.FLAT))
 	board[2][3].push_back(Piece.new(Col.WHITE, Type.FLAT))
 	board[2][3].push_back(Piece.new(Col.BLACK, Type.FLAT))
+	board[2][2].push_back(Piece.new(Col.BLACK, Type.CAP))
+	board[4][3].push_back(Piece.new(Col.WHITE, Type.WALL))
+	board[1][1].push_back(Piece.new(Col.BLACK, Type.WALL))
