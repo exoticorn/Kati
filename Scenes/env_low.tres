@@ -1,15 +1,14 @@
-[gd_resource type="Environment" load_steps=4 format=3 uid="uid://cuxidajrib3es"]
+[gd_resource type="Environment" load_steps=4 format=3 uid="uid://gio35wn5euew"]
 
-[ext_resource type="Texture2D" uid="uid://bu1ukiu6t4ran" path="res://Assets/medieval_cafe_4k.exr" id="1_de2ku"]
+[ext_resource type="Texture2D" uid="uid://c7xj3s08yroey" path="res://Assets/medieval_cafe_4k.png" id="1_de2ku"]
 
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_3dryh"]
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_bvnn8"]
 panorama = ExtResource("1_de2ku")
+energy_multiplier = 5.0
 
-[sub_resource type="Sky" id="Sky_wowpa"]
-sky_material = SubResource("PanoramaSkyMaterial_3dryh")
+[sub_resource type="Sky" id="Sky_wrm1d"]
+sky_material = SubResource("PanoramaSkyMaterial_bvnn8")
 
 [resource]
 background_mode = 2
-sky = SubResource("Sky_wowpa")
-tonemap_mode = 1
-tonemap_white = 6.0
+sky = SubResource("Sky_wrm1d")

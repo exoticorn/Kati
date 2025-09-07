@@ -34,20 +34,23 @@ func create_board():
 func setup_quality():
 	var env: Environment
 	var light_energy := 6.0
-	var quality: String = config.get_value("display", "quality", "high")
+	var quality: String = config.get_value("display", "quality", "mid")
 	var rendering_method := RenderingServer.get_current_rendering_method()
 	if rendering_method == "gl_compatibility":
-		quality = "compatibility"
+		quality = "low"
 	match quality:
 		"high":
 			env = load("res://Scenes/env_high.tres")
-		"compatibility":
-			env = load("res://Scenes/env_compat.tres")
-			light_energy = 1.0
-		_:
+		"low":
 			env = load("res://Scenes/env_low.tres")
+			light_energy = 2.0
+			var viewport = get_viewport()
+			viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+			viewport.scaling_3d_scale = 1.0
+		_:
+			env = load("res://Scenes/env_mid.tres")
 	$WorldEnvironment.environment = env
+	if rendering_method == "gl_compatibility":
+		$Camera.attributes = load("res://Scenes/cam_attr_compat.tres")
+		light_energy = 1.0
 	$Light.light_energy = light_energy
-	match rendering_method:
-		"gl_compatibility", "mobile":
-			get_viewport().scaling_3d_scale = 1.0
