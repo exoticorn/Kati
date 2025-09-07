@@ -5,14 +5,20 @@ var piece_scene = preload("res://Scenes/piece.tscn")
 
 var config: ConfigFile
 
-#var game_state = GameState.new(5, 21, 1)
-var game_state = GameState.from_tps("x3,1121,x,2/x2,1,1,121S,x/x2,1,x,2C,12S/x,212,112221C,x,2,221/1112,11,x,2,x2/1,1,112S,2,2,x 2 34", 30, 1)
+var game_state = GameState.new(6)
+#var game_state = GameState.from_tps("x3,2,x,1/x2,1S,2,2,1/1,1,1212C,1,1,1/1,2S,21,21C,1,2/x,2,2,21,x,2/2,x,121S,x,2,12 1 24")
+
+var engine: EngineInterface
 
 func _ready():
 	config = ConfigFile.new()
 	config.load("user://catak.cfg")
 	setup_quality()
 	create_board()
+	engine = EngineInterface.new(game_state)
+	engine.bestmove.connect(engine_move)
+	add_child(engine)
+	game_state.changed.connect(update_board)
 
 func create_board():
 	for x in range(game_state.size):
@@ -20,6 +26,17 @@ func create_board():
 			var square := square_scene.instantiate()
 			square.position = Vector3(x, 0, -y)
 			$Board.add_child(square)
+				
+	var center = (game_state.size - 1.0) / 2
+	$Camera.target = Vector3(center, 0, -center)
+	
+	update_board()
+
+func update_board():
+	for piece in $Pieces.get_children():
+		piece.queue_free()
+	for x in range(game_state.size):
+		for y in range(game_state.size):
 			var stack: Array = game_state.board[x][y]
 			for i in stack.size():
 				var piece = stack[i]
@@ -27,9 +44,12 @@ func create_board():
 				piece_node.setup(piece.color, piece.type)
 				$Pieces.add_child(piece_node)
 				piece_node.place(Vector3i(x, i, y))
-				
-	var center = (game_state.size - 1.0) / 2
-	$Camera.target = Vector3(center, 0, -center)
+	
+
+func engine_move(move: GameState.Move):
+	game_state.do_move(move)
+	await get_tree().create_timer(1).timeout
+	engine.go()
 
 func setup_quality():
 	var env: Environment

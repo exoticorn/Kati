@@ -13,9 +13,9 @@ var base_rotation: Quaternion
 func _init():
 	flat_aabb = white_flat_mesh.get_aabb()
 
-func setup(color: GameState.Col, type: GameState.Type):
-	self.color = color
-	self.type = type
+func setup(c: GameState.Col, t: GameState.Type):
+	color = c
+	type = t
 	match [color, type]:
 		[GameState.Col.WHITE, GameState.Type.FLAT], [GameState.Col.WHITE, GameState.Type.WALL]:
 			mesh = white_flat_mesh
