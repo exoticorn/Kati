@@ -17,7 +17,8 @@ signal bestmove(move: GameState.Move)
 
 func _init(gs: GameState):
 	game_state = gs
-	var result = OS.execute_with_pipe("tmp/tiltak", PackedStringArray(["--cobblebot"]), false)
+	var args = ["--cobblebot"]
+	var result = OS.execute_with_pipe("tmp/tiltak", PackedStringArray(args), false)
 	if result.is_empty():
 		printerr("Failed to start engine exe")
 		state = State.ERROR
@@ -45,6 +46,7 @@ func _process(_delta):
 	match Array(line.split(" ")):
 		["teiok"]:
 			if state == State.STARTING:
+				stdio.store_line("setoption name HalfKomi value 4")
 				stdio.store_line("teinewgame %d" % game_state.size)
 			state = State.IDLE
 			go()

@@ -157,6 +157,11 @@ func do_move(move: Move):
 					square.x -= 1
 				Direction.UP:
 					square.y += 1
+			stack = board[square.x][square.y]
+			if !stack.is_empty():
+				var top_piece: Piece = stack.back()
+				if top_piece.type == Type.WALL:
+					top_piece.type = Type.FLAT
 			for i in drop_count:
 				board[square.x][square.y].push_back(pieces.pop_front())
 	moves.push_back(move)
