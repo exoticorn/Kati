@@ -9,6 +9,7 @@ var flat_aabb: AABB
 var type: GameState.Type
 var color: GameState.Col
 var base_rotation: Quaternion
+var board_pos: Vector3i
 
 func _init():
 	flat_aabb = white_flat_mesh.get_aabb()
@@ -32,6 +33,7 @@ func setup(c: GameState.Col, t: GameState.Type):
 		base_rotation = Quaternion.from_euler(Vector3(PI / 2, PI / 4 * dir, 0)) * base_rotation
 
 func place(pos: Vector3i):
+	board_pos = pos
 	var offset = 0.0
 	if type == GameState.Type.FLAT:
 		offset = flat_aabb.size.y * 0.5
@@ -40,3 +42,15 @@ func place(pos: Vector3i):
 	var base_pos = Vector3(pos.x, pos.y * flat_aabb.size.y, -pos.z)
 	position = base_pos + Vector3(randf_range(-0.03, 0.03), offset, randf_range(-0.03, 0.03))
 	quaternion = Quaternion.from_euler(Vector3(0, randf_range(-0.1, 0.1), 0)) * base_rotation
+
+func can_be(c: GameState.Col, t: GameState.Type):
+	if c != color:
+		return false
+	if t == type:
+		return true
+	return type == GameState.Type.WALL && t == GameState.Type.FLAT
+
+func become(t: GameState.Type):
+	if t != type:
+		setup(color, t)
+		place(board_pos)

@@ -7,6 +7,7 @@ var config: ConfigFile
 
 var game_state = GameState.new(6)
 #var game_state = GameState.from_tps("x3,2,x,1/x2,1S,2,2,1/1,1,1212C,1,1,1/1,2S,21,21C,1,2/x,2,2,21,x,2/2,x,121S,x,2,12 1 24")
+var pieces_map = {}
 
 var engine: EngineInterface
 
@@ -33,17 +34,31 @@ func create_board():
 	update_board()
 
 func update_board():
+	var piece_map = {}
+	var pieces_to_place = []
 	for piece in $Pieces.get_children():
-		piece.queue_free()
+		piece_map[piece.board_pos] = piece
 	for x in range(game_state.size):
 		for y in range(game_state.size):
 			var stack: Array = game_state.board[x][y]
 			for i in stack.size():
+				var board_pos = Vector3i(x, i, y)
 				var piece = stack[i]
-				var piece_node = piece_scene.instantiate()
-				piece_node.setup(piece.color, piece.type)
-				$Pieces.add_child(piece_node)
-				piece_node.place(Vector3i(x, i, y))
+				var existing = piece_map.get(board_pos)
+				if existing != null && existing.can_be(piece.color, piece.type):
+					existing.become(piece.type)
+					piece_map.erase(board_pos)
+				else:
+					pieces_to_place.push_back({"pos": board_pos, "piece": piece})
+
+	for pos in piece_map:
+		piece_map[pos].queue_free()
+	for to_place in pieces_to_place:
+		var piece_node = piece_scene.instantiate()
+		var piece = to_place.piece
+		piece_node.setup(piece.color, piece.type)
+		$Pieces.add_child(piece_node)
+		piece_node.place(to_place.pos)
 	
 
 func engine_move(move: GameState.Move):

@@ -41,8 +41,6 @@ func _process(_delta):
 			state = State.ERROR
 			return
 
-	print(line)
-
 	match Array(line.split(" ")):
 		["teiok"]:
 			if state == State.STARTING:
