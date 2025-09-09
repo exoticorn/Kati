@@ -73,17 +73,21 @@ func setup_quality():
 	var rendering_method := RenderingServer.get_current_rendering_method()
 	if rendering_method == "gl_compatibility":
 		quality = "low"
+	var viewport = get_viewport()
 	match quality:
 		"high":
 			env = load("res://Scenes/env_high.tres")
+			viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
+			viewport.scaling_3d_scale = 0.75
 		"low":
 			env = load("res://Scenes/env_low.tres")
 			light_energy = 2.0
-			var viewport = get_viewport()
 			viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
 			viewport.scaling_3d_scale = 1.0
 		_:
 			env = load("res://Scenes/env_mid.tres")
+			viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
+			viewport.scaling_3d_scale = 0.5
 	$WorldEnvironment.environment = env
 	if rendering_method == "gl_compatibility":
 		$Camera.attributes = load("res://Scenes/cam_attr_compat.tres")
