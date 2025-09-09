@@ -35,7 +35,7 @@ func create_board():
 
 func update_board():
 	var piece_map = {}
-	var pieces_to_place = []
+	var pieces_to_place := []
 	for piece in $Pieces.get_children():
 		piece_map[piece.board_pos] = piece
 	for x in range(game_state.size):
@@ -51,14 +51,36 @@ func update_board():
 				else:
 					pieces_to_place.push_back({"pos": board_pos, "piece": piece})
 
+	var pieces_to_move := []
 	for pos in piece_map:
-		piece_map[pos].queue_free()
+		pieces_to_move.push_back(piece_map[pos])
+	
+	pieces_to_move.sort_custom(func (a, b): return a.board_pos.y < b.board_pos.y)
+	
+	for piece in pieces_to_move:
+		var pos_a = piece.board_pos
+		var best_index = -1
+		var best_distance = game_state.size ** 2 * 2
+		for index in pieces_to_place.size():
+			var to_place = pieces_to_place[index]
+			if to_place.piece.color == piece.color && to_place.piece.type == piece.type:
+				var pos_b = to_place.pos
+				var distance = abs(pos_a.y - pos_b.y) * game_state.size + abs(pos_a.x - pos_b.x) + abs(pos_a.z - pos_b.z)
+				if distance < best_distance:
+					best_distance = distance
+					best_index = index
+		if best_index >= 0:
+			piece.place(pieces_to_place[best_index].pos)
+			pieces_to_place.remove_at(best_index)
+		else:
+			piece.queue_free()
+
 	for to_place in pieces_to_place:
 		var piece_node = piece_scene.instantiate()
 		var piece = to_place.piece
 		piece_node.setup(piece.color, piece.type)
 		$Pieces.add_child(piece_node)
-		piece_node.place(to_place.pos)
+		piece_node.place(to_place.pos, false)
 	
 
 func engine_move(move: GameState.Move):
