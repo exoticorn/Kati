@@ -41,6 +41,8 @@ func update_board():
 	var pieces_to_place := []
 	for piece in $Pieces.get_children():
 		piece_map[piece.board_pos] = piece
+	
+	# don't touch pieces that didn't move
 	for x in range(game_state.size):
 		for y in range(game_state.size):
 			var stack: Array = game_state.board[x][y]
@@ -54,6 +56,7 @@ func update_board():
 				else:
 					pieces_to_place.push_back({"pos": board_pos, "piece": piece})
 
+	# either move or remove the remaining pieces
 	var pieces_to_move := []
 	for pos in piece_map:
 		pieces_to_move.push_back(piece_map[pos])
@@ -78,6 +81,7 @@ func update_board():
 		else:
 			piece.queue_free()
 
+	# put down pieces left to place
 	for to_place in pieces_to_place:
 		var piece_node = piece_scene.instantiate()
 		var piece = to_place.piece
@@ -85,15 +89,30 @@ func update_board():
 		$Pieces.add_child(piece_node)
 		piece_node.place(to_place.pos, false)
 
+	# apply move highlights
 	for c in squares:
 		squares[c].clear_move_highlight()
 
+	piece_map = {}
+	for piece in $Pieces.get_children():
+		piece_map[piece.board_pos] = piece
+		
 	if !game_state.moves.is_empty():
 		var highlight_squares = game_state.moves.back().highlight_squares()
 		for square in highlight_squares:
 			var count = highlight_squares[square]
 			var color = Color(0.3, 0.45, 0.75) if count > 0 else Color(0.1, 0.15, 0.3)
 			squares[square].set_move_highlight(color)
+			var height = game_state.board[square.x][square.y].size()
+			for i in count:
+				var p = Vector3i(square.x, height - 1 - i, square.y)
+				var piece = piece_map[p]
+				piece_map.erase(p)
+				if piece != null:
+					piece.set_highlight(true)
+	
+	for p in piece_map:
+		piece_map[p].set_highlight(false)
 
 func engine_move(move: GameState.Move):
 	game_state.do_move(move)

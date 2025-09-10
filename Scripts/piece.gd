@@ -4,6 +4,7 @@ var white_flat_mesh: Mesh = preload("res://Assets/imported/white flat.res")
 var black_flat_mesh: Mesh = preload("res://Assets/imported/black flat.res")
 var white_cap_mesh: Mesh = preload("res://Assets/imported/white capstone.res")
 var black_cap_mesh: Mesh = preload("res://Assets/imported/black capstone.res")
+var highlight_overlay_material: Material = preload("res://Shaders/highlight.tres")
 
 var flat_aabb: AABB
 var type: GameState.Type
@@ -70,3 +71,6 @@ func become(t: GameState.Type):
 	if t != type:
 		setup(color, t)
 		place(board_pos)
+
+func set_highlight(flag: bool):
+	material_overlay = highlight_overlay_material if flag else null
