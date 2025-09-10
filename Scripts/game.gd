@@ -7,7 +7,8 @@ var config: ConfigFile
 
 var game_state = GameState.new(6)
 #var game_state = GameState.from_tps("x3,2,x,1/x2,1S,2,2,1/1,1,1212C,1,1,1/1,2S,21,21C,1,2/x,2,2,21,x,2/2,x,121S,x,2,12 1 24")
-var pieces_map = {}
+
+var squares = {}
 
 var engine: EngineInterface
 
@@ -22,11 +23,13 @@ func _ready():
 	game_state.changed.connect(update_board)
 
 func create_board():
+	squares = {}
 	for x in range(game_state.size):
 		for y in range(game_state.size):
 			var square := square_scene.instantiate()
 			square.position = Vector3(x, 0, -y)
 			$Board.add_child(square)
+			squares[Vector2i(x, y)] = square
 				
 	var center = (game_state.size - 1.0) / 2
 	$Camera.target = Vector3(center, 0, -center)
@@ -81,7 +84,16 @@ func update_board():
 		piece_node.setup(piece.color, piece.type)
 		$Pieces.add_child(piece_node)
 		piece_node.place(to_place.pos, false)
-	
+
+	for c in squares:
+		squares[c].clear_move_highlight()
+
+	if !game_state.moves.is_empty():
+		var highlight_squares = game_state.moves.back().highlight_squares()
+		for square in highlight_squares:
+			var count = highlight_squares[square]
+			var color = Color(0.3, 0.45, 0.75) if count > 0 else Color(0.1, 0.15, 0.3)
+			squares[square].set_move_highlight(color)
 
 func engine_move(move: GameState.Move):
 	game_state.do_move(move)

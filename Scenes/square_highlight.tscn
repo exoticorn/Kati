@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://ces18xbufkjt7"]
+[gd_scene load_steps=7 format=3 uid="uid://bwv200p8fri76"]
 
 [ext_resource type="Shader" uid="uid://1u76r1nma2ur" path="res://Shaders/square_highlight_front.gdshader" id="1_7vyc8"]
 [ext_resource type="Texture2D" uid="uid://3105edhaoxkm" path="res://Assets/square_highlight.svg" id="2_0txnb"]
@@ -8,14 +8,12 @@
 render_priority = 1
 shader = ExtResource("1_7vyc8")
 shader_parameter/mask = ExtResource("2_0txnb")
-shader_parameter/color = Vector3(0.065, 0.34, 0.11)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_a2nlk"]
 render_priority = 1
 next_pass = SubResource("ShaderMaterial_cylw3")
 shader = ExtResource("3_esyg6")
 shader_parameter/mask = ExtResource("2_0txnb")
-shader_parameter/color = Vector3(0.065, 0.34, 0.11)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_hvssd"]
 material = SubResource("ShaderMaterial_a2nlk")

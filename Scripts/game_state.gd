@@ -105,6 +105,25 @@ class Move:
 		if dps.is_empty():
 			dps = [cnt]
 		return Move.stack(squ, cnt, dir, dps)
+		
+	func highlight_squares() -> Dictionary:
+		if count == 0:
+			return { square: 1 }
+		var squares = { square: 0 }
+		var sq = square
+		for cnt in drops:
+			match direction:
+				Direction.RIGHT:
+					sq.x += 1
+				Direction.DOWN:
+					sq.y -= 1
+				Direction.LEFT:
+					sq.x -= 1
+				Direction.UP:
+					sq.y += 1
+			squares[sq] = cnt
+		return squares
+		
 
 var size: int
 var flats_left: Array

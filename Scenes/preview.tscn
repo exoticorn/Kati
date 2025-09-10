@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://qja87y8qw1sc"]
+[gd_scene load_steps=16 format=3 uid="uid://qja87y8qw1sc"]
 
 [ext_resource type="ArrayMesh" uid="uid://jqlqaowxo5qp" path="res://Assets/imported/square.res" id="1_0nmea"]
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_s4qi8"]
@@ -8,10 +8,28 @@
 [ext_resource type="Material" uid="uid://dv324n3u1s6tb" path="res://Shaders/highlight.tres" id="5_1vhyc"]
 [ext_resource type="ArrayMesh" uid="uid://cnt817tmlromd" path="res://Assets/imported/white capstone.res" id="5_ckmux"]
 [ext_resource type="ArrayMesh" uid="uid://wittpc8xl4wl" path="res://Assets/imported/black capstone.res" id="6_s4qi8"]
-[ext_resource type="PackedScene" uid="uid://ces18xbufkjt7" path="res://Scenes/square_highlight.tscn" id="9_icjxw"]
+[ext_resource type="Shader" uid="uid://1u76r1nma2ur" path="res://Shaders/square_highlight_front.gdshader" id="9_hvssd"]
+[ext_resource type="Texture2D" uid="uid://3105edhaoxkm" path="res://Assets/square_highlight.svg" id="10_cylw3"]
+[ext_resource type="Shader" uid="uid://d0i0ov5b6o2wf" path="res://Shaders/square_highlight.gdshader" id="11_ilhyi"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_icjxw"]
 exposure_multiplier = 0.3
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cylw3"]
+render_priority = 1
+shader = ExtResource("9_hvssd")
+shader_parameter/mask = ExtResource("10_cylw3")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a2nlk"]
+render_priority = 1
+next_pass = SubResource("ShaderMaterial_cylw3")
+shader = ExtResource("11_ilhyi")
+shader_parameter/mask = ExtResource("10_cylw3")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_hvssd"]
+material = SubResource("ShaderMaterial_a2nlk")
+size = Vector2(1, 1)
+center_offset = Vector3(0, 0.01, 0)
 
 [node name="Preview" type="Node3D"]
 
@@ -349,5 +367,6 @@ transform = Transform3D(0.0430963, 0, -0.999071, 0, 1, 0, 0.999071, 0, 0.0430963
 mesh = ExtResource("6_s4qi8")
 skeleton = NodePath("../..")
 
-[node name="SquareHighlight" parent="." instance=ExtResource("9_icjxw")]
+[node name="SquareHighlight" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -4)
+mesh = SubResource("PlaneMesh_hvssd")
