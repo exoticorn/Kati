@@ -12,5 +12,5 @@ void vertex() {
 
 void fragment() {
 	ALBEDO = color;
-	ALPHA = texture(mask, UV).a * 0.1 * alpha;
+	ALPHA = texture(mask, UV).a * 0.05 * alpha;
 }

@@ -102,17 +102,8 @@ func update_board():
 		for square in highlight_squares:
 			var count = highlight_squares[square]
 			var color = Color(0.3, 0.45, 0.75) if count > 0 else Color(0.1, 0.15, 0.3)
-			squares[square].set_move_highlight(color)
 			var height = game_state.board[square.x][square.y].size()
-			for i in count:
-				var p = Vector3i(square.x, height - 1 - i, square.y)
-				var piece = piece_map[p]
-				piece_map.erase(p)
-				if piece != null:
-					piece.set_highlight(true)
-	
-	for p in piece_map:
-		piece_map[p].set_highlight(false)
+			squares[square].set_move_highlight(color, height - count)
 
 func engine_move(move: GameState.Move):
 	game_state.do_move(move)

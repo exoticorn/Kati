@@ -1,15 +1,16 @@
 shader_type spatial;
 
+render_mode blend_premul_alpha, unshaded;
+
 void vertex() {
 	// Called for every vertex the material is visible on.
 }
 
 void fragment() {
-	vec3 pos = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	float f = mod(dot(pos, vec3(0.25, 0.5, 0.04)) + TIME, 2.0);
-	f = smoothstep(0.885, 0.9, f) * smoothstep(1.15, 1.0, f) * 0.2;
-	ALBEDO = vec3(0.3, 0.4, 0.5);
-	ALPHA = f;
+	vec3 normal = normalize((INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz - NODE_POSITION_WORLD);
+	float a = (0.5 + 0.5 * sin(length(normal.xy) * 10.0 + TIME));
+	ALBEDO = vec3(0.0, 0.0, 0.05) * (1.0 - a);
+	ALPHA = a * 0.5;
 }
 
 //void light() {
