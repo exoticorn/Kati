@@ -110,6 +110,24 @@ func update_board():
 	$UI/CapsWhite/Box/Count.text = str(game_state.caps_left[GameState.Col.WHITE])
 	$UI/FlatsBlack/Box/Count.text = str(game_state.flats_left[GameState.Col.BLACK])
 	$UI/CapsBlack/Box/Count.text = str(game_state.caps_left[GameState.Col.BLACK])
+	
+	if game_state.result != GameState.Result.ONGOING:
+		var result_string
+		match game_state.result:
+			GameState.Result.WHITE_ROAD:
+				result_string = "White won by road"
+			GameState.Result.BLACK_ROAD:
+				result_string = "Black won by road"
+			GameState.Result.WHITE_FLATS:
+				result_string = "White won by flats"
+			GameState.Result.BLACK_FLATS:
+				result_string = "Black won by flats"
+			_:
+				result_string = "Draw"
+		$UI/GameOver/Box/Result.text = result_string
+		var flat_count = game_state.flat_count()
+		$UI/GameOver/Box/FlatCount.text = "%d - %d+%d flats" % [flat_count[0], flat_count[1], game_state.komi]
+		$UI/GameOver.show()
 
 func engine_move(move: GameState.Move):
 	game_state.do_move(move)

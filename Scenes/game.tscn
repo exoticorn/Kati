@@ -111,3 +111,31 @@ text = "Cap Stones:"
 [node name="Count" type="Label" parent="UI/CapsBlack/Box"]
 layout_mode = 2
 text = "0"
+
+[node name="GameOver" type="PanelContainer" parent="UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -20.0
+offset_right = 16.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Box" type="VBoxContainer" parent="UI/GameOver"]
+layout_mode = 2
+
+[node name="Result" type="Label" parent="UI/GameOver/Box"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Result"
+
+[node name="FlatCount" type="Label" parent="UI/GameOver/Box"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "x - x flats"

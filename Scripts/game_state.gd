@@ -123,13 +123,23 @@ class Move:
 					sq.y += 1
 			squares[sq] = cnt
 		return squares
-		
+
+enum Result {
+	ONGOING,
+	WHITE_ROAD,
+	BLACK_ROAD,
+	WHITE_FLATS,
+	BLACK_FLATS,
+	DRAW
+}
 
 var size: int
 var flats_left: Array
 var caps_left: Array
 var board: Array # Array[Array[Array[Piece]]]
 var moves: Array[Move] = []
+var result := Result.ONGOING
+var komi = 2
 
 signal changed
 
@@ -188,6 +198,9 @@ func do_move(move: Move):
 			for i in drop_count:
 				board[square.x][square.y].push_back(pieces.pop_front())
 	moves.push_back(move)
+	
+	check_game_end(color)
+	
 	changed.emit()
 
 static func from_tps(tps: String) -> GameState:
@@ -217,4 +230,80 @@ static func from_tps(tps: String) -> GameState:
 				x += 1
 	
 	return game_state
+
+func check_game_end(color: Col):
+	var road = find_road(color)
+	if road != null:
+		result = Result.WHITE_ROAD + color
+		return
 	
+	road = find_road(1 - color)
+	if road != null:
+		result = Result.BLACK_ROAD - color
+		return
+	
+	var has_empty_squares = false
+	for row in board:
+		for stack in row:
+			if stack.is_empty():
+				has_empty_squares = true
+	
+	if !has_empty_squares || (flats_left[color] == 0 && caps_left[color] == 0):
+		var count = flat_count()
+		var w = count[0]
+		var b = count[1] + komi
+		if w > b:
+			result = Result.WHITE_FLATS
+		elif b > w:
+			result = Result.BLACK_FLATS
+		else:
+			result = Result.DRAW
+
+func flat_count() -> Array[int]:
+	var flat_count: Array[int] = [0, 0]
+	for row in board:
+		for stack in row:
+			if !stack.is_empty() && stack.back().type == Type.FLAT:
+				flat_count[stack.back().color] += 1
+	return flat_count
+
+func find_road(color: Col) -> Variant:
+	var reachable = []
+	for x in size:
+		var row = []
+		for y in size:
+			row.push_back(0)
+		reachable.push_back(row)
+	var candidates = []
+	for i in size:
+		candidates.push_back([i, 0, 1])
+		candidates.push_back([i, size-1, 2])
+		candidates.push_back([0, i, 4])
+		candidates.push_back([size-1, i, 8])
+	while !candidates.is_empty():
+		var c = candidates.pop_back()
+		var x = c[0]
+		var y = c[1]
+		var mask = c[2]
+		var stack = board[x][y]
+		if stack.is_empty() || stack.back().color != color || stack.back().type == Type.WALL:
+			continue
+		var prev_mask = reachable[x][y]
+		if prev_mask == mask:
+			continue
+		mask |= prev_mask
+		reachable[x][y] = mask
+		if x > 0: candidates.push_back([x - 1, y, mask])
+		if x < size - 1: candidates.push_back([x + 1, y, mask])
+		if y > 0: candidates.push_back([x, y - 1, mask])
+		if y < size - 1: candidates.push_back([x, y + 1, mask])
+	var road_squares = []
+	for x in size:
+		for y in size:
+			var mask = reachable[x][y]
+			if (mask & (mask >> 1) & 5) != 0:
+				road_squares.push_back(Vector2i(x, y))
+
+	if road_squares.is_empty():
+		return null
+	return road_squares
