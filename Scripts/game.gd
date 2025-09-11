@@ -105,6 +105,12 @@ func update_board():
 			var height = game_state.board[square.x][square.y].size()
 			squares[square].set_move_highlight(color, height - count)
 
+	# update ui
+	$UI/FlatsWhite/Box/Count.text = str(game_state.flats_left[GameState.Col.WHITE])
+	$UI/CapsWhite/Box/Count.text = str(game_state.caps_left[GameState.Col.WHITE])
+	$UI/FlatsBlack/Box/Count.text = str(game_state.flats_left[GameState.Col.BLACK])
+	$UI/CapsBlack/Box/Count.text = str(game_state.caps_left[GameState.Col.BLACK])
+
 func engine_move(move: GameState.Move):
 	game_state.do_move(move)
 	await get_tree().create_timer(1).timeout

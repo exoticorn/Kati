@@ -162,6 +162,10 @@ func do_move(move: Move):
 	var square = move.square
 	if move.count == 0:
 		board[square.x][square.y].push_back(Piece.new(color, move.type))
+		if move.type == Type.CAP:
+			caps_left[color] -= 1
+		else:
+			flats_left[color] -= 1
 	else:
 		var stack: Array = board[move.square.x][move.square.y]
 		var pieces: Array = stack.slice(-move.count)

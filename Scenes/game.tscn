@@ -24,3 +24,90 @@ environment = ExtResource("3_wrm1d")
 transform = Transform3D(0.234704, 0.843938, -0.482371, -0.0625096, 0.508309, 0.858903, 0.970055, -0.171435, 0.172057, 0, 1.41202, 0)
 light_energy = 6.0
 shadow_enabled = true
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="FlatsWhite" type="PanelContainer" parent="UI"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 127.0
+offset_bottom = 56.0
+
+[node name="Box" type="HBoxContainer" parent="UI/FlatsWhite"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/FlatsWhite/Box"]
+layout_mode = 2
+text = "Flats:"
+
+[node name="Count" type="Label" parent="UI/FlatsWhite/Box"]
+layout_mode = 2
+text = "0"
+
+[node name="CapsWhite" type="PanelContainer" parent="UI"]
+offset_left = 16.0
+offset_top = 68.0
+offset_right = 201.0
+offset_bottom = 108.0
+
+[node name="Box" type="HBoxContainer" parent="UI/CapsWhite"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/CapsWhite/Box"]
+layout_mode = 2
+text = "Cap Stones:"
+
+[node name="Count" type="Label" parent="UI/CapsWhite/Box"]
+layout_mode = 2
+text = "0"
+
+[node name="FlatsBlack" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -127.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 56.0
+grow_horizontal = 0
+
+[node name="Box" type="HBoxContainer" parent="UI/FlatsBlack"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/FlatsBlack/Box"]
+layout_mode = 2
+text = "Flats:"
+
+[node name="Count" type="Label" parent="UI/FlatsBlack/Box"]
+layout_mode = 2
+text = "0"
+
+[node name="CapsBlack" type="PanelContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -201.0
+offset_top = 68.0
+offset_right = -16.0
+offset_bottom = 108.0
+grow_horizontal = 0
+
+[node name="Box" type="HBoxContainer" parent="UI/CapsBlack"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/CapsBlack/Box"]
+layout_mode = 2
+text = "Cap Stones:"
+
+[node name="Count" type="Label" parent="UI/CapsBlack/Box"]
+layout_mode = 2
+text = "0"

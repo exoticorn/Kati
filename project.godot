@@ -23,6 +23,10 @@ gdscript/warnings/integer_division=0
 
 import/blender/enabled=false
 
+[gui]
+
+theme/custom="uid://crtntg40ill57"
+
 [rendering]
 
 scaling_3d/mode=2
