@@ -10,5 +10,5 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [resource]
-Label/font_sizes/font_size = 24
+Label/font_sizes/font_size = 32
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_dmjyp")

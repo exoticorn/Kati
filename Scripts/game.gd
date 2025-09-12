@@ -21,6 +21,7 @@ func _ready():
 	engine.bestmove.connect(engine_move)
 	add_child(engine)
 	game_state.changed.connect(update_board)
+	$MovePreview.is_ghost = true
 
 func create_board():
 	squares = {}
@@ -28,8 +29,11 @@ func create_board():
 		for y in range(game_state.size):
 			var square := square_scene.instantiate()
 			square.position = Vector3(x, 0, -y)
+			square.square = Vector2i(x, y)
 			$Board.add_child(square)
 			squares[Vector2i(x, y)] = square
+			square.entered.connect(square_entered)
+			square.exited.connect(square_exited)
 				
 	var center = (game_state.size - 1.0) / 2
 	$Camera.target = Vector3(center, 0, -center)
@@ -87,7 +91,7 @@ func update_board():
 		var piece = to_place.piece
 		piece_node.setup(piece.color, piece.type)
 		$Pieces.add_child(piece_node)
-		piece_node.place(to_place.pos, false)
+		piece_node.place(to_place.pos)
 
 	# apply move highlights
 	for c in squares:
@@ -128,6 +132,14 @@ func update_board():
 		var flat_count = game_state.flat_count()
 		$UI/GameOver/Box/FlatCount.text = "%d - %d+%d flats" % [flat_count[0], flat_count[1], game_state.komi]
 		$UI/GameOver.show()
+
+func square_entered(square):
+	var sq = squares[square]
+	sq.set_hover_highlight(true)
+
+func square_exited(square):
+	var sq = squares[square]
+	sq.set_hover_highlight(false)
 
 func engine_move(move: GameState.Move):
 	game_state.do_move(move)

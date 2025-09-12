@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://ckm3kb4aosxb4"]
+[gd_scene load_steps=6 format=3 uid="uid://ckm3kb4aosxb4"]
 
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_ebmjs"]
 [ext_resource type="Script" uid="uid://dgduyultasupv" path="res://Scripts/game.gd" id="1_qxrlw"]
 [ext_resource type="CameraAttributesPractical" uid="uid://gtybhomfgbns" path="res://Scenes/cam_attr_normal.tres" id="2_3dryh"]
 [ext_resource type="Environment" uid="uid://gio35wn5euew" path="res://Scenes/env_low.tres" id="3_wrm1d"]
+[ext_resource type="PackedScene" uid="uid://dkwxditx1ga2f" path="res://Scenes/piece.tscn" id="5_wowpa"]
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_qxrlw")
@@ -141,3 +142,6 @@ text = "Result"
 layout_mode = 2
 size_flags_horizontal = 4
 text = "x - x flats"
+
+[node name="MovePreview" parent="." instance=ExtResource("5_wowpa")]
+visible = false

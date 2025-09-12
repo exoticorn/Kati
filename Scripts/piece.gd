@@ -5,12 +5,16 @@ var black_flat_mesh: Mesh = preload("res://Assets/imported/black flat.res")
 var white_cap_mesh: Mesh = preload("res://Assets/imported/white capstone.res")
 var black_cap_mesh: Mesh = preload("res://Assets/imported/black capstone.res")
 var highlight_overlay_material: Material = preload("res://Shaders/highlight.tres")
+var white_ghost_material: Material = preload("res://Shaders/white_ghost.tres")
+var black_ghost_material: Material = preload("res://Shaders/black_ghost.tres")
 
 var flat_aabb: AABB
 var type: GameState.Type
 var color: GameState.Col
 var base_rotation: Quaternion
 var board_pos: Vector3i
+var is_placed := false
+var is_ghost := false
 
 var tween: Tween
 
@@ -29,6 +33,8 @@ func setup(c: GameState.Col, t: GameState.Type):
 			mesh = white_cap_mesh
 		[GameState.Col.BLACK, GameState.Type.CAP]:
 			mesh = black_cap_mesh
+	if is_ghost:
+		material_override = white_ghost_material if color == GameState.Col.WHITE else black_ghost_material
 	var flip = randi_range(0, 1) if type != GameState.Type.CAP else 0
 	base_rotation = Quaternion.from_euler(Vector3(flip * PI, randi_range(0, 3) * PI / 2, 0))
 	if type == GameState.Type.WALL:
@@ -48,17 +54,19 @@ func place(pos: Vector3i, animate: bool = true):
 	if tween != null:
 		tween.kill()
 	if animate:
-		tween = create_tween()
-		tween.set_trans(Tween.TRANS_CUBIC)
-		tween.tween_property(self, "position", target_pos, 0.2)
-		tween.parallel().tween_property(self, "quaternion", target_quat, 0.2)
-	else:
-		position = target_pos + Vector3(0, 3, 0)
-		quaternion = target_quat
-		tween = create_tween()
-		tween.set_trans(Tween.TRANS_QUAD)
-		tween.set_ease(Tween.EASE_IN)
-		tween.tween_property(self, "position", target_pos, 0.2)
+		if is_placed:
+			tween = create_tween()
+			tween.set_trans(Tween.TRANS_CUBIC)
+			tween.tween_property(self, "position", target_pos, 0.2)
+			tween.parallel().tween_property(self, "quaternion", target_quat, 0.2)
+		else:
+			position = target_pos + Vector3(0, 3, 0)
+			quaternion = target_quat
+			tween = create_tween()
+			tween.set_trans(Tween.TRANS_QUAD)
+			tween.set_ease(Tween.EASE_IN)
+			tween.tween_property(self, "position", target_pos, 0.2)
+	is_placed = true
 
 func can_be(c: GameState.Col, t: GameState.Type):
 	if c != color:

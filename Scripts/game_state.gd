@@ -234,12 +234,12 @@ static func from_tps(tps: String) -> GameState:
 func check_game_end(color: Col):
 	var road = find_road(color)
 	if road != null:
-		result = Result.WHITE_ROAD + color
+		result = (Result.WHITE_ROAD + color) as Result
 		return
 	
 	road = find_road(1 - color)
 	if road != null:
-		result = Result.BLACK_ROAD - color
+		result = (Result.BLACK_ROAD - color) as Result
 		return
 	
 	var has_empty_squares = false
@@ -260,12 +260,12 @@ func check_game_end(color: Col):
 			result = Result.DRAW
 
 func flat_count() -> Array[int]:
-	var flat_count: Array[int] = [0, 0]
+	var count: Array[int] = [0, 0]
 	for row in board:
 		for stack in row:
 			if !stack.is_empty() && stack.back().type == Type.FLAT:
-				flat_count[stack.back().color] += 1
-	return flat_count
+				count[stack.back().color] += 1
+	return count
 
 func find_road(color: Col) -> Variant:
 	var reachable = []

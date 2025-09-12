@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://qja87y8qw1sc"]
+[gd_scene load_steps=18 format=3 uid="uid://qja87y8qw1sc"]
 
 [ext_resource type="ArrayMesh" uid="uid://jqlqaowxo5qp" path="res://Assets/imported/square.res" id="1_0nmea"]
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_s4qi8"]
@@ -8,6 +8,8 @@
 [ext_resource type="Material" uid="uid://dv324n3u1s6tb" path="res://Shaders/highlight.tres" id="5_1vhyc"]
 [ext_resource type="ArrayMesh" uid="uid://cnt817tmlromd" path="res://Assets/imported/white capstone.res" id="5_ckmux"]
 [ext_resource type="ArrayMesh" uid="uid://wittpc8xl4wl" path="res://Assets/imported/black capstone.res" id="6_s4qi8"]
+[ext_resource type="Material" uid="uid://8romf1a65q6q" path="res://Shaders/black_ghost.tres" id="7_ilhyi"]
+[ext_resource type="Material" uid="uid://bnxds02og4nh5" path="res://Shaders/white_ghost.tres" id="8_dh722"]
 [ext_resource type="Shader" uid="uid://1u76r1nma2ur" path="res://Shaders/square_highlight_front.gdshader" id="9_hvssd"]
 [ext_resource type="Texture2D" uid="uid://3105edhaoxkm" path="res://Assets/square_highlight.svg" id="10_cylw3"]
 [ext_resource type="Shader" uid="uid://d0i0ov5b6o2wf" path="res://Shaders/square_highlight.gdshader" id="11_ilhyi"]
@@ -355,11 +357,13 @@ skeleton = NodePath("../..")
 
 [node name="BlackFlat2" type="MeshInstance3D" parent="Pieces"]
 transform = Transform3D(0.998962, -0.00136303, 0.0455359, 0.00135506, 0.999999, 0.000205867, -0.0455362, -0.00014393, 0.998963, 2.04334, 0.0702675, -2.03151)
+material_override = ExtResource("7_ilhyi")
 mesh = ExtResource("3_sfrw1")
 skeleton = NodePath("../..")
 
 [node name="WhiteCapstone" type="MeshInstance3D" parent="Pieces"]
 transform = Transform3D(-0.0288812, 0, 0.999583, 0, 1, 0, -0.999583, 0, -0.0288812, 2.99231, -0.00229788, -2.95217)
+material_override = ExtResource("8_dh722")
 mesh = ExtResource("5_ckmux")
 skeleton = NodePath("../..")
 

@@ -1,12 +1,25 @@
 extends Camera3D
 
 var rot := Vector2(0, 0.8)
+var speed := Vector2(0, 0)
 var distance := 8.0
 var target := Vector3(2.5, 0.0, -2.5)
 
 var last_drag_pos = null
 
-func _process(_delta: float):
+func _process(delta: float):
+	if Input.is_action_pressed("cam_left"):
+		speed.x += (-1 - speed.x) * delta
+	if Input.is_action_pressed("cam_right"):
+		speed.x += (1 - speed.x) * delta
+	if Input.is_action_pressed("cam_up"):
+		speed.y += (-1 - speed.y) * delta
+	if Input.is_action_pressed("cam_down"):
+		speed.y += (1 - speed.y) * delta
+	speed *= 0.05 ** delta
+	rot += speed * (delta * 3)
+	rot.x = fmod(rot.x, PI * 2)
+	rot.y = clampf(rot.y, 0.1, 1.4)
 	var pos := Vector3(0.0, 0.0, distance).rotated(Vector3.RIGHT, -rot.y).rotated(Vector3.UP, -rot.x)
 	look_at_from_position(target + pos, target)
 
@@ -22,4 +35,3 @@ func _unhandled_input(event: InputEvent):
 			var delta = event.position - last_drag_pos
 			last_drag_pos = event.position
 			rot += delta * 4 / get_viewport().get_visible_rect().size
-			rot.y = clampf(rot.y, 0.1, 1.4)
