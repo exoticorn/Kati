@@ -1,7 +1,5 @@
 shader_type spatial;
 
-render_mode unshaded;
-
 uniform sampler2D mask;
 instance uniform vec3 color: source_color;
 instance uniform float alpha;

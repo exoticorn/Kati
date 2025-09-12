@@ -35,6 +35,7 @@ grow_vertical = 2
 mouse_filter = 1
 
 [node name="FlatsWhite" type="PanelContainer" parent="UI"]
+layout_mode = 0
 offset_left = 16.0
 offset_top = 16.0
 offset_right = 127.0
@@ -52,6 +53,7 @@ layout_mode = 2
 text = "0"
 
 [node name="CapsWhite" type="PanelContainer" parent="UI"]
+layout_mode = 0
 offset_left = 16.0
 offset_top = 68.0
 offset_right = 201.0

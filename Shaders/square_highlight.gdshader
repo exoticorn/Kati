@@ -1,6 +1,6 @@
 shader_type spatial;
 
-render_mode unshaded, depth_test_disabled;
+render_mode depth_test_disabled;
 
 uniform sampler2D mask;
 instance uniform vec3 color: source_color;
