@@ -164,6 +164,18 @@ func _init(s: int):
 			col.push_back([])
 		board.push_back(col)
 
+func is_setup_turn() -> bool:
+	return moves.size() < 2
+
+func side_to_move() -> Col:
+	return (moves.size() & 1) as Col
+
+func color_to_place() -> Col:
+	if is_setup_turn():
+		return (1 - side_to_move()) as Col
+	else:
+		return side_to_move()
+
 func do_move(move: Move):
 	var move_count := moves.size() / 2
 	var color := moves.size() % 2

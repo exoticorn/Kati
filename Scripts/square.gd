@@ -12,6 +12,7 @@ var move_highlight_color: Color
 var move_highlight_height: int
 
 var has_hover_highlight := false
+var hover_highlight_color: Color
 
 signal entered(Vector2)
 signal exited(Vector2)
@@ -27,18 +28,23 @@ var highlight_alpha: float:
 	get: return $Highlight.get_instance_shader_parameter("alpha")
 	set(alpha): $Highlight.set_instance_shader_parameter("alpha", alpha)
 
-func clear_move_highlight():
-	has_move_highlight = false
-	update_highlight()
-
 func set_move_highlight(color: Color, height: int = 0):
 	has_move_highlight = true
 	move_highlight_color = color
 	move_highlight_height = height
 	update_highlight()
 
-func set_hover_highlight(active: bool):
-	has_hover_highlight = active
+func clear_move_highlight():
+	has_move_highlight = false
+	update_highlight()
+
+func set_hover_highlight(color: Color):
+	has_hover_highlight = true
+	hover_highlight_color = color
+	update_highlight()
+
+func clear_hover_highlight():
+	has_hover_highlight = false
 	update_highlight()
 	
 func update_highlight():
@@ -55,7 +61,9 @@ func update_highlight():
 	var color: Color
 	var height: int
 	if has_hover_highlight:
-		color = Color(0.3, 0.6, 0.3)
+		color = hover_highlight_color
+		if has_move_highlight:
+			color = lerp(color, move_highlight_color, 0.33)
 		height = 0
 	else:
 		color = move_highlight_color
@@ -78,5 +86,7 @@ func _on_mouse_entered() -> void:
 func _on_mouse_exited() -> void:
 	exited.emit(square)
 
-func _on_input_event(_camera: Node, _event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
-	clicked.emit(square)
+func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3, _normal: Vector3, _shape_idx: int) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed && event.button_index == 1:
+			clicked.emit(square)

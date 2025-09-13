@@ -26,6 +26,9 @@ transform = Transform3D(0.234704, 0.843938, -0.482371, -0.0625096, 0.508309, 0.8
 light_energy = 6.0
 shadow_enabled = true
 
+[node name="MovePreview" parent="." instance=ExtResource("5_wowpa")]
+visible = false
+
 [node name="UI" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
@@ -142,6 +145,3 @@ text = "Result"
 layout_mode = 2
 size_flags_horizontal = 4
 text = "x - x flats"
-
-[node name="MovePreview" parent="." instance=ExtResource("5_wowpa")]
-visible = false

@@ -13,6 +13,7 @@ var state: State = State.STARTING
 
 var game_state: GameState
 
+signal engine_ready
 signal bestmove(move: GameState.Move)
 
 func _init(gs: GameState):
@@ -25,7 +26,7 @@ func _init(gs: GameState):
 		return
 	pid = result["pid"]
 	stdio = result["stdio"]
-	stdio.store_line("tei")
+	send("tei")
 
 func _process(_delta):
 	if state == State.ERROR:
@@ -35,6 +36,9 @@ func _process(_delta):
 		OK:
 			pass
 		ERR_FILE_CANT_READ:
+			if !OS.is_process_running(pid):
+				printerr("Engine died")
+				state = State.ERROR
 			return
 		var err:
 			printerr("Failed to read from engine pipe: %s" % err)
@@ -44,10 +48,10 @@ func _process(_delta):
 	match Array(line.split(" ")):
 		["teiok"]:
 			if state == State.STARTING:
-				stdio.store_line("setoption name HalfKomi value 4")
-				stdio.store_line("teinewgame %d" % game_state.size)
+				send("setoption name HalfKomi value 4")
+				send("teinewgame %d" % game_state.size)
+				engine_ready.emit()
 			state = State.IDLE
-			go()
 		["bestmove", var move]:
 			bestmove.emit(GameState.Move.from_ptn(move))
 
@@ -57,5 +61,8 @@ func go():
 	var position = "position startpos moves"
 	for mv in game_state.moves:
 		position += " " + mv.to_tpn()
-	stdio.store_line(position)
-	stdio.store_line("go nodes 100")
+	send(position)
+	send("go nodes 100")
+
+func send(line):
+	stdio.store_line(line)

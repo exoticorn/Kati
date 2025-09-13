@@ -11,6 +11,11 @@ var game_state = GameState.new(6)
 var squares = {}
 
 var engine: EngineInterface
+var selected_piece_type := GameState.Type.FLAT
+var current_hover_square
+
+enum PlayerType { LOCAL, ENGINE }
+var player_types: Array[PlayerType] = [PlayerType.LOCAL, PlayerType.ENGINE]
 
 func _ready():
 	config = ConfigFile.new()
@@ -23,6 +28,20 @@ func _ready():
 	game_state.changed.connect(update_board)
 	$MovePreview.is_ghost = true
 
+func _process(_delta: float):
+	if !game_state.is_setup_turn():
+		var old = selected_piece_type
+		if Input.is_action_just_pressed("select_flat"):
+			selected_piece_type = GameState.Type.FLAT
+		if Input.is_action_just_pressed("select_wall"):
+			selected_piece_type = GameState.Type.WALL
+		if Input.is_action_just_pressed("select_cap"):
+			selected_piece_type = GameState.Type.CAP
+		if Input.is_action_just_pressed("toggle_flat_wall"):
+			selected_piece_type = GameState.Type.WALL if selected_piece_type == GameState.Type.FLAT else GameState.Type.FLAT
+		if selected_piece_type != old:
+			$MovePreview.setup(game_state.color_to_place(), selected_piece_type)
+
 func create_board():
 	squares = {}
 	for x in range(game_state.size):
@@ -34,6 +53,7 @@ func create_board():
 			squares[Vector2i(x, y)] = square
 			square.entered.connect(square_entered)
 			square.exited.connect(square_exited)
+			square.clicked.connect(square_clicked)
 				
 	var center = (game_state.size - 1.0) / 2
 	$Camera.target = Vector3(center, 0, -center)
@@ -133,18 +153,47 @@ func update_board():
 		$UI/GameOver/Box/FlatCount.text = "%d - %d+%d flats" % [flat_count[0], flat_count[1], game_state.komi]
 		$UI/GameOver.show()
 
+	selected_piece_type = GameState.Type.FLAT
+	
+	if current_hover_square != null:
+		square_entered(current_hover_square)
+	
+	if game_state.result == GameState.Result.ONGOING:
+		match player_types[game_state.side_to_move()]:
+			PlayerType.ENGINE:
+				engine.go()
+
 func square_entered(square):
+	current_hover_square = square
 	var sq = squares[square]
-	sq.set_hover_highlight(true)
+	var stack = game_state.board[square.x][square.y]
+	if stack.is_empty():
+		sq.set_hover_highlight(Color(0.3, 0.6, 0.3))
+		$MovePreview.setup(game_state.color_to_place(), selected_piece_type)
+		$MovePreview.place(Vector3i(square.x, 0, square.y), false)
+		$MovePreview.show()
+	else:
+		if !game_state.is_setup_turn() && stack.back().color == game_state.side_to_move():
+			sq.set_hover_highlight(Color(0.3, 0.6, 0.3))
+		else:
+			sq.set_hover_highlight(Color(0.5, 0.2, 0.2))
+		$MovePreview.hide()
 
 func square_exited(square):
+	current_hover_square = null
 	var sq = squares[square]
-	sq.set_hover_highlight(false)
+	sq.clear_hover_highlight()
+	$MovePreview.hide()
+
+func square_clicked(square):
+	if player_types[game_state.side_to_move()] != PlayerType.LOCAL:
+		return
+	var stack = game_state.board[square.x][square.y]
+	if stack.is_empty():
+		game_state.do_move(GameState.Move.place(square, selected_piece_type))
 
 func engine_move(move: GameState.Move):
 	game_state.do_move(move)
-	await get_tree().create_timer(1).timeout
-	engine.go()
 
 func setup_quality():
 	var env: Environment

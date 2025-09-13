@@ -40,6 +40,8 @@ func setup(c: GameState.Col, t: GameState.Type):
 	if type == GameState.Type.WALL:
 		var dir = 1 if color == GameState.Col.WHITE else -1
 		base_rotation = Quaternion.from_euler(Vector3(PI / 2, PI / 4 * dir, 0)) * base_rotation
+	if is_placed:
+		place(board_pos, false)
 
 func place(pos: Vector3i, animate: bool = true):
 	board_pos = pos
@@ -66,6 +68,9 @@ func place(pos: Vector3i, animate: bool = true):
 			tween.set_trans(Tween.TRANS_QUAD)
 			tween.set_ease(Tween.EASE_IN)
 			tween.tween_property(self, "position", target_pos, 0.2)
+	else:
+		position = target_pos
+		quaternion = target_quat
 	is_placed = true
 
 func can_be(c: GameState.Col, t: GameState.Type):
