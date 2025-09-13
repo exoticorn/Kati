@@ -9,7 +9,7 @@
 [ext_resource type="ArrayMesh" uid="uid://cnt817tmlromd" path="res://Assets/imported/white capstone.res" id="5_ckmux"]
 [ext_resource type="ArrayMesh" uid="uid://wittpc8xl4wl" path="res://Assets/imported/black capstone.res" id="6_s4qi8"]
 [ext_resource type="Material" uid="uid://8romf1a65q6q" path="res://Shaders/black_ghost.tres" id="7_ilhyi"]
-[ext_resource type="Material" uid="uid://bnxds02og4nh5" path="res://Shaders/white_ghost.tres" id="8_dh722"]
+[ext_resource type="Material" uid="uid://danetysogbyd" path="res://Shaders/ghost.tres" id="8_ilhyi"]
 [ext_resource type="Shader" uid="uid://1u76r1nma2ur" path="res://Shaders/square_highlight_front.gdshader" id="9_hvssd"]
 [ext_resource type="Texture2D" uid="uid://3105edhaoxkm" path="res://Assets/square_highlight.svg" id="10_cylw3"]
 [ext_resource type="Shader" uid="uid://d0i0ov5b6o2wf" path="res://Shaders/square_highlight.gdshader" id="11_ilhyi"]
@@ -363,7 +363,7 @@ skeleton = NodePath("../..")
 
 [node name="WhiteCapstone" type="MeshInstance3D" parent="Pieces"]
 transform = Transform3D(-0.0288812, 0, 0.999583, 0, 1, 0, -0.999583, 0, -0.0288812, 2.99231, -0.00229788, -2.95217)
-material_override = ExtResource("8_dh722")
+material_override = ExtResource("8_ilhyi")
 mesh = ExtResource("5_ckmux")
 skeleton = NodePath("../..")
 

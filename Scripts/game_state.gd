@@ -18,6 +18,8 @@ enum Direction {
 	LEFT
 }
 
+const DIR_VEC := [Vector2i(0, 1), Vector2i(1, 0), Vector2i(0, -1), Vector2i(-1, 0)]
+
 class Piece:
 	var color: Col
 	var type: Type
@@ -46,6 +48,56 @@ class Move:
 		move.direction = dir
 		move.drops = drps
 		return move
+	
+	static func pending_stack(s: Vector2i, c: int) -> Move:
+		var move := Move.new()
+		move.square = s
+		move.count = c
+		move.drops = []
+		return move
+	
+	func is_valid_next_square(s: Vector2i):
+		if drops.size() == 0:
+			return abs(square.x - s.x) + abs(square.y - s.y) == 1
+		var v = DIR_VEC[direction]
+		return s == square + v * drops.size() || s == square + v * (drops.size() + 1)
+	
+	func can_continue_on_square(game_state: GameState, s: Vector2i) -> bool:
+		if !is_valid_next_square(s):
+			return false
+		var stk = game_state.board[s.x][s.y]
+		if !stk.is_empty():
+			var top_piece = stk.back()
+			if top_piece.type == GameState.Type.WALL:
+				var drops_sum = 0
+				for drop in drops:
+					drops_sum += drop
+				if drops_sum + 1 < count:
+					return false
+				return game_state.board[square.x][square.y].back().type == Type.CAP && drops_on(s) == 0
+			if top_piece.type == GameState.Type.CAP:
+				return false
+		return true
+	
+	func add_drop(s: Vector2i):
+		if drops.size() == 0:
+			drops.push_back(1)
+			for i in 4:
+				if s == square + DIR_VEC[i]:
+					direction = i as Direction
+		else:
+			var d = abs(square.x - s.x) + abs(square.y - s.y)
+			if d == drops.size():
+				drops[-1] += 1
+			else:
+				drops.push_back(1)
+		
+	func drops_on(s: Vector2i) -> int:
+		if is_valid_next_square(s):
+			var d = abs(square.x - s.x) + abs(square.y - s.y)
+			if d <= drops.size():
+				return drops[d-1]
+		return 0
 	
 	const PTN_TO_DIR = {
 		">": Direction.RIGHT,
@@ -112,15 +164,7 @@ class Move:
 		var squares = { square: 0 }
 		var sq = square
 		for cnt in drops:
-			match direction:
-				Direction.RIGHT:
-					sq.x += 1
-				Direction.DOWN:
-					sq.y -= 1
-				Direction.LEFT:
-					sq.x -= 1
-				Direction.UP:
-					sq.y += 1
+			sq += DIR_VEC[direction]
 			squares[sq] = cnt
 		return squares
 
@@ -193,15 +237,7 @@ func do_move(move: Move):
 		var pieces: Array = stack.slice(-move.count)
 		board[square.x][square.y] = stack.slice(0, -move.count)
 		for drop_count in move.drops:
-			match move.direction:
-				Direction.RIGHT:
-					square.x += 1
-				Direction.DOWN:
-					square.y -= 1
-				Direction.LEFT:
-					square.x -= 1
-				Direction.UP:
-					square.y += 1
+			square += DIR_VEC[move.direction]
 			stack = board[square.x][square.y]
 			if !stack.is_empty():
 				var top_piece: Piece = stack.back()

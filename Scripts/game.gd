@@ -17,6 +17,9 @@ var current_hover_square
 enum PlayerType { LOCAL, ENGINE }
 var player_types: Array[PlayerType] = [PlayerType.LOCAL, PlayerType.ENGINE]
 
+var held_pieces := []
+var pending_move
+
 func _ready():
 	config = ConfigFile.new()
 	config.load("user://catak.cfg")
@@ -76,6 +79,7 @@ func update_board():
 				var existing = piece_map.get(board_pos)
 				if existing != null && existing.can_be(piece.color, piece.type):
 					existing.become(piece.type)
+					existing.set_temp_pos(null)
 					piece_map.erase(board_pos)
 				else:
 					pieces_to_place.push_back({"pos": board_pos, "piece": piece})
@@ -154,6 +158,8 @@ func update_board():
 		$UI/GameOver.show()
 
 	selected_piece_type = GameState.Type.FLAT
+	held_pieces = []
+	pending_move = null
 	
 	if current_hover_square != null:
 		square_entered(current_hover_square)
@@ -163,10 +169,33 @@ func update_board():
 			PlayerType.ENGINE:
 				engine.go()
 
+func can_enter_move():
+	return game_state.result == GameState.Result.ONGOING && player_types[game_state.side_to_move()] == PlayerType.LOCAL
+
 func square_entered(square):
 	current_hover_square = square
 	var sq = squares[square]
+	if !can_enter_move():
+		sq.clear_hover_highlight()
+		$MovePreview.hide()
+		return
+		
 	var stack = game_state.board[square.x][square.y]
+	
+	if pending_move != null:
+		if pending_move.can_continue_on_square(game_state, square) || (square == pending_move.square && pending_move.drops.is_empty()):
+			var height = stack.size()
+			if square == pending_move.square:
+				height -= pending_move.count
+			sq.set_hover_highlight(Color(0.3, 0.6, 0.3), height)
+			var next_height = stack.size() + pending_move.drops_on(square) + 4
+			for piece in held_pieces:
+				piece.set_temp_pos(Vector3i(square.x, next_height, square.y))
+				next_height += 1
+		else:
+			sq.set_hover_highlight(Color(0.5, 0.2, 0.2))
+		return
+	
 	if stack.is_empty():
 		sq.set_hover_highlight(Color(0.3, 0.6, 0.3))
 		$MovePreview.setup(game_state.color_to_place(), selected_piece_type)
@@ -174,7 +203,7 @@ func square_entered(square):
 		$MovePreview.show()
 	else:
 		if !game_state.is_setup_turn() && stack.back().color == game_state.side_to_move():
-			sq.set_hover_highlight(Color(0.3, 0.6, 0.3))
+			sq.set_hover_highlight(Color(0.3, 0.6, 0.3), max(0, stack.size() - game_state.size))
 		else:
 			sq.set_hover_highlight(Color(0.5, 0.2, 0.2))
 		$MovePreview.hide()
@@ -186,11 +215,47 @@ func square_exited(square):
 	$MovePreview.hide()
 
 func square_clicked(square):
-	if player_types[game_state.side_to_move()] != PlayerType.LOCAL:
+	if !can_enter_move():
 		return
+	
 	var stack = game_state.board[square.x][square.y]
+	
+	if pending_move != null:
+		if square == pending_move.square:
+			if pending_move.drops.size() != 0 || pending_move.count <= 1:
+				cancel_stack_move()
+			else:
+				held_pieces.pop_front().set_temp_pos(null)
+				pending_move.count -= 1
+		elif pending_move.can_continue_on_square(game_state, square):
+			var dropped_piece = held_pieces.pop_front()
+			var height = stack.size() + pending_move.drops_on(square)
+			pending_move.add_drop(square)
+			if held_pieces.is_empty():
+				game_state.do_move(pending_move)
+			else:
+				dropped_piece.set_temp_pos(Vector3i(square.x, height, square.y))
+		return
+	
 	if stack.is_empty():
 		game_state.do_move(GameState.Move.place(square, selected_piece_type))
+	elif !game_state.is_setup_turn() && stack.back().color == game_state.side_to_move():
+		held_pieces = []
+		for piece in $Pieces.get_children():
+			if piece.board_pos.x == square.x && piece.board_pos.z == square.y:
+				held_pieces.push_back(piece)
+		held_pieces.sort_custom(func (a, b): return a.board_pos.y < b.board_pos.y)
+		while held_pieces.size() > game_state.size:
+			held_pieces.pop_front()
+		for piece in held_pieces:
+			piece.set_temp_pos(piece.board_pos + Vector3i(0, 4, 0))
+		pending_move = GameState.Move.pending_stack(square, held_pieces.size())
+
+func cancel_stack_move():
+	pending_move = null
+	held_pieces = []
+	for piece in $Pieces.get_children():
+		piece.set_temp_pos(null)
 
 func engine_move(move: GameState.Move):
 	game_state.do_move(move)

@@ -5,14 +5,14 @@ var black_flat_mesh: Mesh = preload("res://Assets/imported/black flat.res")
 var white_cap_mesh: Mesh = preload("res://Assets/imported/white capstone.res")
 var black_cap_mesh: Mesh = preload("res://Assets/imported/black capstone.res")
 var highlight_overlay_material: Material = preload("res://Shaders/highlight.tres")
-var white_ghost_material: Material = preload("res://Shaders/white_ghost.tres")
-var black_ghost_material: Material = preload("res://Shaders/black_ghost.tres")
+var ghost_material: Material = preload("res://Shaders/ghost.tres")
 
 var flat_aabb: AABB
 var type: GameState.Type
 var color: GameState.Col
 var base_rotation: Quaternion
 var board_pos: Vector3i
+var temp_board_pos
 var is_placed := false
 var is_ghost := false
 
@@ -34,23 +34,38 @@ func setup(c: GameState.Col, t: GameState.Type):
 		[GameState.Col.BLACK, GameState.Type.CAP]:
 			mesh = black_cap_mesh
 	if is_ghost:
-		material_override = white_ghost_material if color == GameState.Col.WHITE else black_ghost_material
+		material_override = ghost_material
 	var flip = randi_range(0, 1) if type != GameState.Type.CAP else 0
 	base_rotation = Quaternion.from_euler(Vector3(flip * PI, randi_range(0, 3) * PI / 2, 0))
 	if type == GameState.Type.WALL:
 		var dir = 1 if color == GameState.Col.WHITE else -1
 		base_rotation = Quaternion.from_euler(Vector3(PI / 2, PI / 4 * dir, 0)) * base_rotation
 	if is_placed:
-		place(board_pos, false)
+		update_transform(false)
 
 func place(pos: Vector3i, animate: bool = true):
 	board_pos = pos
+	if pos == temp_board_pos:
+		temp_board_pos = null
+		return
+	temp_board_pos = null
+	update_transform(animate)
+
+func set_temp_pos(pos):
+	if temp_board_pos != pos:
+		temp_board_pos = pos
+		update_transform(true)
+
+func update_transform(animate: bool):
+	var pos = temp_board_pos if temp_board_pos != null else board_pos
 	var offset = 0.0
 	if type == GameState.Type.FLAT:
 		offset = flat_aabb.size.y * 0.5
 	elif type == GameState.Type.WALL:
 		offset = flat_aabb.size.x * 0.5
 	var base_pos = Vector3(pos.x, pos.y * flat_aabb.size.y, -pos.z)
+	if is_ghost:
+		base_pos.y += flat_aabb.size.y * 0.5
 	var target_pos = base_pos + Vector3(randf_range(-0.03, 0.03), offset, randf_range(-0.03, 0.03))
 	var target_quat = Quaternion.from_euler(Vector3(0, randf_range(-0.1, 0.1), 0)) * base_rotation
 	if tween != null:
@@ -83,7 +98,7 @@ func can_be(c: GameState.Col, t: GameState.Type):
 func become(t: GameState.Type):
 	if t != type:
 		setup(color, t)
-		place(board_pos)
+		update_transform(true)
 
 func set_highlight(flag: bool):
 	material_overlay = highlight_overlay_material if flag else null

@@ -13,6 +13,7 @@ var move_highlight_height: int
 
 var has_hover_highlight := false
 var hover_highlight_color: Color
+var hover_highlight_height: int
 
 signal entered(Vector2)
 signal exited(Vector2)
@@ -28,7 +29,7 @@ var highlight_alpha: float:
 	get: return $Highlight.get_instance_shader_parameter("alpha")
 	set(alpha): $Highlight.set_instance_shader_parameter("alpha", alpha)
 
-func set_move_highlight(color: Color, height: int = 0):
+func set_move_highlight(color: Color, height: int):
 	has_move_highlight = true
 	move_highlight_color = color
 	move_highlight_height = height
@@ -38,9 +39,10 @@ func clear_move_highlight():
 	has_move_highlight = false
 	update_highlight()
 
-func set_hover_highlight(color: Color):
+func set_hover_highlight(color: Color, height: int = 0):
 	has_hover_highlight = true
 	hover_highlight_color = color
+	hover_highlight_height = height
 	update_highlight()
 
 func clear_hover_highlight():
@@ -64,7 +66,7 @@ func update_highlight():
 		color = hover_highlight_color
 		if has_move_highlight:
 			color = lerp(color, move_highlight_color, 0.33)
-		height = 0
+		height = hover_highlight_height
 	else:
 		color = move_highlight_color
 		height = move_highlight_height
