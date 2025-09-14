@@ -44,6 +44,8 @@ func setup(c: GameState.Col, t: GameState.Type):
 		update_transform(false)
 
 func place(pos: Vector3i, animate: bool = true):
+	if animate && is_placed:
+		print("temp: %s, old: %s, new %s" % [temp_board_pos, board_pos, pos])
 	board_pos = pos
 	if pos == temp_board_pos:
 		temp_board_pos = null

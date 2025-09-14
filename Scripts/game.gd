@@ -20,6 +20,9 @@ var player_types: Array[PlayerType] = [PlayerType.LOCAL, PlayerType.ENGINE]
 var held_pieces := []
 var pending_move
 
+var right_click_time: int = 0
+var right_click_position: Vector2
+
 func _ready():
 	config = ConfigFile.new()
 	config.load("user://catak.cfg")
@@ -43,7 +46,41 @@ func _process(_delta: float):
 		if Input.is_action_just_pressed("toggle_flat_wall"):
 			selected_piece_type = GameState.Type.WALL if selected_piece_type == GameState.Type.FLAT else GameState.Type.FLAT
 		if selected_piece_type != old:
-			$MovePreview.setup(game_state.color_to_place(), selected_piece_type)
+			setup_move_preview()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_RIGHT:
+			if event.pressed:
+				right_click_time = Time.get_ticks_msec()
+				right_click_position = event.position
+			else:
+				var elapsed_ticks = Time.get_ticks_msec() - right_click_time
+				var distance = (event.position - right_click_position).length()
+				if elapsed_ticks < 300 && distance < 8:
+					if pending_move != null:
+						cancel_stack_move()
+					elif !game_state.is_setup_turn():
+						match selected_piece_type:
+							GameState.Type.FLAT:
+								selected_piece_type = GameState.Type.CAP
+							GameState.Type.WALL:
+								selected_piece_type = GameState.Type.FLAT
+							_:
+								selected_piece_type = GameState.Type.WALL
+						setup_move_preview()
+
+func setup_move_preview():
+	if game_state.is_setup_turn():
+		selected_piece_type = GameState.Type.FLAT
+	else:
+		var c = game_state.side_to_move()
+		if selected_piece_type == GameState.Type.CAP:
+			if game_state.caps_left[c] == 0:
+				selected_piece_type = GameState.Type.WALL
+		elif game_state.flats_left[c] == 0:
+			selected_piece_type = GameState.Type.CAP
+	$MovePreview.setup(game_state.color_to_place(), selected_piece_type)
 
 func create_board():
 	squares = {}
@@ -94,12 +131,12 @@ func update_board():
 	for piece in pieces_to_move:
 		var pos_a = piece.board_pos
 		var best_index = -1
-		var best_distance = game_state.size ** 2 * 2
+		var best_distance = game_state.size * 200
 		for index in pieces_to_place.size():
 			var to_place = pieces_to_place[index]
 			if to_place.piece.color == piece.color && to_place.piece.type == piece.type:
 				var pos_b = to_place.pos
-				var distance = abs(pos_a.y - pos_b.y) * game_state.size + abs(pos_a.x - pos_b.x) + abs(pos_a.z - pos_b.z)
+				var distance = pos_b.y + 100 * (abs(pos_a.x - pos_b.x) + abs(pos_a.z - pos_b.z))
 				if distance < best_distance:
 					best_distance = distance
 					best_index = index
@@ -187,8 +224,8 @@ func square_entered(square):
 			var height = stack.size()
 			if square == pending_move.square:
 				height -= pending_move.count
-			sq.set_hover_highlight(Color(0.3, 0.6, 0.3), height)
-			var next_height = stack.size() + pending_move.drops_on(square) + 4
+			sq.set_hover_highlight(Color(0.3, 0.6, 0.3))#, height)
+			var next_height = height + pending_move.drops_on(square) + 3
 			for piece in held_pieces:
 				piece.set_temp_pos(Vector3i(square.x, next_height, square.y))
 				next_height += 1
@@ -198,12 +235,12 @@ func square_entered(square):
 	
 	if stack.is_empty():
 		sq.set_hover_highlight(Color(0.3, 0.6, 0.3))
-		$MovePreview.setup(game_state.color_to_place(), selected_piece_type)
+		setup_move_preview()
 		$MovePreview.place(Vector3i(square.x, 0, square.y), false)
 		$MovePreview.show()
 	else:
 		if !game_state.is_setup_turn() && stack.back().color == game_state.side_to_move():
-			sq.set_hover_highlight(Color(0.3, 0.6, 0.3), max(0, stack.size() - game_state.size))
+			sq.set_hover_highlight(Color(0.3, 0.6, 0.3))#, max(0, stack.size() - game_state.size))
 		else:
 			sq.set_hover_highlight(Color(0.5, 0.2, 0.2))
 		$MovePreview.hide()
@@ -248,7 +285,7 @@ func square_clicked(square):
 		while held_pieces.size() > game_state.size:
 			held_pieces.pop_front()
 		for piece in held_pieces:
-			piece.set_temp_pos(piece.board_pos + Vector3i(0, 4, 0))
+			piece.set_temp_pos(piece.board_pos + Vector3i(0, 3, 0))
 		pending_move = GameState.Move.pending_stack(square, held_pieces.size())
 
 func cancel_stack_move():

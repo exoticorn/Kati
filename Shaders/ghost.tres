@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://danetysogbyd"]
+
+[ext_resource type="Shader" uid="uid://dfcdp2s6lpksf" path="res://Shaders/ghost.gdshader" id="1_yjyan"]
+
+[resource]
+render_priority = 2
+shader = ExtResource("1_yjyan")
