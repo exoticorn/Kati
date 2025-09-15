@@ -2,12 +2,9 @@ extends Camera3D
 
 var rot := Vector2(0, 0.8)
 var speed := Vector2(0, 0)
-var distance := 8.0
-var target := Vector3(2.5, 0.0, -2.5)
+var board_size := 6
 
 var last_drag_pos = null
-
-var bounding_points: Array[Vector3] = []
 
 func _process(delta: float):
 	if Input.is_action_pressed("cam_left"):
@@ -44,10 +41,13 @@ func _unhandled_input(event: InputEvent):
 			rot += delta * 4 / get_viewport().get_visible_rect().size
 
 func calculate_camera_pos() -> Vector3:
-	var inv_basis = basis.inverse()
-	var ps = []
-	for p in bounding_points:
-		ps.push_back(inv_basis * p)
+	var inv_basis := basis.inverse()
+	var center_world := Vector3(board_size * 0.5 - 0.5, 0, 0.5 - board_size * 0.5)
+	var to_front := Vector3(basis.z.x, 0, basis.z.z).normalized()
+	var radius := sqrt((board_size * 0.5) ** 2 * 2)
+	var front_world := center_world + to_front * radius
+	var center := inv_basis * center_world
+	var front_pos := inv_basis * front_world
 	
 	var viewport := get_viewport()
 	var fov_h := fov
@@ -57,33 +57,17 @@ func calculate_camera_pos() -> Vector3:
 	else:
 		fov_v = rad_to_deg(atan(tan(deg_to_rad(fov)) * viewport.size.y as float / viewport.size.x))
 	
-	var ps2: Array[Vector2] = []
-	for p in ps:
-		ps2.push_back(Vector2(p.x, p.z))	
-	var px = calculate_camera_pos2d(ps2, fov_h)
+	var px = calculate_camera_pos2d(Vector2(center.x, center.z), radius, Vector2(center.x, center.z), radius, fov_h)
 
-	ps2 = []
-	for p in ps:
-		ps2.push_back(Vector2(p.y, p.z))
-	var py = calculate_camera_pos2d(ps2, fov_v)
+	var py = calculate_camera_pos2d(Vector2(center.y, center.z), radius, Vector2(front_pos.y, front_pos.z), 0, fov_v)
 	
 	return Vector3(px.x, py.x, max(px.y, py.y))
 
-func calculate_camera_pos2d(pts: Array[Vector2], fov2: float) -> Vector2:
+func calculate_camera_pos2d(centerl: Vector2, radiusl: float, centerr: Vector2, radiusr: float, fov2: float) -> Vector2:
 	var nl := Vector2.from_angle(deg_to_rad(fov2 / 2 + 180))
 	var nr := Vector2(-nl.x, nl.y)
-	var minl := 1000.0
-	var minr := 1000.0
-	for p in pts:
-		minl = min(minl, nl.dot(p))
-		minr = min(minr, nr.dot(p))
-	var y = (minr * nl.x - minl * nr.x) / (nr.y * nl.x - nl.y * nr.x)
-	var x = (minl - y * nl.y) / nl.x
+	var minl := nl.dot(centerl) - radiusl
+	var minr := nr.dot(centerr) - radiusr
+	var y := (minr * nl.x - minl * nr.x) / (nr.y * nl.x - nl.y * nr.x)
+	var x := (minl - y * nl.y) / nl.x
 	return Vector2(x, y)
-
-func set_content_box(box: AABB):
-	var p = box.position
-	var x := Vector3(1, 0, 0) * box.size.x
-	var y := Vector3(0, 1, 0) * box.size.y
-	var z := Vector3(0, 0, 1) * box.size.z
-	bounding_points = [p, p + x, p + y, p + z, p + x + y, p + x + z, p + y + z, p + x + y + z]

@@ -94,9 +94,8 @@ func create_board():
 			square.entered.connect(square_entered)
 			square.exited.connect(square_exited)
 			square.clicked.connect(square_clicked)
-				
-	var center = (game_state.size - 1.0) / 2
-	$Camera.target = Vector3(center, 0, -center)
+	
+	$Camera.board_size = game_state.size
 	
 	update_board()
 
@@ -169,11 +168,6 @@ func update_board():
 			var color = Color(0.3, 0.45, 0.75) if count > 0 else Color(0.1, 0.15, 0.3)
 			var height = game_state.board[square.x][square.y].size()
 			squares[square].set_move_highlight(color, height - count)
-
-	var aabb := AABB(Vector3(-0.5, 0, 0.5), Vector3(game_state.size, 0, -game_state.size)).abs()
-	for piece in $Pieces.get_children():
-		aabb.size.y = max(aabb.size.y, piece.mesh_height + piece.board_pos.y * piece.flat_aabb.size.y)
-	$Camera.set_content_box(aabb)
 
 	# update ui
 	$UI/FlatsWhite/Box/Count.text = str(game_state.flats_left[GameState.Col.WHITE])
