@@ -15,6 +15,7 @@ var board_pos: Vector3i
 var temp_board_pos
 var is_placed := false
 var is_ghost := false
+var mesh_height: float
 
 var tween: Tween
 
@@ -42,10 +43,15 @@ func setup(c: GameState.Col, t: GameState.Type):
 		base_rotation = Quaternion.from_euler(Vector3(PI / 2, PI / 4 * dir, 0)) * base_rotation
 	if is_placed:
 		update_transform(false)
+	match type:
+		GameState.Type.FLAT:
+			mesh_height = flat_aabb.size.y
+		GameState.Type.WALL:
+			mesh_height = flat_aabb.size.x
+		GameState.Type.CAP:
+			mesh_height = white_cap_mesh.get_aabb().size.y
 
 func place(pos: Vector3i, animate: bool = true):
-	if animate && is_placed:
-		print("temp: %s, old: %s, new %s" % [temp_board_pos, board_pos, pos])
 	board_pos = pos
 	if pos == temp_board_pos:
 		temp_board_pos = null

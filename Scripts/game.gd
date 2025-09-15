@@ -170,6 +170,11 @@ func update_board():
 			var height = game_state.board[square.x][square.y].size()
 			squares[square].set_move_highlight(color, height - count)
 
+	var aabb := AABB(Vector3(-0.5, 0, 0.5), Vector3(game_state.size, 0, -game_state.size)).abs()
+	for piece in $Pieces.get_children():
+		aabb.size.y = max(aabb.size.y, piece.mesh_height + piece.board_pos.y * piece.flat_aabb.size.y)
+	$Camera.set_content_box(aabb)
+
 	# update ui
 	$UI/FlatsWhite/Box/Count.text = str(game_state.flats_left[GameState.Col.WHITE])
 	$UI/CapsWhite/Box/Count.text = str(game_state.caps_left[GameState.Col.WHITE])
