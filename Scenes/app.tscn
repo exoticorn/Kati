@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://bct47lm2yejq8"]
+[gd_scene load_steps=5 format=3 uid="uid://bct47lm2yejq8"]
 
 [ext_resource type="Script" uid="uid://b6ftb44rorpa" path="res://Scripts/app.gd" id="1_nmq3k"]
+[ext_resource type="Script" uid="uid://872wvye2kvm2" path="res://Scripts/local_game_menu.gd" id="2_sb7qb"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_sb7qb"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_nmq3k"]
 
 [node name="App" type="Control"]
 layout_mode = 3
@@ -11,7 +16,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_nmq3k")
 
-[node name="MainMenu" type="Control" parent="."]
+[node name="Games" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,28 +24,137 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="LocalGame" type="Button" parent="MainMenu"]
+[node name="MainMenu" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -4.0
-offset_top = -4.0
-offset_right = 4.0
-offset_bottom = 4.0
+offset_left = -107.0
+offset_top = -25.0
+offset_right = 107.0
+offset_bottom = 25.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_type_variation = &"MenuPanel"
+
+[node name="LocalGame" type="Button" parent="MainMenu"]
+layout_mode = 2
 text = "Local Game"
 
-[node name="Games" type="Control" parent="."]
+[node name="LocalGame" type="PanelContainer" parent="."]
 visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -20.0
+offset_right = 16.0
+offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_type_variation = &"MenuPanel"
+script = ExtResource("2_sb7qb")
+
+[node name="Rows" type="VBoxContainer" parent="LocalGame"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="LocalGame/Rows"]
+layout_mode = 2
+
+[node name="Grid" type="GridContainer" parent="LocalGame"]
+layout_mode = 2
+columns = 2
+
+[node name="Size" type="Label" parent="LocalGame/Grid"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Board size: "
+
+[node name="Sizes" type="HBoxContainer" parent="LocalGame/Grid"]
+layout_mode = 2
+
+[node name="Five" type="CheckBox" parent="LocalGame/Grid/Sizes"]
+layout_mode = 2
+size_flags_vertical = 8
+button_group = SubResource("ButtonGroup_sb7qb")
+text = "5x5"
+
+[node name="Six" type="CheckBox" parent="LocalGame/Grid/Sizes"]
+layout_mode = 2
+size_flags_vertical = 8
+button_pressed = true
+button_group = SubResource("ButtonGroup_sb7qb")
+text = "6x6
+"
+
+[node name="Seven" type="CheckBox" parent="LocalGame/Grid/Sizes"]
+layout_mode = 2
+size_flags_vertical = 8
+button_group = SubResource("ButtonGroup_sb7qb")
+text = "7x7
+"
+
+[node name="Komi" type="Label" parent="LocalGame/Grid"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Komi: "
+
+[node name="Komis" type="OptionButton" parent="LocalGame/Grid"]
+layout_mode = 2
+selected = 4
+item_count = 5
+popup/item_0/text = "0"
+popup/item_0/id = 0
+popup/item_1/text = "0.5"
+popup/item_1/id = 1
+popup/item_2/text = "1"
+popup/item_2/id = 2
+popup/item_3/text = "1.5"
+popup/item_3/id = 3
+popup/item_4/text = "2"
+popup/item_4/id = 4
+
+[node name="You Play" type="Label" parent="LocalGame/Grid"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "You play: "
+
+[node name="Colors" type="HBoxContainer" parent="LocalGame/Grid"]
+layout_mode = 2
+
+[node name="White" type="CheckBox" parent="LocalGame/Grid/Colors"]
+layout_mode = 2
+size_flags_vertical = 8
+button_pressed = true
+button_group = SubResource("ButtonGroup_nmq3k")
+text = "White"
+
+[node name="Black" type="CheckBox" parent="LocalGame/Grid/Colors"]
+layout_mode = 2
+size_flags_vertical = 8
+button_group = SubResource("ButtonGroup_nmq3k")
+text = "Black
+"
+
+[node name="Both" type="CheckBox" parent="LocalGame/Grid/Colors"]
+layout_mode = 2
+size_flags_vertical = 8
+button_group = SubResource("ButtonGroup_nmq3k")
+text = "Both
+"
+
+[node name="Control" type="Control" parent="LocalGame/Grid"]
+layout_mode = 2
+
+[node name="Play" type="Button" parent="LocalGame/Grid"]
+layout_mode = 2
+text = "Play"
 
 [connection signal="pressed" from="MainMenu/LocalGame" to="." method="_on_local_game_pressed"]
+[connection signal="start_game" from="LocalGame" to="." method="_on_local_game_start_game"]
+[connection signal="pressed" from="LocalGame/Grid/Play" to="LocalGame" method="_on_play_pressed"]

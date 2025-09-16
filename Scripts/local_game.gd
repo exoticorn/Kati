@@ -2,19 +2,26 @@ extends Node
 
 const TakBoard = preload("res://Scenes/tak_board.tscn")
 
-var game_state = GameState.new(5, 0)
+var settings: Dictionary
+
+var game_state: GameState
 
 var engine: EngineInterface
 var board
 
 enum PlayerType { LOCAL, ENGINE }
-var player_types: Array[PlayerType] = [PlayerType.ENGINE, PlayerType.LOCAL]
+var player_types: Array[PlayerType] = []
 
 func _ready():
-	engine = EngineInterface.new(game_state)
-	engine.bestmove.connect(move_input)
-	engine.engine_ready.connect(engine_ready)
-	add_child(engine)
+	game_state = GameState.new(settings.size, settings.komi)
+	for i in 2:
+		player_types.push_back(PlayerType.ENGINE if (settings.engine_mask & (1 << i)) != 0 else PlayerType.LOCAL)
+
+	if settings.engine_mask != 0:
+		engine = EngineInterface.new(game_state);
+		engine.bestmove.connect(move_input)
+		engine.engine_ready.connect(engine_ready)
+		add_child(engine)
 	board = TakBoard.instantiate()
 	board.game_state = game_state
 	board.move_input.connect(move_input)
