@@ -1,14 +1,15 @@
-[gd_scene load_steps=18 format=3 uid="uid://qja87y8qw1sc"]
+[gd_scene load_steps=21 format=3 uid="uid://qja87y8qw1sc"]
 
 [ext_resource type="ArrayMesh" uid="uid://jqlqaowxo5qp" path="res://Assets/imported/square.res" id="1_0nmea"]
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_s4qi8"]
 [ext_resource type="ArrayMesh" uid="uid://ct5wiwvoqq2c7" path="res://Assets/imported/white flat.res" id="2_e5mf5"]
+[ext_resource type="PackedScene" uid="uid://bwv200p8fri76" path="res://Scenes/square_highlight.tscn" id="3_dh722"]
 [ext_resource type="Environment" uid="uid://gio35wn5euew" path="res://Scenes/env_low.tres" id="3_icjxw"]
 [ext_resource type="ArrayMesh" uid="uid://b3vkf85inwx36" path="res://Assets/imported/black flat.res" id="3_sfrw1"]
 [ext_resource type="Material" uid="uid://dv324n3u1s6tb" path="res://Shaders/highlight.tres" id="5_1vhyc"]
 [ext_resource type="ArrayMesh" uid="uid://cnt817tmlromd" path="res://Assets/imported/white capstone.res" id="5_ckmux"]
 [ext_resource type="ArrayMesh" uid="uid://wittpc8xl4wl" path="res://Assets/imported/black capstone.res" id="6_s4qi8"]
-[ext_resource type="Material" uid="uid://8romf1a65q6q" path="res://Shaders/black_ghost.tres" id="7_ilhyi"]
+[ext_resource type="Shader" uid="uid://dfcdp2s6lpksf" path="res://Shaders/ghost.gdshader" id="7_ilhyi"]
 [ext_resource type="Material" uid="uid://danetysogbyd" path="res://Shaders/ghost.tres" id="8_ilhyi"]
 [ext_resource type="Shader" uid="uid://1u76r1nma2ur" path="res://Shaders/square_highlight_front.gdshader" id="9_hvssd"]
 [ext_resource type="Texture2D" uid="uid://3105edhaoxkm" path="res://Assets/square_highlight.svg" id="10_cylw3"]
@@ -16,6 +17,17 @@
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_icjxw"]
 exposure_multiplier = 0.3
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dh722"]
+render_priority = 0
+shader = ExtResource("7_ilhyi")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vi7l8"]
+next_pass = SubResource("ShaderMaterial_dh722")
+transparency = 1
+blend_mode = 3
+shading_mode = 0
+albedo_color = Color(0.585783, 0.585783, 0.585783, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cylw3"]
 render_priority = 1
@@ -112,6 +124,10 @@ skeleton = NodePath("../..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -2)
 mesh = ExtResource("1_0nmea")
 skeleton = NodePath("../..")
+
+[node name="SquareHighlight" parent="Board/Square13" instance=ExtResource("3_dh722")]
+instance_shader_parameters/alpha = 1.0
+instance_shader_parameters/color = Color(0.351262, 0.561447, 0.363897, 1)
 
 [node name="Square14" type="MeshInstance3D" parent="Board"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -2)
@@ -357,7 +373,7 @@ skeleton = NodePath("../..")
 
 [node name="BlackFlat2" type="MeshInstance3D" parent="Pieces"]
 transform = Transform3D(0.998962, -0.00136303, 0.0455359, 0.00135506, 0.999999, 0.000205867, -0.0455362, -0.00014393, 0.998963, 2.04334, 0.0702675, -2.03151)
-material_override = ExtResource("7_ilhyi")
+material_override = SubResource("StandardMaterial3D_vi7l8")
 mesh = ExtResource("3_sfrw1")
 skeleton = NodePath("../..")
 

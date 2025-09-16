@@ -47,11 +47,12 @@ func _process(_delta):
 
 	match Array(line.split(" ")):
 		["teiok"]:
-			if state == State.STARTING:
+			var is_starting := state == State.STARTING
+			state = State.IDLE
+			if is_starting:
 				send("setoption name HalfKomi value 4")
 				send("teinewgame %d" % game_state.size)
 				engine_ready.emit()
-			state = State.IDLE
 		["bestmove", var move]:
 			bestmove.emit(GameState.Move.from_ptn(move))
 
@@ -63,6 +64,9 @@ func go():
 		position += " " + mv.to_tpn()
 	send(position)
 	send("go nodes 100")
+
+func is_ready() -> bool:
+	return state == State.IDLE
 
 func send(line):
 	stdio.store_line(line)

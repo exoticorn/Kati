@@ -5,17 +5,11 @@ var piece_scene = preload("res://Scenes/piece.tscn")
 
 var config: ConfigFile
 
-var game_state = GameState.new(6)
-#var game_state = GameState.from_tps("x3,2,x,1/x2,1S,2,2,1/1,1,1212C,1,1,1/1,2S,21,21C,1,2/x,2,2,21,x,2/2,x,121S,x,2,12 1 24")
-
+var game_state: GameState
 var squares = {}
 
-var engine: EngineInterface
 var selected_piece_type := GameState.Type.FLAT
 var current_hover_square
-
-enum PlayerType { LOCAL, ENGINE }
-var player_types: Array[PlayerType] = [PlayerType.LOCAL, PlayerType.ENGINE]
 
 var held_pieces := []
 var pending_move
@@ -23,14 +17,15 @@ var pending_move
 var right_click_time: int = 0
 var right_click_position: Vector2
 
+var can_input_move := false
+
+signal move_input(move: GameState.Move)
+
 func _ready():
 	config = ConfigFile.new()
 	config.load("user://catak.cfg")
 	setup_quality()
 	create_board()
-	engine = EngineInterface.new(game_state)
-	engine.bestmove.connect(engine_move)
-	add_child(engine)
 	game_state.changed.connect(update_board)
 	$MovePreview.is_ghost = true
 
@@ -45,6 +40,8 @@ func _process(_delta: float):
 			selected_piece_type = GameState.Type.CAP
 		if Input.is_action_just_pressed("toggle_flat_wall"):
 			selected_piece_type = GameState.Type.WALL if selected_piece_type == GameState.Type.FLAT else GameState.Type.FLAT
+		if Input.is_action_just_pressed("toggle_cap_wall"):
+			selected_piece_type = GameState.Type.WALL if selected_piece_type == GameState.Type.CAP else GameState.Type.CAP
 		if selected_piece_type != old:
 			setup_move_preview()
 
@@ -199,19 +196,11 @@ func update_board():
 	
 	if current_hover_square != null:
 		square_entered(current_hover_square)
-	
-	if game_state.result == GameState.Result.ONGOING:
-		match player_types[game_state.side_to_move()]:
-			PlayerType.ENGINE:
-				engine.go()
-
-func can_enter_move():
-	return game_state.result == GameState.Result.ONGOING && player_types[game_state.side_to_move()] == PlayerType.LOCAL
 
 func square_entered(square):
 	current_hover_square = square
 	var sq = squares[square]
-	if !can_enter_move():
+	if !can_input_move:
 		sq.clear_hover_highlight()
 		$MovePreview.hide()
 		return
@@ -251,7 +240,7 @@ func square_exited(square):
 	$MovePreview.hide()
 
 func square_clicked(square):
-	if !can_enter_move():
+	if !can_input_move:
 		return
 	
 	var stack = game_state.board[square.x][square.y]
@@ -267,14 +256,13 @@ func square_clicked(square):
 			var dropped_piece = held_pieces.pop_front()
 			var height = stack.size() + pending_move.drops_on(square)
 			pending_move.add_drop(square)
+			dropped_piece.set_temp_pos(Vector3i(square.x, height, square.y))
 			if held_pieces.is_empty():
-				game_state.do_move(pending_move)
-			else:
-				dropped_piece.set_temp_pos(Vector3i(square.x, height, square.y))
+				move_input.emit(pending_move)
 		return
 	
 	if stack.is_empty():
-		game_state.do_move(GameState.Move.place(square, selected_piece_type))
+		move_input.emit(GameState.Move.place(square, selected_piece_type))
 	elif !game_state.is_setup_turn() && stack.back().color == game_state.side_to_move():
 		held_pieces = []
 		for piece in $Pieces.get_children():
@@ -292,9 +280,6 @@ func cancel_stack_move():
 	held_pieces = []
 	for piece in $Pieces.get_children():
 		piece.set_temp_pos(null)
-
-func engine_move(move: GameState.Move):
-	game_state.do_move(move)
 
 func setup_quality():
 	var env: Environment

@@ -2,6 +2,8 @@ shader_type spatial;
 
 render_mode blend_add, cull_disabled;
 
+instance uniform vec3 color: source_color = vec3(0.1, 0.4, 0.2);
+
 void vertex() {
 	// Called for every vertex the material is visible on.
 }
@@ -10,7 +12,7 @@ void fragment() {
 	vec3 fromCamera = normalize(VERTEX);
 	float dir = dot(NORMAL, fromCamera);
 	float rim = 1.0 - dir * dir;
-	ALBEDO = vec3(0.1, 0.3, 0.2) * rim;
+	ALBEDO = color * rim;
 	// Called for every pixel the material is visible on.
 }
 

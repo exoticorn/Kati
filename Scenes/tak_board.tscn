@@ -1,32 +1,32 @@
 [gd_scene load_steps=6 format=3 uid="uid://ckm3kb4aosxb4"]
 
-[ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="1_ebmjs"]
-[ext_resource type="Script" uid="uid://dgduyultasupv" path="res://Scripts/game.gd" id="1_qxrlw"]
-[ext_resource type="CameraAttributesPractical" uid="uid://gtybhomfgbns" path="res://Scenes/cam_attr_normal.tres" id="2_3dryh"]
-[ext_resource type="Environment" uid="uid://gio35wn5euew" path="res://Scenes/env_low.tres" id="3_wrm1d"]
-[ext_resource type="PackedScene" uid="uid://dkwxditx1ga2f" path="res://Scenes/piece.tscn" id="5_wowpa"]
+[ext_resource type="Script" uid="uid://dgduyultasupv" path="res://Scripts/tak_board.gd" id="1_1wqm5"]
+[ext_resource type="CameraAttributesPractical" uid="uid://gtybhomfgbns" path="res://Scenes/cam_attr_normal.tres" id="2_la2l8"]
+[ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="3_yhhd6"]
+[ext_resource type="Environment" uid="uid://gio35wn5euew" path="res://Scenes/env_low.tres" id="4_n4c1u"]
+[ext_resource type="PackedScene" uid="uid://dkwxditx1ga2f" path="res://Scenes/piece.tscn" id="5_63v3t"]
 
-[node name="Game" type="Node3D"]
-script = ExtResource("1_qxrlw")
+[node name="TakBoard" type="Node3D"]
+script = ExtResource("1_1wqm5")
 
 [node name="Camera" type="Camera3D" parent="."]
-attributes = ExtResource("2_3dryh")
+attributes = ExtResource("2_la2l8")
 fov = 45.0
-script = ExtResource("1_ebmjs")
+script = ExtResource("3_yhhd6")
 
 [node name="Board" type="Node3D" parent="."]
 
 [node name="Pieces" type="Node3D" parent="."]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = ExtResource("3_wrm1d")
+environment = ExtResource("4_n4c1u")
 
 [node name="Light" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.234704, 0.843938, -0.482371, -0.0625096, 0.508309, 0.858903, 0.970055, -0.171435, 0.172057, 0, 1.41202, 0)
 light_energy = 6.0
 shadow_enabled = true
 
-[node name="MovePreview" parent="." instance=ExtResource("5_wowpa")]
+[node name="MovePreview" parent="." instance=ExtResource("5_63v3t")]
 visible = false
 
 [node name="UI" type="Control" parent="."]

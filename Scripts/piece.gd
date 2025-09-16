@@ -36,6 +36,7 @@ func setup(c: GameState.Col, t: GameState.Type):
 			mesh = black_cap_mesh
 	if is_ghost:
 		material_override = ghost_material
+		set_instance_shader_parameter("color", Color(0.9, 1.0, 0.9) if color == GameState.Col.WHITE else Color(0.4, 0.4, 0.5))
 	var flip = randi_range(0, 1) if type != GameState.Type.CAP else 0
 	base_rotation = Quaternion.from_euler(Vector3(flip * PI, randi_range(0, 3) * PI / 2, 0))
 	if type == GameState.Type.WALL:
@@ -80,10 +81,12 @@ func update_transform(animate: bool):
 		tween.kill()
 	if animate:
 		if is_placed:
+			var duration = (target_pos - position).length() * 0.2
 			tween = create_tween()
 			tween.set_trans(Tween.TRANS_CUBIC)
-			tween.tween_property(self, "position", target_pos, 0.2)
-			tween.parallel().tween_property(self, "quaternion", target_quat, 0.2)
+			tween.set_ease(Tween.EASE_OUT)
+			tween.tween_property(self, "position", target_pos, duration)
+			tween.parallel().tween_property(self, "quaternion", target_quat, duration)
 		else:
 			position = target_pos + Vector3(0, 3, 0)
 			quaternion = target_quat
