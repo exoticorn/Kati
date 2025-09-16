@@ -2,13 +2,13 @@ extends Node
 
 const TakBoard = preload("res://Scenes/tak_board.tscn")
 
-var game_state = GameState.new(6)
+var game_state = GameState.new(5, 0)
 
 var engine: EngineInterface
 var board
 
 enum PlayerType { LOCAL, ENGINE }
-var player_types: Array[PlayerType] = [PlayerType.LOCAL, PlayerType.LOCAL]
+var player_types: Array[PlayerType] = [PlayerType.ENGINE, PlayerType.LOCAL]
 
 func _ready():
 	engine = EngineInterface.new(game_state)

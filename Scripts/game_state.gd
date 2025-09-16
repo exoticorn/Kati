@@ -183,7 +183,7 @@ var caps_left: Array
 var board: Array # Array[Array[Array[Piece]]]
 var moves: Array[Move] = []
 var result := Result.ONGOING
-var komi = 2
+var komi := 2.0
 
 signal changed
 
@@ -195,8 +195,9 @@ const StoneCounts = {
 	8: [50, 2]
 }
 
-func _init(s: int):
+func _init(s: int, k: float):
 	size = s
+	komi = k
 	var f = StoneCounts[s][0]
 	var c = StoneCounts[s][1]
 	flats_left = [f, f]
@@ -251,11 +252,11 @@ func do_move(move: Move):
 	
 	changed.emit()
 
-static func from_tps(tps: String) -> GameState:
+static func from_tps(tps: String, k: float) -> GameState:
 	var parts = tps.split(" ")
 	var rows = parts[0].split("/")
 	var sze = rows.size()
-	var game_state := GameState.new(sze)
+	var game_state := GameState.new(sze, k)
 	
 	for y in rows.size():
 		var x = 0
