@@ -3,6 +3,7 @@ extends Camera3D
 var rot := Vector2(0, 0.8)
 var speed := Vector2(0, 0)
 var board_size := 6
+var distance_factor := 1.0
 
 var last_drag_pos = null
 
@@ -25,7 +26,11 @@ func _process(delta: float):
 	
 	basis = Basis.from_euler(Vector3(-rot.y, -rot.x, 0))
 	var pos := calculate_camera_pos()
-	position = basis * pos
+	pos = basis * pos
+	var board_center = Vector3(board_size * 0.5 - 0.5, 0.0, 0.5 - board_size * 0.5)
+	var distance = basis.z.dot(pos - board_center)
+	distance_factor = clamp(distance_factor, 0.5, 2.0)
+	position = pos + (distance_factor - 1) * distance * basis.z
 	
 func _unhandled_input(event: InputEvent):
 	if event is InputEventMouseButton:
@@ -34,6 +39,10 @@ func _unhandled_input(event: InputEvent):
 				last_drag_pos = event.position
 			else:
 				last_drag_pos = null
+		elif event.button_index == MOUSE_BUTTON_WHEEL_UP && event.pressed:
+			distance_factor *= 0.9
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN && event.pressed:
+			distance_factor /= 0.9
 	elif event is InputEventMouseMotion:
 		if last_drag_pos:
 			var delta = event.position - last_drag_pos
