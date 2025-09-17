@@ -10,7 +10,7 @@ shader = ExtResource("1_7vyc8")
 shader_parameter/mask = ExtResource("2_0txnb")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_a2nlk"]
-render_priority = 1
+render_priority = 0
 next_pass = SubResource("ShaderMaterial_cylw3")
 shader = ExtResource("3_esyg6")
 shader_parameter/mask = ExtResource("2_0txnb")

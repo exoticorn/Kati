@@ -36,7 +36,7 @@ func setup(c: GameState.Col, t: GameState.Type):
 			mesh = black_cap_mesh
 	if is_ghost:
 		material_override = ghost_material
-		set_instance_shader_parameter("color", Color(0.9, 1.0, 0.9) if color == GameState.Col.WHITE else Color(0.4, 0.4, 0.5))
+		set_instance_shader_parameter("color", Color(0.459, 0.611, 0.471, 1.0) if color == GameState.Col.WHITE else Color(0.164, 0.196, 0.141, 1.0))
 	var flip = randi_range(0, 1) if type != GameState.Type.CAP else 0
 	base_rotation = Quaternion.from_euler(Vector3(flip * PI, randi_range(0, 3) * PI / 2, 0))
 	if type == GameState.Type.WALL:
