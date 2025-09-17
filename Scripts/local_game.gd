@@ -37,6 +37,7 @@ func engine_ready():
 
 func setup_move_input():
 	if game_state.result != GameState.Result.ONGOING:
+		board.can_input_move = false
 		return
 	if player_types[game_state.side_to_move()] == PlayerType.LOCAL:
 		board.can_input_move = true

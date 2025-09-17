@@ -17,7 +17,12 @@ var pending_move
 var right_click_time: int = 0
 var right_click_position: Vector2
 
-var can_input_move := false
+var _can_input_move := false
+var can_input_move:
+	set(can):
+		_can_input_move = can
+		if current_hover_square:
+			square_entered(current_hover_square)
 
 signal move_input(move: GameState.Move)
 
@@ -200,7 +205,7 @@ func update_board():
 func square_entered(square):
 	current_hover_square = square
 	var sq = squares[square]
-	if !can_input_move:
+	if !_can_input_move:
 		sq.clear_hover_highlight()
 		$MovePreview.hide()
 		return
@@ -240,7 +245,7 @@ func square_exited(square):
 	$MovePreview.hide()
 
 func square_clicked(square):
-	if !can_input_move:
+	if !_can_input_move:
 		return
 	
 	var stack = game_state.board[square.x][square.y]
