@@ -12,7 +12,7 @@ var stdio: FileAccess
 var stderr: FileAccess
 var state: State = State.STARTING
 
-var log = []
+var log_lines = []
 
 var game_state: GameState
 
@@ -46,7 +46,7 @@ func _process(_delta):
 		ERR_FILE_CANT_READ:
 			if !OS.is_process_running(pid):
 				printerr("Engine died, log:")
-				for l in log:
+				for l in log_lines:
 					printerr(l)
 				state = State.ERROR
 			return
@@ -85,6 +85,6 @@ func send(line):
 	log_line("< ", line)
 
 func log_line(prefix, line):
-	if log.size() > 20:
-		log.pop_front()
-	log.push_back(prefix + line)
+	if log_lines.size() > 20:
+		log_lines.pop_front()
+	log_lines.push_back(prefix + line)

@@ -1,26 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://c8u4rgsbtnlkc"]
+[gd_scene load_steps=4 format=3 uid="uid://c8u4rgsbtnlkc"]
 
 [ext_resource type="ArrayMesh" uid="uid://jqlqaowxo5qp" path="res://Assets/imported/square.res" id="1_7naj2"]
 [ext_resource type="Script" uid="uid://dgn643qf7qhxf" path="res://Scripts/square.gd" id="2_2jr70"]
-[ext_resource type="Shader" uid="uid://1u76r1nma2ur" path="res://Shaders/square_highlight_front.gdshader" id="2_vkl7y"]
-[ext_resource type="Texture2D" uid="uid://3105edhaoxkm" path="res://Assets/square_highlight.svg" id="3_2jr70"]
-[ext_resource type="Shader" uid="uid://d0i0ov5b6o2wf" path="res://Shaders/square_highlight.gdshader" id="4_6rp5l"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cylw3"]
-render_priority = 1
-shader = ExtResource("2_vkl7y")
-shader_parameter/mask = ExtResource("3_2jr70")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_a2nlk"]
-render_priority = 1
-next_pass = SubResource("ShaderMaterial_cylw3")
-shader = ExtResource("4_6rp5l")
-shader_parameter/mask = ExtResource("3_2jr70")
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_hvssd"]
-material = SubResource("ShaderMaterial_a2nlk")
-size = Vector2(1, 1)
-center_offset = Vector3(0, 0.01, 0)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2jr70"]
 size = Vector3(1, 0.1, 1)
@@ -28,12 +9,6 @@ size = Vector3(1, 0.1, 1)
 [node name="Square" type="MeshInstance3D"]
 mesh = ExtResource("1_7naj2")
 script = ExtResource("2_2jr70")
-
-[node name="Highlight" type="MeshInstance3D" parent="."]
-visible = false
-instance_shader_parameters/alpha = 0.0
-instance_shader_parameters/color = Color(0, 0, 0, 1)
-mesh = SubResource("PlaneMesh_hvssd")
 
 [node name="Area3D" type="Area3D" parent="."]
 

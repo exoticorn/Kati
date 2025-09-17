@@ -20,5 +20,7 @@ material = SubResource("ShaderMaterial_a2nlk")
 size = Vector2(1, 1)
 center_offset = Vector3(0, 0.01, 0)
 
-[node name="SquareHighlight" type="MeshInstance3D"]
+[node name="Highlight" type="MeshInstance3D"]
+instance_shader_parameters/alpha = 0.0
+instance_shader_parameters/color = Color(0, 0, 0, 1)
 mesh = SubResource("PlaneMesh_hvssd")

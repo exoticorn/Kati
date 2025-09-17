@@ -1,6 +1,7 @@
 extends MeshInstance3D
 
 var white_flat_mesh: Mesh = preload("res://Assets/imported/white flat.res")
+var highlight_scene = preload("res://Scenes/square_highlight.tscn")
 
 var tween: Tween
 var flat_aabb: AABB
@@ -15,6 +16,10 @@ var has_hover_highlight := false
 var hover_highlight_color: Color
 var hover_highlight_height: int
 
+var highlight
+var _highlight_color: Color
+var _highlight_alpha: float
+
 signal entered(Vector2)
 signal exited(Vector2)
 signal clicked(Vector2i)
@@ -23,11 +28,17 @@ func _init():
 	flat_aabb = white_flat_mesh.get_aabb()
 
 var highlight_color: Color:
-	get: return $Highlight.get_instance_shader_parameter("color")
-	set(color): $Highlight.set_instance_shader_parameter("color", color)
+	get: return _highlight_color
+	set(color):
+		_highlight_color = color
+		if highlight:
+			highlight.set_instance_shader_parameter("color", color)
 var highlight_alpha: float:
-	get: return $Highlight.get_instance_shader_parameter("alpha")
-	set(alpha): $Highlight.set_instance_shader_parameter("alpha", alpha)
+	get: return _highlight_alpha
+	set(alpha):
+		_highlight_alpha = alpha
+		if highlight:
+			highlight.set_instance_shader_parameter("alpha", alpha)
 
 func set_move_highlight(color: Color, height: int):
 	has_move_highlight = true
@@ -48,16 +59,21 @@ func set_hover_highlight(color: Color, height: int = 0):
 func clear_hover_highlight():
 	has_hover_highlight = false
 	update_highlight()
-	
+
+func remove_highlight():
+	if highlight:
+		highlight.queue_free()
+	highlight = null
+
 func update_highlight():
 	if tween != null:
 		tween.kill()
 	var has_highlight = has_move_highlight || has_hover_highlight
 	if !has_highlight:
-		if $Highlight.is_visible_in_tree():
+		if highlight:
 			tween = create_tween()
 			tween.tween_property(self, "highlight_alpha", 0.0, 0.1)
-			tween.tween_callback($Highlight.hide)
+			tween.tween_callback(remove_highlight)
 		return
 	
 	var color: Color
@@ -70,17 +86,19 @@ func update_highlight():
 	else:
 		color = move_highlight_color
 		height = move_highlight_height
+	
+	var pos = Vector3(0, height * flat_aabb.size.y, 0)	
 
-	var pos = Vector3(0, height * flat_aabb.size.y, 0)
 	tween = create_tween()
 	tween.tween_property(self, "highlight_alpha", 1.0, 0.1)
-	if !$Highlight.is_visible_in_tree():
+	if !highlight:
+		highlight = highlight_scene.instantiate()
+		add_child(highlight)
 		highlight_color = color
-		$Highlight.position = pos
+		highlight.position = pos
 	else:
 		tween.parallel().tween_property($Highlight, "position", pos, 0.1)
 		tween.parallel().tween_property(self, "highlight_color", color, 0.1)		
-	$Highlight.show()
 
 func _on_mouse_entered() -> void:
 	entered.emit(square)
