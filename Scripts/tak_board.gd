@@ -28,7 +28,7 @@ signal move_input(move: GameState.Move)
 
 func _ready():
 	config = ConfigFile.new()
-	config.load("user://catak.cfg")
+	config.load("user://settings.cfg")
 	setup_quality()
 	create_board()
 	game_state.changed.connect(update_board)
