@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://ckm3kb4aosxb4"]
+[gd_scene load_steps=7 format=3 uid="uid://ckm3kb4aosxb4"]
 
 [ext_resource type="Script" uid="uid://dgduyultasupv" path="res://Scripts/tak_board.gd" id="1_1wqm5"]
 [ext_resource type="CameraAttributesPractical" uid="uid://gtybhomfgbns" path="res://Scenes/cam_attr_normal.tres" id="2_la2l8"]
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="3_yhhd6"]
 [ext_resource type="Environment" uid="uid://gio35wn5euew" path="res://Scenes/env_low.tres" id="4_n4c1u"]
 [ext_resource type="PackedScene" uid="uid://dkwxditx1ga2f" path="res://Scenes/piece.tscn" id="5_63v3t"]
+[ext_resource type="Theme" uid="uid://je1ecuklaqff" path="res://board_ui_theme.tres" id="6_la2l8"]
 
 [node name="TakBoard" type="Node3D"]
 script = ExtResource("1_1wqm5")
@@ -37,6 +38,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
+theme = ExtResource("6_la2l8")
 
 [node name="FlatsWhite" type="PanelContainer" parent="UI"]
 layout_mode = 0
