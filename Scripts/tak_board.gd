@@ -1,4 +1,4 @@
-extends Node3D
+extends Control
 
 var square_scene = preload("res://Scenes/square.tscn")
 var piece_scene = preload("res://Scenes/piece.tscn")

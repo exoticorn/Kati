@@ -7,11 +7,19 @@
 [ext_resource type="PackedScene" uid="uid://dkwxditx1ga2f" path="res://Scenes/piece.tscn" id="5_63v3t"]
 [ext_resource type="Theme" uid="uid://je1ecuklaqff" path="res://board_ui_theme.tres" id="6_la2l8"]
 
-[node name="TakBoard" type="Node3D"]
+[node name="TakBoard" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
 script = ExtResource("1_1wqm5")
 
 [node name="Camera" type="Camera3D" parent="."]
 attributes = ExtResource("2_la2l8")
+current = true
 fov = 45.0
 script = ExtResource("3_yhhd6")
 
@@ -31,7 +39,7 @@ shadow_enabled = true
 visible = false
 
 [node name="UI" type="Control" parent="."]
-layout_mode = 3
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
