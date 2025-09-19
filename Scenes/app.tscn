@@ -1,79 +1,88 @@
-[gd_scene load_steps=5 format=3 uid="uid://bct47lm2yejq8"]
+[gd_scene load_steps=7 format=3 uid="uid://bct47lm2yejq8"]
 
 [ext_resource type="Script" uid="uid://b6ftb44rorpa" path="res://Scripts/app.gd" id="1_nmq3k"]
+[ext_resource type="Theme" uid="uid://bkrs4n0b5x0vf" path="res://topbar_theme.tres" id="2_fel14"]
 [ext_resource type="Script" uid="uid://872wvye2kvm2" path="res://Scripts/local_game_menu.gd" id="2_sb7qb"]
+[ext_resource type="Script" uid="uid://c43nj0jgrp3mh" path="res://Scripts/seeks_screen.gd" id="4_u0ug8"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_sb7qb"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_nmq3k"]
 
-[node name="App" type="Control"]
-layout_mode = 3
+[node name="App" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
 script = ExtResource("1_nmq3k")
 
-[node name="MenuButton" type="Button" parent="."]
-visible = false
-layout_mode = 0
-offset_right = 114.0
-offset_bottom = 50.0
+[node name="TopBar" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 4
+theme = ExtResource("2_fel14")
+
+[node name="MenuButton" type="Button" parent="TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
 text = "Menu"
 
-[node name="Games" type="Control" parent="."]
+[node name="Screens" type="Control" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 1
+
+[node name="Games" type="Control" parent="Screens"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 55.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="MainMenu" type="PanelContainer" parent="."]
+[node name="MainMenu" type="PanelContainer" parent="Screens"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -107.0
-offset_top = -25.0
-offset_right = 107.0
-offset_bottom = 25.0
+offset_left = -123.0
+offset_top = -136.5
+offset_right = 123.0
+offset_bottom = 136.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Box" type="VBoxContainer" parent="MainMenu"]
+[node name="Box" type="VBoxContainer" parent="Screens/MainMenu"]
 layout_mode = 2
 
-[node name="Titel" type="Label" parent="MainMenu/Box"]
+[node name="Titel" type="Label" parent="Screens/MainMenu/Box"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_type_variation = &"MenuTitel"
 text = "Kati"
 
-[node name="Login" type="Button" parent="MainMenu/Box"]
+[node name="Login" type="Button" parent="Screens/MainMenu/Box"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Login"
 
-[node name="Seeks" type="Button" parent="MainMenu/Box"]
+[node name="Seeks" type="Button" parent="Screens/MainMenu/Box"]
 layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
 text = "Seeks"
 
-[node name="LocalGame" type="Button" parent="MainMenu/Box"]
+[node name="LocalGame" type="Button" parent="Screens/MainMenu/Box"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Local Game"
 
-[node name="LocalGame" type="PanelContainer" parent="."]
+[node name="LocalGameScreen" type="PanelContainer" parent="Screens"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -81,39 +90,39 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -16.0
-offset_top = -20.0
-offset_right = 16.0
-offset_bottom = 20.0
+offset_left = -251.0
+offset_top = -114.0
+offset_right = 251.0
+offset_bottom = 114.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("2_sb7qb")
 
-[node name="Rows" type="VBoxContainer" parent="LocalGame"]
+[node name="Rows" type="VBoxContainer" parent="Screens/LocalGameScreen"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="LocalGame/Rows"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Screens/LocalGameScreen/Rows"]
 layout_mode = 2
 
-[node name="Grid" type="GridContainer" parent="LocalGame"]
+[node name="Grid" type="GridContainer" parent="Screens/LocalGameScreen"]
 layout_mode = 2
 columns = 2
 
-[node name="Size" type="Label" parent="LocalGame/Grid"]
+[node name="Size" type="Label" parent="Screens/LocalGameScreen/Grid"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "Board size: "
 
-[node name="Sizes" type="HBoxContainer" parent="LocalGame/Grid"]
+[node name="Sizes" type="HBoxContainer" parent="Screens/LocalGameScreen/Grid"]
 layout_mode = 2
 
-[node name="Five" type="CheckBox" parent="LocalGame/Grid/Sizes"]
+[node name="Five" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Sizes"]
 layout_mode = 2
 size_flags_vertical = 8
 button_group = SubResource("ButtonGroup_sb7qb")
 text = "5x5"
 
-[node name="Six" type="CheckBox" parent="LocalGame/Grid/Sizes"]
+[node name="Six" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Sizes"]
 layout_mode = 2
 size_flags_vertical = 8
 button_pressed = true
@@ -121,19 +130,19 @@ button_group = SubResource("ButtonGroup_sb7qb")
 text = "6x6
 "
 
-[node name="Seven" type="CheckBox" parent="LocalGame/Grid/Sizes"]
+[node name="Seven" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Sizes"]
 layout_mode = 2
 size_flags_vertical = 8
 button_group = SubResource("ButtonGroup_sb7qb")
 text = "7x7
 "
 
-[node name="Komi" type="Label" parent="LocalGame/Grid"]
+[node name="Komi" type="Label" parent="Screens/LocalGameScreen/Grid"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "Komi: "
 
-[node name="Komis" type="OptionButton" parent="LocalGame/Grid"]
+[node name="Komis" type="OptionButton" parent="Screens/LocalGameScreen/Grid"]
 layout_mode = 2
 selected = 4
 item_count = 5
@@ -148,43 +157,44 @@ popup/item_3/id = 3
 popup/item_4/text = "2"
 popup/item_4/id = 4
 
-[node name="You Play" type="Label" parent="LocalGame/Grid"]
+[node name="You Play" type="Label" parent="Screens/LocalGameScreen/Grid"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "You play: "
 
-[node name="Colors" type="HBoxContainer" parent="LocalGame/Grid"]
+[node name="Colors" type="HBoxContainer" parent="Screens/LocalGameScreen/Grid"]
 layout_mode = 2
 
-[node name="White" type="CheckBox" parent="LocalGame/Grid/Colors"]
+[node name="White" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Colors"]
 layout_mode = 2
 size_flags_vertical = 8
 button_pressed = true
 button_group = SubResource("ButtonGroup_nmq3k")
 text = "White"
 
-[node name="Black" type="CheckBox" parent="LocalGame/Grid/Colors"]
+[node name="Black" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Colors"]
 layout_mode = 2
 size_flags_vertical = 8
 button_group = SubResource("ButtonGroup_nmq3k")
 text = "Black
 "
 
-[node name="Both" type="CheckBox" parent="LocalGame/Grid/Colors"]
+[node name="Both" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Colors"]
 layout_mode = 2
 size_flags_vertical = 8
 button_group = SubResource("ButtonGroup_nmq3k")
 text = "Both
 "
 
-[node name="Control" type="Control" parent="LocalGame/Grid"]
+[node name="Control" type="Control" parent="Screens/LocalGameScreen/Grid"]
 layout_mode = 2
 
-[node name="Play" type="Button" parent="LocalGame/Grid"]
+[node name="Play" type="Button" parent="Screens/LocalGameScreen/Grid"]
 layout_mode = 2
 text = "Play"
 
-[node name="Seeks" type="PanelContainer" parent="."]
+[node name="SeeksScreen" type="PanelContainer" parent="Screens"]
+unique_name_in_owner = true
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -192,27 +202,41 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -16.0
-offset_top = -20.0
-offset_right = 16.0
-offset_bottom = 20.0
+offset_left = -80.5
+offset_top = -57.5
+offset_right = 80.5
+offset_bottom = 57.5
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("4_u0ug8")
 
-[node name="MainBox" type="VBoxContainer" parent="Seeks"]
+[node name="MainBox" type="VBoxContainer" parent="Screens/SeeksScreen"]
 layout_mode = 2
 
-[node name="Titel" type="Label" parent="Seeks/MainBox"]
+[node name="Titel" type="Label" parent="Screens/SeeksScreen/MainBox"]
 layout_mode = 2
 theme_type_variation = &"MenuTitel"
 text = "Seeks:"
 
-[node name="Seeks" type="VBoxContainer" parent="Seeks/MainBox"]
+[node name="Seeks" type="GridContainer" parent="Screens/SeeksScreen/MainBox"]
 layout_mode = 2
+columns = 3
 
-[connection signal="pressed" from="MenuButton" to="." method="_on_menu_button_pressed"]
-[connection signal="pressed" from="MainMenu/Box/Login" to="." method="_on_login_pressed"]
-[connection signal="pressed" from="MainMenu/Box/Seeks" to="." method="_on_seeks_pressed"]
-[connection signal="pressed" from="MainMenu/Box/LocalGame" to="." method="_on_local_game_pressed"]
-[connection signal="start_game" from="LocalGame" to="." method="_on_local_game_start_game"]
-[connection signal="pressed" from="LocalGame/Grid/Play" to="LocalGame" method="_on_play_pressed"]
+[node name="Name" type="Label" parent="Screens/SeeksScreen/MainBox/Seeks"]
+layout_mode = 2
+text = "Name "
+
+[node name="Rules" type="Label" parent="Screens/SeeksScreen/MainBox/Seeks"]
+layout_mode = 2
+text = "Rules "
+
+[node name="Time" type="Label" parent="Screens/SeeksScreen/MainBox/Seeks"]
+layout_mode = 2
+text = "Time "
+
+[connection signal="pressed" from="TopBar/MenuButton" to="." method="_on_menu_button_pressed"]
+[connection signal="pressed" from="Screens/MainMenu/Box/Login" to="." method="_on_login_pressed"]
+[connection signal="pressed" from="Screens/MainMenu/Box/Seeks" to="." method="_on_seeks_pressed"]
+[connection signal="pressed" from="Screens/MainMenu/Box/LocalGame" to="." method="_on_local_game_pressed"]
+[connection signal="start_game" from="Screens/LocalGameScreen" to="." method="_on_local_game_start_game"]
+[connection signal="pressed" from="Screens/LocalGameScreen/Grid/Play" to="Screens/LocalGameScreen" method="_on_play_pressed"]

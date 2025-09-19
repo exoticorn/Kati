@@ -14,6 +14,8 @@ var state := State.OFFLINE
 var user_pw: String
 var username: String
 
+var last_ping: float = 0
+
 enum ColorChoice { WHITE, BLACK, ANY}
 enum GameType { RATED, UNRATED, TOURNAMENT }
 
@@ -79,6 +81,7 @@ func _process(_delta):
 			["Welcome", var uname]:
 				username = uname.left(-1)
 				state = State.ONLINE
+				last_ping = Time.get_unix_time_from_system()
 				print("Connected as " + username)
 				state_changed.emit()
 			["Seek", "new", var id, var user, var size, var time, var inc, var color, var half_komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var opp, var bot_seek]:
@@ -105,6 +108,12 @@ func _process(_delta):
 				for player in line.right(-14).split(","):
 					online_players.push_back(player.lstrip("[\" ").rstrip("]\"")) # advanced parsing!
 				players_changed.emit()
+	
+	if state == State.ONLINE:
+		var t = Time.get_unix_time_from_system()
+		if t >= last_ping + 30:
+			send("PING")
+			last_ping = t
 
 func send(line: String):
 	print("< " + line)
