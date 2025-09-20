@@ -16,7 +16,7 @@ var username: String
 
 var last_ping: float = 0
 
-enum ColorChoice { WHITE, BLACK, ANY}
+enum ColorChoice { WHITE, BLACK, NONE}
 enum GameType { RATED, UNRATED, TOURNAMENT }
 
 class Seek:
@@ -34,12 +34,29 @@ class Seek:
 	var extra_time: int
 	var bot: bool
 
+class Game:
+	var id
+	var player_white: String
+	var player_black: String
+	var color: ColorChoice
+	var size: int
+	var time: int
+	var inc: int
+	var komi: float
+	var flat_count: int
+	var capstone_count: int
+	var game_type: GameType
+	var extra_time_move: int
+	var extra_time: int
+	var bot: bool
+
 var seeks: Array[Seek] = []
 var online_players: Array[String] = []
 
 signal state_changed
 signal seeks_changed
 signal players_changed
+signal game_started(game: Game)
 
 func login(upw: String):
 	user_pw = upw
@@ -48,6 +65,9 @@ func login(upw: String):
 	ws.supported_protocols = PackedStringArray(["binary"])
 	ws.connect_to_url(ws_url)
 	state = State.CONNECTING
+
+func accept_seek(id: int):
+	send("Accept %d" % id)
 
 func _process(_delta):
 	if state == State.OFFLINE:
@@ -93,7 +113,7 @@ func _process(_delta):
 				seek.size = size.to_int()
 				seek.time = time.to_int()
 				seek.inc = inc.to_int()
-				seek.color = ColorChoice.WHITE if color == "W" else ColorChoice.BLACK if color == "B" else ColorChoice.ANY
+				seek.color = ColorChoice.WHITE if color == "W" else ColorChoice.BLACK if color == "B" else ColorChoice.NONE
 				seek.komi = half_komi.to_int() / 2.0
 				seek.flat_count = flat_count.to_int()
 				seek.capstone_count = capstone_count.to_int()
@@ -103,6 +123,28 @@ func _process(_delta):
 				seek.bot = bot_seek == "1"
 				seeks.push_back(seek)
 				seeks_changed.emit()
+			["Seek", "remove", var id, ..]:
+				var int_id = id.to_int()
+				var index = seeks.find_custom(func (s): return s.id == int_id)
+				seeks.remove_at(index)
+				seeks_changed.emit()
+			["Game", "Start", var id, var player_white, "vs", var player_black, var color, var size, var time, var inc, var komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var is_bot]:
+				var game := Game.new()
+				game.id = id.to_int()
+				game.player_white = player_white
+				game.player_black = player_black
+				game.color = ColorChoice.WHITE if color == "white" else ColorChoice.BLACK
+				game.size = size.to_int()
+				game.time = time.to_int()
+				game.inc = inc.to_int()
+				game.komi = komi.to_int() * 0.5
+				game.flat_count = flat_count.to_int()
+				game.capstone_count = capstone_count.to_int()
+				game.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
+				game.extra_time_move = extra_time_move.to_int()
+				game.extra_time = extra_time.to_int()
+				game.bot = is_bot == "1"
+				game_started.emit(game)
 			["OnlinePlayers", ..]:
 				online_players = []
 				for player in line.right(-14).split(","):

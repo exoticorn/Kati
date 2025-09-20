@@ -1,4 +1,4 @@
-extends Node
+class_name LocalGame extends Control
 
 const TakBoard = preload("res://Scenes/tak_board.tscn")
 
@@ -7,12 +7,21 @@ var settings: Dictionary
 var game_state: GameState
 
 var engine: EngineInterface
-var board
+var board: Node
 
 enum PlayerType { LOCAL, ENGINE }
 var player_types: Array[PlayerType] = []
 
+func _init(sttngs: Dictionary):
+	settings = sttngs
+	
 func _ready():
+	anchor_left = ANCHOR_BEGIN
+	anchor_right = ANCHOR_END
+	anchor_top = ANCHOR_BEGIN
+	anchor_bottom = ANCHOR_END
+	mouse_filter = Control.MOUSE_FILTER_PASS
+	
 	game_state = GameState.new(settings.size, settings.komi)
 	for i in 2:
 		player_types.push_back(PlayerType.ENGINE if (settings.engine_mask & (1 << i)) != 0 else PlayerType.LOCAL)

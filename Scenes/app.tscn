@@ -18,6 +18,7 @@ grow_vertical = 2
 script = ExtResource("1_nmq3k")
 
 [node name="TopBar" type="HBoxContainer" parent="."]
+visible = false
 layout_mode = 2
 size_flags_vertical = 4
 theme = ExtResource("2_fel14")

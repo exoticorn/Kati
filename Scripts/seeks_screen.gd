@@ -37,6 +37,7 @@ func sync_seeks():
 			s.seek = seek
 			var name_ = LinkButton.new()
 			name_.text = seek.user
+			name_.pressed.connect(playtak.accept_seek.bind(seek.id))
 			s.controls.push_back(name_)
 			var rules = Label.new()
 			var rules_string = "%dx%d" % [seek.size, seek.size]

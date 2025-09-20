@@ -177,6 +177,7 @@ CheckBox/styles/hover_pressed = SubResource("StyleBoxEmpty_2pn01")
 CheckBox/styles/normal = SubResource("StyleBoxEmpty_touxu")
 CheckBox/styles/pressed = SubResource("StyleBoxEmpty_tbeor")
 Label/font_sizes/font_size = 24
+LinkButton/font_sizes/font_size = 24
 MenuTitel/base_type = &"Label"
 MenuTitel/font_sizes/font_size = 32
 MenuTitel/styles/normal = SubResource("StyleBoxFlat_dmjyp")

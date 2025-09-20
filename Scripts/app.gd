@@ -5,6 +5,7 @@ var playtak: PlayTakInterface
 func _ready():
 	playtak = PlayTakInterface.new()
 	playtak.state_changed.connect(_on_playtak_state_changed)
+	playtak.game_started.connect(_on_playtak_game_started)
 	add_child(playtak)
 	%SeeksScreen.set_playtak(playtak)
 
@@ -14,8 +15,7 @@ func _on_local_game_pressed() -> void:
 
 func _on_local_game_start_game(settings: Dictionary) -> void:
 	%LocalGameScreen.hide()
-	var game = load("res://Scenes/local_game.tscn").instantiate()
-	game.settings = settings
+	var game = LocalGame.new(settings)
 	$Screens/Games.add_child(game)
 
 func _on_seeks_pressed() -> void:
@@ -38,8 +38,13 @@ func _on_playtak_state_changed():
 		%MainMenu/Box/Seeks.disabled = true
 	%MainMenu/Box/Login.disabled = false
 
-
 func _on_menu_button_pressed() -> void:
 	%SeeksScreen.hide()
 	%LocalGameScreen.hide()
 	%MainMenu.show()
+
+func _on_playtak_game_started(game: PlayTakInterface.Game):
+	%MainMenu.hide()
+	%SeeksScreen.hide()
+	var game_control = PlaytakGame.new(game)
+	$Screens/Games.add_child(game_control)
