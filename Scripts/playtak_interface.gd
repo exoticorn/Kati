@@ -1,4 +1,4 @@
-class_name PlayTakInterface extends Node
+class_name PlaytakInterface extends Node
 
 enum State {
 	OFFLINE,
@@ -57,6 +57,7 @@ signal state_changed
 signal seeks_changed
 signal players_changed
 signal game_started(game: Game)
+signal game_move(id: int, move: GameState.Move)
 
 func login(upw: String):
 	user_pw = upw
@@ -105,67 +106,89 @@ func _process(_delta):
 		
 		print("> " + line)
 		
-		match Array(line.split(" ")):
-			["Login", "or", "Register"] when state == State.CONNECTING:
-				send("Client Kati")
-				send("Protocol 2")
-				send("Login " + user_pw)
-				state = State.LOGGING_IN
-			["Authentication", "failure"]:
-				printerr("Failed to login to playtak server")
-				close_connection()
-			["Welcome", var uname]:
-				username = uname.left(-1)
-				state = State.ONLINE
-				last_ping = Time.get_unix_time_from_system()
-				print("Connected as " + username)
-				state_changed.emit()
-			["Seek", "new", var id, var user, var size, var time, var inc, var color, var half_komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var opp, var bot_seek]:
-				if opp != "0" && opp.to_lower() != username.to_lower():
-					return
-				var seek := Seek.new()
-				seek.id = id.to_int()
-				seek.user = user
-				seek.size = size.to_int()
-				seek.time = time.to_int()
-				seek.inc = inc.to_int()
-				seek.color = ColorChoice.WHITE if color == "W" else ColorChoice.BLACK if color == "B" else ColorChoice.NONE
-				seek.komi = half_komi.to_int() / 2.0
-				seek.flat_count = flat_count.to_int()
-				seek.capstone_count = capstone_count.to_int()
-				seek.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
-				seek.extra_time_move = extra_time_move.to_int()
-				seek.extra_time = extra_time.to_int()
-				seek.bot = bot_seek == "1"
-				seeks.push_back(seek)
-				seeks_changed.emit()
-			["Seek", "remove", var id, ..]:
-				var int_id = id.to_int()
-				var index = seeks.find_custom(func (s): return s.id == int_id)
-				seeks.remove_at(index)
-				seeks_changed.emit()
-			["Game", "Start", var id, var player_white, "vs", var player_black, var color, var size, var time, var inc, var komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var is_bot]:
-				var game := Game.new()
-				game.id = id.to_int()
-				game.player_white = player_white
-				game.player_black = player_black
-				game.color = ColorChoice.WHITE if color == "white" else ColorChoice.BLACK
-				game.size = size.to_int()
-				game.time = time.to_int()
-				game.inc = inc.to_int()
-				game.komi = komi.to_int() * 0.5
-				game.flat_count = flat_count.to_int()
-				game.capstone_count = capstone_count.to_int()
-				game.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
-				game.extra_time_move = extra_time_move.to_int()
-				game.extra_time = extra_time.to_int()
-				game.bot = is_bot == "1"
-				game_started.emit(game)
-			["OnlinePlayers", ..]:
-				online_players = []
-				for player in line.right(-14).split(","):
-					online_players.push_back(player.lstrip("[\" ").rstrip("]\"")) # advanced parsing!
-				players_changed.emit()
+		if line.begins_with("Game#"):
+			var parts = line.right(-5).split(" ")
+			var id = parts[0].to_int()
+			match Array(parts.slice(1)):
+				["P", var square, ..]:
+					var sqr = GameState.Move.square_from_str(square)
+					var type = GameState.Type.FLAT
+					if parts.size() > 3:
+						type = GameState.Type.WALL if parts[3] == "W" else GameState.Type.CAP
+					game_move.emit(id, GameState.Move.place(sqr, type))
+				["M", var from, var to, ..]:
+					var sqr = GameState.Move.square_from_str(from)
+					var delta = GameState.Move.square_from_str(to) - sqr
+					var dir = GameState.Direction.LEFT if delta.x < 0 else GameState.Direction.RIGHT if delta.x > 0 else GameState.Direction.DOWN if delta.y < 0 else GameState.Direction.UP
+					var drops: Array[int] = []
+					var count = 0
+					for d in parts.slice(4):
+						var drop = d.to_int()
+						drops.push_back(drop)
+						count += drop
+					game_move.emit(id, GameState.Move.stack(sqr, count, dir, drops))
+		else:
+			match Array(line.split(" ")):
+				["Login", "or", "Register"] when state == State.CONNECTING:
+					send("Client Kati")
+					send("Protocol 2")
+					send("Login " + user_pw)
+					state = State.LOGGING_IN
+				["Authentication", "failure"]:
+					printerr("Failed to login to playtak server")
+					close_connection()
+				["Welcome", var uname]:
+					username = uname.left(-1)
+					state = State.ONLINE
+					last_ping = Time.get_unix_time_from_system()
+					print("Connected as " + username)
+					state_changed.emit()
+				["Seek", "new", var id, var user, var size, var time, var inc, var color, var half_komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var opp, var bot_seek]:
+					if opp != "0" && opp.to_lower() != username.to_lower():
+						return
+					var seek := Seek.new()
+					seek.id = id.to_int()
+					seek.user = user
+					seek.size = size.to_int()
+					seek.time = time.to_int()
+					seek.inc = inc.to_int()
+					seek.color = ColorChoice.WHITE if color == "W" else ColorChoice.BLACK if color == "B" else ColorChoice.NONE
+					seek.komi = half_komi.to_int() / 2.0
+					seek.flat_count = flat_count.to_int()
+					seek.capstone_count = capstone_count.to_int()
+					seek.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
+					seek.extra_time_move = extra_time_move.to_int()
+					seek.extra_time = extra_time.to_int()
+					seek.bot = bot_seek == "1"
+					seeks.push_back(seek)
+					seeks_changed.emit()
+				["Seek", "remove", var id, ..]:
+					var int_id = id.to_int()
+					var index = seeks.find_custom(func (s): return s.id == int_id)
+					seeks.remove_at(index)
+					seeks_changed.emit()
+				["Game", "Start", var id, var player_white, "vs", var player_black, var color, var size, var time, var inc, var komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var is_bot]:
+					var game := Game.new()
+					game.id = id.to_int()
+					game.player_white = player_white
+					game.player_black = player_black
+					game.color = ColorChoice.WHITE if color == "white" else ColorChoice.BLACK
+					game.size = size.to_int()
+					game.time = time.to_int()
+					game.inc = inc.to_int()
+					game.komi = komi.to_int() * 0.5
+					game.flat_count = flat_count.to_int()
+					game.capstone_count = capstone_count.to_int()
+					game.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
+					game.extra_time_move = extra_time_move.to_int()
+					game.extra_time = extra_time.to_int()
+					game.bot = is_bot == "1"
+					game_started.emit(game)
+				["OnlinePlayers", ..]:
+					online_players = []
+					for player in line.right(-14).split(","):
+						online_players.push_back(player.lstrip("[\" ").rstrip("]\"")) # advanced parsing!
+					players_changed.emit()
 	
 	if state == State.ONLINE:
 		var t = Time.get_unix_time_from_system()

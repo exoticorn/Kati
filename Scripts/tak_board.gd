@@ -264,10 +264,12 @@ func square_clicked(square):
 			dropped_piece.set_temp_pos(Vector3i(square.x, height, square.y))
 			if held_pieces.is_empty():
 				move_input.emit(pending_move)
+				can_input_move = false
 		return
 	
 	if stack.is_empty():
 		move_input.emit(GameState.Move.place(square, selected_piece_type))
+		can_input_move = false
 	elif !game_state.is_setup_turn() && stack.back().color == game_state.side_to_move():
 		held_pieces = []
 		for piece in $Pieces.get_children():

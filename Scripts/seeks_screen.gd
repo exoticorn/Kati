@@ -1,13 +1,13 @@
 extends PanelContainer
 
 class SeekRow:
-	var seek: PlayTakInterface.Seek
+	var seek: PlaytakInterface.Seek
 	var controls: Array[Control]
 
-var playtak: PlayTakInterface
+var playtak: PlaytakInterface
 var seeks: Array[SeekRow]
 
-func set_playtak(p: PlayTakInterface):
+func set_playtak(p: PlaytakInterface):
 	playtak = p
 	playtak.seeks_changed.connect(sync_seeks)
 
