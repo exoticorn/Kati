@@ -69,6 +69,22 @@ func login(upw: String):
 func accept_seek(id: int):
 	send("Accept %d" % id)
 
+func send_move(game_id:int, move: GameState.Move):
+	var move_string = "Game#%d " % game_id
+
+	if move.count == 0:
+		move_string += "P %s" % GameState.Move.square_to_str(move.square).to_upper()
+		if move.type == GameState.Type.WALL:
+			move_string += " W"
+		elif move.type == GameState.Type.CAP:
+			move_string += " C"
+	else:
+		move_string += "M %s %s" % [GameState.Move.square_to_str(move.square).to_upper(), GameState.Move.square_to_str(move.square + GameState.DIR_VEC[move.direction] * move.drops.size()).to_upper()]
+		for drop in move.drops:
+			move_string += " %d" % drop
+		
+	send(move_string)
+
 func _process(_delta):
 	if state == State.OFFLINE:
 		return

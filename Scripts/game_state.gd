@@ -114,7 +114,7 @@ class Move:
 	}
 	
 	func to_tpn() -> String:
-		var sqr = String.chr(square.x + 97) + String.chr(square.y + 49)
+		var sqr = square_to_str(square)
 		var mv = ""
 		if count == 0:
 			match type:
@@ -129,7 +129,7 @@ class Move:
 		for d in drops:
 			mv += "%d" % d
 		return mv
-	
+
 	static func from_ptn(move: String) -> Move:
 		var tpe = Type.FLAT
 		if move[0] == "S":
@@ -142,9 +142,7 @@ class Move:
 		if move[0] >= "1" and move[0] < "9":
 			cnt = move[0].to_int()
 			move = move.right(-1)
-		var x = move.unicode_at(0) - 97
-		var y = move.unicode_at(1) - 49
-		var squ = Vector2i(x, y)
+		var squ = square_from_str(move.left(2))
 		move = move.right(-2)
 		if move.is_empty():
 			return Move.place(squ, tpe)
@@ -158,6 +156,15 @@ class Move:
 			dps = [cnt]
 		return Move.stack(squ, cnt, dir, dps)
 		
+	static func square_to_str(sq: Vector2i) -> String:
+		return String.chr(sq.x + 97) + String.chr(sq.y + 49)
+	
+	static func square_from_str(sqr: String) -> Vector2i:
+		var lsqr = sqr.to_lower()
+		var x = lsqr.unicode_at(0) - 97
+		var y = lsqr.unicode_at(1) - 49
+		return Vector2i(x, y)
+	
 	func highlight_squares() -> Dictionary:
 		if count == 0:
 			return { square: 1 }

@@ -46,5 +46,5 @@ func _on_menu_button_pressed() -> void:
 func _on_playtak_game_started(game: PlayTakInterface.Game):
 	%MainMenu.hide()
 	%SeeksScreen.hide()
-	var game_control = PlaytakGame.new(game)
+	var game_control = PlaytakGame.new(game, playtak)
 	$Screens/Games.add_child(game_control)

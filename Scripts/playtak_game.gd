@@ -2,12 +2,14 @@ class_name PlaytakGame extends Control
 
 const TakBoard = preload("res://Scenes/tak_board.tscn")
 
+var playtak_interface: PlayTakInterface
 var game: PlayTakInterface.Game
 var game_state: GameState
 var board: Node
 
-func _init(g: PlayTakInterface.Game):
+func _init(g: PlayTakInterface.Game, i: PlayTakInterface):
 	game = g
+	playtak_interface = i
 
 func _ready():
 	anchor_left = ANCHOR_BEGIN
@@ -25,7 +27,15 @@ func _ready():
 	setup_move_input()
 
 func move_input(move: GameState.Move):
-	pass
+	game_state.do_move(move)
+	playtak_interface.send_move(game.id, move)
 
 func setup_move_input():
-	pass
+	var can_move = false
+	if game_state.result == GameState.Result.ONGOING:
+		var side_to_move = game_state.side_to_move()
+		if side_to_move == GameState.Col.WHITE && game.color == PlayTakInterface.ColorChoice.WHITE:
+			can_move = true
+		elif side_to_move == GameState.Col.BLACK && game.color == PlayTakInterface.ColorChoice.BLACK:
+			can_move = true
+	board.can_input_move = can_move
