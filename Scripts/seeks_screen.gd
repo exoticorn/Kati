@@ -42,7 +42,11 @@ func sync_seeks():
 			var rules = Label.new()
 			var rules_string = "%dx%d" % [seek.size, seek.size]
 			if seek.komi != 0:
-				rules_string += ", Komi %f" % seek.komi
+				var half_komi = roundi(seek.komi * 2)
+				if half_komi % 2 == 0:
+					rules_string += ", %d Komi" % roundi(seek.komi)
+				else:
+					rules_string += ", %.1f Komi" % seek.komi
 			rules.text = rules_string
 			s.controls.push_back(rules)
 			var time = Label.new()
