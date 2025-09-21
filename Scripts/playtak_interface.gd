@@ -60,6 +60,7 @@ signal seeks_changed
 signal players_changed
 signal game_started(game: Game)
 signal game_move(id: int, move: GameState.Move)
+signal update_clock(id: int, wtime: float, btime: float)
 
 func login(lgn: Login):
 	user_pw = "%s %s" % [lgn.user, lgn.password]
@@ -129,6 +130,8 @@ func _process(_delta):
 						drops.push_back(drop)
 						count += drop
 					game_move.emit(id, GameState.Move.stack(sqr, count, dir, drops))
+				["Timems", var wtime, var btime]:
+					update_clock.emit(id, wtime.to_int() / 1000.0, btime.to_int() / 1000.0)
 		else:
 			match Array(line.split(" ")):
 				["Login", "or", "Register"] when state == State.CONNECTING:

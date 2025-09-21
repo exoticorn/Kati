@@ -19,14 +19,30 @@ func _ready():
 	board.move_input.connect(move_input)
 	add_child(board)
 	setup_move_input()
+	
+	$WhiteClock.setup(game.player_white, game.time)
+	$BlackClock.setup(game.player_black, game.time)
 
 func move_input(move: GameState.Move):
 	game_state.do_move(move)
 	playtak_interface.send_move(game.id, move)
+	update_clock_running()
 
 func remote_move(move: GameState.Move):
 	game_state.do_move(move)
 	setup_move_input()
+	update_clock_running()
+
+func update_clock(wtime: float, btime: float):
+	$WhiteClock.time = wtime
+	$BlackClock.time = btime
+	update_clock_running()
+
+func update_clock_running():
+	var running = game_state.result == GameState.Result.ONGOING
+	var white_to_move = game_state.side_to_move() == GameState.Col.WHITE
+	$WhiteClock.running = running && white_to_move
+	$BlackClock.running = running && !white_to_move
 
 func setup_move_input():
 	var can_move = false
