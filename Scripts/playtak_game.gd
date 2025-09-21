@@ -7,17 +7,11 @@ var game: PlaytakInterface.Game
 var game_state: GameState
 var board: Node
 
-func _init(g: PlaytakInterface.Game, i: PlaytakInterface):
+func setup(g: PlaytakInterface.Game, i: PlaytakInterface):
 	game = g
 	playtak_interface = i
 
 func _ready():
-	anchor_left = ANCHOR_BEGIN
-	anchor_right = ANCHOR_END
-	anchor_top = ANCHOR_BEGIN
-	anchor_bottom = ANCHOR_END
-	mouse_filter = Control.MOUSE_FILTER_PASS
-	
 	game_state = GameState.new(game.size, game.komi)
 	
 	board = TakBoard.instantiate()

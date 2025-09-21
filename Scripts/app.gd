@@ -1,12 +1,16 @@
 extends Control
 
+const Login = preload("res://Scripts/login.gd")
+
 var playtak: PlaytakInterface
+var login: Login
 
 func _ready():
 	playtak = PlaytakInterface.new()
 	playtak.state_changed.connect(_on_playtak_state_changed)
 	playtak.game_started.connect(_on_playtak_game_started)
 	add_child(playtak)
+	login = Login.load()
 	%SeeksScreen.set_playtak(playtak)
 	$Screens/Games.setup(playtak)
 
@@ -27,7 +31,9 @@ func _on_login_pressed() -> void:
 	if playtak.state == PlaytakInterface.State.ONLINE:
 		playtak.close_connection()
 	else:
-		playtak.login("Guest")
+		login.make_guest()
+		login.save()
+		playtak.login(login)
 	%MainMenu/Box/Login.disabled = true
 
 func _on_playtak_state_changed():
@@ -47,5 +53,6 @@ func _on_menu_button_pressed() -> void:
 func _on_playtak_game_started(game: PlaytakInterface.Game):
 	%MainMenu.hide()
 	%SeeksScreen.hide()
-	var game_control = PlaytakGame.new(game, playtak)
+	var game_control: PlaytakGame = preload("res://Scenes/playtak_game.tscn").instantiate()
+	game_control.setup(game, playtak)
 	$Screens/Games.add_child(game_control)

@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqwiio8l40knd"]
+
+[ext_resource type="Script" uid="uid://cb1q3ugl77gbu" path="res://Scripts/playtak_game.gd" id="1_nouv0"]
+[ext_resource type="PackedScene" uid="uid://y8pkdrakgd36" path="res://Scenes/clock.tscn" id="2_k0v80"]
+
+[node name="PlaytakGame" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_nouv0")
+
+[node name="WhiteClock" parent="." instance=ExtResource("2_k0v80")]
+layout_mode = 1
+offset_left = 16.0
+offset_top = 153.0
+offset_right = 241.0
+offset_bottom = 247.0
+
+[node name="BlackClock" parent="." instance=ExtResource("2_k0v80")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -241.0
+offset_top = 152.0
+offset_right = -16.0
+offset_bottom = 246.0
+grow_horizontal = 0

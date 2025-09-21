@@ -1,5 +1,7 @@
 class_name PlaytakInterface extends Node
 
+const Login = preload("res://Scripts/login.gd")
+
 enum State {
 	OFFLINE,
 	CONNECTING,
@@ -59,8 +61,8 @@ signal players_changed
 signal game_started(game: Game)
 signal game_move(id: int, move: GameState.Move)
 
-func login(upw: String):
-	user_pw = upw
+func login(lgn: Login):
+	user_pw = "%s %s" % [lgn.user, lgn.password]
 	if state != State.OFFLINE:
 		close_connection()
 	ws.supported_protocols = PackedStringArray(["binary"])
