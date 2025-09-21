@@ -19,17 +19,20 @@ grow_vertical = 2
 script = ExtResource("1_nmq3k")
 
 [node name="TopBar" type="HBoxContainer" parent="."]
-visible = false
 layout_mode = 2
 size_flags_vertical = 4
 theme = ExtResource("2_fel14")
 
 [node name="MenuButton" type="Button" parent="TopBar"]
-unique_name_in_owner = true
 layout_mode = 2
 text = "Menu"
 
+[node name="Games" type="Button" parent="TopBar"]
+layout_mode = 2
+text = "Games"
+
 [node name="Screens" type="Control" parent="."]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 1
@@ -238,6 +241,7 @@ layout_mode = 2
 text = "Time "
 
 [connection signal="pressed" from="TopBar/MenuButton" to="." method="_on_menu_button_pressed"]
+[connection signal="pressed" from="TopBar/Games" to="." method="_on_games_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/Login" to="." method="_on_login_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/Seeks" to="." method="_on_seeks_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/LocalGame" to="." method="_on_local_game_pressed"]

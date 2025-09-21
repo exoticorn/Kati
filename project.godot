@@ -80,4 +80,4 @@ toggle_cap_wall={
 
 scaling_3d/mode=2
 scaling_3d/scale=0.5
-environment/defaults/default_clear_color=Color(0.121111, 0.150191, 0.157533, 1)
+environment/defaults/default_clear_color=Color(0.23135275, 0.27466062, 0.2870408, 1)

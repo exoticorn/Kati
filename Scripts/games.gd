@@ -4,6 +4,19 @@ func setup(playtak_interface: PlaytakInterface):
 	playtak_interface.game_move.connect(game_move)
 	playtak_interface.update_clock.connect(update_clock)
 
+func add_game(game: Control):
+	for child in get_children():
+		var remove = false
+		if child is LocalGame:
+			remove = child.game_state.result != GameState.Result.ONGOING || game is LocalGame
+		elif child is PlaytakGame:
+			remove = child.game_state.result != GameState.Result.ONGOING
+		if remove:
+			child.queue_free()
+		else:
+			child.hide()
+	add_child(game)
+
 func game_move(id: int, move: GameState.Move):
 	var game := find_game(id)
 	if game != null:
@@ -20,3 +33,15 @@ func find_game(id: int) -> PlaytakGame:
 			if child.game.id == id:
 				return child
 	return null
+
+func switch_game() -> void:
+	var games = get_children()
+	if games.size() < 2:
+		return
+	var index = 0
+	for i in games.size():
+		if games[i].visible:
+			index = i
+	index = (index + 1) % games.size()
+	for i in games.size():
+		games[i].visible = i == index
