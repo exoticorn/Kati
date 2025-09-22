@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://bct47lm2yejq8"]
+[gd_scene load_steps=9 format=3 uid="uid://bct47lm2yejq8"]
 
 [ext_resource type="Script" uid="uid://b6ftb44rorpa" path="res://Scripts/app.gd" id="1_nmq3k"]
 [ext_resource type="Theme" uid="uid://bkrs4n0b5x0vf" path="res://topbar_theme.tres" id="2_fel14"]
 [ext_resource type="Script" uid="uid://872wvye2kvm2" path="res://Scripts/local_game_menu.gd" id="2_sb7qb"]
 [ext_resource type="Script" uid="uid://didjayc8ohs03" path="res://Scripts/games.gd" id="3_fdjpt"]
 [ext_resource type="Script" uid="uid://c43nj0jgrp3mh" path="res://Scripts/seeks_screen.gd" id="4_u0ug8"]
+[ext_resource type="Script" uid="uid://bf18o4ey614js" path="res://Scripts/watch_screen.gd" id="6_atls0"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_sb7qb"]
 
@@ -81,6 +82,12 @@ layout_mode = 2
 size_flags_horizontal = 4
 disabled = true
 text = "Seeks"
+
+[node name="Watch" type="Button" parent="Screens/MainMenu/Box"]
+layout_mode = 2
+size_flags_horizontal = 4
+disabled = true
+text = "Watch"
 
 [node name="LocalGame" type="Button" parent="Screens/MainMenu/Box"]
 layout_mode = 2
@@ -219,9 +226,9 @@ script = ExtResource("4_u0ug8")
 [node name="MainBox" type="VBoxContainer" parent="Screens/SeeksScreen"]
 layout_mode = 2
 
-[node name="Titel" type="Label" parent="Screens/SeeksScreen/MainBox"]
+[node name="Title" type="Label" parent="Screens/SeeksScreen/MainBox"]
 layout_mode = 2
-theme_type_variation = &"MenuTitel"
+theme_type_variation = &"MenuTitle"
 text = "Seeks:"
 
 [node name="Seeks" type="GridContainer" parent="Screens/SeeksScreen/MainBox"]
@@ -240,10 +247,51 @@ text = "Rules "
 layout_mode = 2
 text = "Time "
 
+[node name="Watch" type="PanelContainer" parent="Screens"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_atls0")
+
+[node name="Box" type="VBoxContainer" parent="Screens/Watch"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Screens/Watch/Box"]
+layout_mode = 2
+theme_type_variation = &"MenuTitle"
+text = "Watch"
+
+[node name="Games" type="GridContainer" parent="Screens/Watch/Box"]
+layout_mode = 2
+columns = 3
+
+[node name="Players" type="Label" parent="Screens/Watch/Box/Games"]
+layout_mode = 2
+text = "Players"
+
+[node name="Rules" type="Label" parent="Screens/Watch/Box/Games"]
+layout_mode = 2
+text = "Rules"
+
+[node name="Time" type="Label" parent="Screens/Watch/Box/Games"]
+layout_mode = 2
+text = "Time"
+
 [connection signal="pressed" from="TopBar/MenuButton" to="." method="_on_menu_button_pressed"]
 [connection signal="pressed" from="TopBar/Games" to="." method="_on_games_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/Login" to="." method="_on_login_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/Seeks" to="." method="_on_seeks_pressed"]
+[connection signal="pressed" from="Screens/MainMenu/Box/Watch" to="." method="_on_watch_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/LocalGame" to="." method="_on_local_game_pressed"]
 [connection signal="start_game" from="Screens/LocalGameScreen" to="." method="_on_local_game_start_game"]
 [connection signal="pressed" from="Screens/LocalGameScreen/Grid/Play" to="Screens/LocalGameScreen" method="_on_play_pressed"]

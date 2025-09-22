@@ -9,6 +9,7 @@ enum Screen {
 	NONE,
 	MAIN_MENU,
 	SEEKS,
+	WATCH,
 	LOCAL_GAME
 }
 
@@ -22,6 +23,7 @@ func _ready():
 	login = Login.load()
 	%SeeksScreen.set_playtak(playtak)
 	$Screens/Games.setup(playtak)
+	$Screens/Watch.setup(playtak)
 	switch_screen(Screen.MAIN_MENU)
 
 func _on_local_game_pressed() -> void:
@@ -45,12 +47,13 @@ func _on_login_pressed() -> void:
 	%MainMenu/Box/Login.disabled = true
 
 func _on_playtak_state_changed():
-	if playtak.state == PlaytakInterface.State.ONLINE:
+	var is_online = playtak.state == PlaytakInterface.State.ONLINE
+	if is_online:
 		%MainMenu/Box/Login.text = "Logout " + playtak.username
-		%MainMenu/Box/Seeks.disabled = false
 	else:
 		%MainMenu/Box/Login.text = "Login"
-		%MainMenu/Box/Seeks.disabled = true
+	%MainMenu/Box/Seeks.disabled = !is_online
+	%MainMenu/Box/Watch.disabled = !is_online
 	%MainMenu/Box/Login.disabled = false
 
 func _on_menu_button_pressed() -> void:
@@ -66,6 +69,7 @@ func switch_screen(screen: Screen):
 	%MainMenu.visible = screen == Screen.MAIN_MENU
 	%SeeksScreen.visible = screen == Screen.SEEKS
 	%LocalGameScreen.visible = screen == Screen.LOCAL_GAME
+	%Screens/Watch.visible = screen == Screen.WATCH
 	active_screen = screen
 
 func _on_games_pressed() -> void:
@@ -73,3 +77,6 @@ func _on_games_pressed() -> void:
 		%Screens/Games.switch_game()
 	else:
 		switch_screen(Screen.NONE)
+
+func _on_watch_pressed() -> void:
+	switch_screen(Screen.WATCH)

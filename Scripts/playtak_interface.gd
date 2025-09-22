@@ -55,10 +55,12 @@ class Game:
 
 var seeks: Array[Seek] = []
 var online_players: Array[String] = []
+var game_list: Array[Game] = []
 
 signal state_changed
 signal seeks_changed
 signal players_changed
+signal game_list_changed
 signal game_started(game: Game)
 signal game_move(id: int, move: GameState.Move)
 signal update_clock(id: int, wtime: float, btime: float)
@@ -73,6 +75,9 @@ func login(lgn: Login):
 
 func accept_seek(id: int):
 	send("Accept %d" % id)
+
+func observe(id: int):
+	send("Observe %d" % id)
 
 func send_move(game_id:int, move: GameState.Move):
 	var move_string = "Game#%d " % game_id
@@ -189,6 +194,46 @@ func _process(_delta):
 					game.extra_time_move = extra_time_move.to_int()
 					game.extra_time = extra_time.to_int()
 					game.bot = is_bot == "1"
+					game_started.emit(game)
+				["GameList", "Add", var id, var player_white, var player_black, var size, var time, var inc, var komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time]:
+					var game := Game.new()
+					game.id = id.to_int()
+					game.player_white = player_white
+					game.player_black = player_black
+					game.color = ColorChoice.NONE
+					game.size = size.to_int()
+					game.time = time.to_int()
+					game.inc = inc.to_int()
+					game.komi = komi.to_int() * 0.5
+					game.flat_count = flat_count.to_int()
+					game.capstone_count = capstone_count.to_int()
+					game.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
+					game.extra_time_move = extra_time_move.to_int()
+					game.extra_time = extra_time.to_int()
+					game.bot = false
+					game_list.push_back(game)
+					game_list_changed.emit()
+				["GameList", "Remove", var id, ..]:
+					var index = game_list.find_custom(func (g): return g.id == id)
+					if index >= 0:
+						game_list.remove_at(index)
+						game_list_changed.emit()
+				["Observe", var id, var player_white, var player_black, var size, var time, var inc, var komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time]:
+					var game := Game.new()
+					game.id = id.to_int()
+					game.player_white = player_white
+					game.player_black = player_black
+					game.color = ColorChoice.NONE
+					game.size = size.to_int()
+					game.time = time.to_int()
+					game.inc = inc.to_int()
+					game.komi = komi.to_int() * 0.5
+					game.flat_count = flat_count.to_int()
+					game.capstone_count = capstone_count.to_int()
+					game.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
+					game.extra_time_move = extra_time_move.to_int()
+					game.extra_time = extra_time.to_int()
+					game.bot = false
 					game_started.emit(game)
 				["OnlinePlayers", ..]:
 					online_players = []
