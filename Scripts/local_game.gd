@@ -3,6 +3,7 @@ class_name LocalGame extends Control
 const TakBoard = preload("res://Scenes/tak_board.tscn")
 
 var settings: Dictionary
+var config: ConfigFile
 
 var game_state: GameState
 
@@ -12,8 +13,16 @@ var board: Node
 enum PlayerType { LOCAL, ENGINE }
 var player_types: Array[PlayerType] = []
 
-func _init(sttngs: Dictionary):
+var shown:
+	set(s):
+		visible = s
+		board.shown = s
+	get():
+		return visible
+
+func _init(sttngs: Dictionary, cfg: ConfigFile):
 	settings = sttngs
+	config = cfg
 	
 func _ready():
 	anchor_left = ANCHOR_BEGIN
@@ -32,6 +41,7 @@ func _ready():
 		engine.engine_ready.connect(engine_ready)
 		add_child(engine)
 	board = TakBoard.instantiate()
+	board.config = config
 	board.game_state = game_state
 	board.move_input.connect(move_input)
 	add_child(board)

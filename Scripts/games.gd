@@ -14,8 +14,15 @@ func add_game(game: Control):
 		if remove:
 			child.queue_free()
 		else:
-			child.hide()
+			child.shown = false
 	add_child(game)
+
+func remove_playtak_games():
+	for game in get_children():
+		if game is PlaytakGame:
+			game.queue_free()
+		else:
+			game.shown = true
 
 func game_move(id: int, move: GameState.Move):
 	var game := find_game(id)
@@ -44,4 +51,4 @@ func switch_game() -> void:
 			index = i
 	index = (index + 1) % games.size()
 	for i in games.size():
-		games[i].visible = i == index
+		games[i].shown = i == index

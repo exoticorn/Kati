@@ -8,6 +8,8 @@ var distance_factor := 1.0
 var last_drag_pos = null
 
 func _process(delta: float):
+	if !is_visible_in_tree():
+		return
 	if Input.is_action_pressed("cam_left"):
 		speed.x += (-1 - speed.x) * delta
 	if Input.is_action_pressed("cam_right"):
@@ -33,6 +35,8 @@ func _process(delta: float):
 	position = pos + (distance_factor - 1) * distance * basis.z
 	
 func _unhandled_input(event: InputEvent):
+	if !is_visible_in_tree():
+		return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:

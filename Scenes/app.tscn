@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bct47lm2yejq8"]
+[gd_scene load_steps=10 format=3 uid="uid://bct47lm2yejq8"]
 
 [ext_resource type="Script" uid="uid://b6ftb44rorpa" path="res://Scripts/app.gd" id="1_nmq3k"]
 [ext_resource type="Theme" uid="uid://bkrs4n0b5x0vf" path="res://topbar_theme.tres" id="2_fel14"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://didjayc8ohs03" path="res://Scripts/games.gd" id="3_fdjpt"]
 [ext_resource type="Script" uid="uid://c43nj0jgrp3mh" path="res://Scripts/seeks_screen.gd" id="4_u0ug8"]
 [ext_resource type="Script" uid="uid://bf18o4ey614js" path="res://Scripts/watch_screen.gd" id="6_atls0"]
+[ext_resource type="Environment" uid="uid://gio35wn5euew" path="res://Scenes/env_low.tres" id="7_patxt"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_sb7qb"]
 
@@ -31,6 +32,24 @@ text = "Menu"
 [node name="Games" type="Button" parent="TopBar"]
 layout_mode = 2
 text = "Games"
+
+[node name="CenterSpacer" type="Control" parent="TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Username" type="Label" parent="TopBar"]
+visible = false
+layout_mode = 2
+text = "Username"
+
+[node name="ReconnectButton" type="Button" parent="TopBar"]
+visible = false
+layout_mode = 2
+text = "Reconnect"
+
+[node name="Help" type="Button" parent="TopBar"]
+layout_mode = 2
+text = "?"
 
 [node name="Screens" type="Control" parent="."]
 unique_name_in_owner = true
@@ -287,8 +306,59 @@ text = "Rules"
 layout_mode = 2
 text = "Time"
 
+[node name="Help" type="PanelContainer" parent="Screens"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Box" type="VBoxContainer" parent="Screens/Help"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Screens/Help/Box"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"MenuTitle"
+text = "Usage"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Screens/Help/Box"]
+custom_minimum_size = Vector2(700, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[b]Mouse:[/b]
+
+[i]Left click[/i] on an empty square to place the selected piece.
+[i]Left click[/i] on a stack you control to pick it up, then click on the squares you want to move to.
+
+[i]Right click[/i] (without moving the mouse) to switch the selected piece to place or to cancel a stack move.
+[i]Right drag[/i] to rotate the camera.
+
+[b]Keyboard:[/b]
+
+[i]WASD:[/i] rotates the camera
+[i]1:[/i] selects flat
+[i]2:[/i] selects wall
+[i]3:[/i] selects capstone
+[i]Q:[/i] toggles between flat/wall
+[i]E:[/i] toggles between capstone/wall"
+fit_content = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("7_patxt")
+
 [connection signal="pressed" from="TopBar/MenuButton" to="." method="_on_menu_button_pressed"]
 [connection signal="pressed" from="TopBar/Games" to="." method="_on_games_pressed"]
+[connection signal="pressed" from="TopBar/ReconnectButton" to="." method="_on_reconnect_button_pressed"]
+[connection signal="pressed" from="TopBar/Help" to="." method="_on_help_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/Login" to="." method="_on_login_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/Seeks" to="." method="_on_seeks_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/Watch" to="." method="_on_watch_pressed"]

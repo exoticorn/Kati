@@ -20,6 +20,10 @@ config/icon="res://icon.svg"
 
 gdscript/warnings/integer_division=0
 
+[display]
+
+display_server/driver.linuxbsd="wayland"
+
 [filesystem]
 
 import/blender/enabled=false
@@ -78,6 +82,4 @@ toggle_cap_wall={
 
 [rendering]
 
-scaling_3d/mode=2
-scaling_3d/scale=0.5
 environment/defaults/default_clear_color=Color(0.23135275, 0.27466062, 0.2870408, 1)

@@ -3,18 +3,28 @@ class_name PlaytakGame extends Control
 const TakBoard = preload("res://Scenes/tak_board.tscn")
 
 var playtak_interface: PlaytakInterface
+var config: ConfigFile
 var game: PlaytakInterface.Game
 var game_state: GameState
 var board: Node
 
-func setup(g: PlaytakInterface.Game, i: PlaytakInterface):
+var shown:
+	set(s):
+		visible = s
+		board.shown = s
+	get():
+		return visible
+
+func setup(g: PlaytakInterface.Game, i: PlaytakInterface, c: ConfigFile):
 	game = g
 	playtak_interface = i
+	config = c
 
 func _ready():
 	game_state = GameState.new(game.size, game.komi)
 	
 	board = TakBoard.instantiate()
+	board.config = config
 	board.game_state = game_state
 	board.move_input.connect(move_input)
 	add_child(board)

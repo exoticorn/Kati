@@ -24,18 +24,24 @@ var can_input_move:
 		if current_hover_square:
 			square_entered(current_hover_square)
 
+var shown:
+	set(s):
+		visible = s
+		$Root3D.visible = s
+		$Root3D/Camera.current = s
+	get():
+		return visible
+
 signal move_input(move: GameState.Move)
 
 func _ready():
-	config = ConfigFile.new()
-	config.load("user://settings.cfg")
 	setup_quality()
 	create_board()
 	game_state.changed.connect(update_board)
-	$MovePreview.is_ghost = true
+	$Root3D/MovePreview.is_ghost = true
 
 func _process(_delta: float):
-	if !game_state.is_setup_turn():
+	if is_visible_in_tree() && !game_state.is_setup_turn():
 		var old = selected_piece_type
 		if Input.is_action_just_pressed("select_flat"):
 			selected_piece_type = GameState.Type.FLAT
@@ -51,6 +57,8 @@ func _process(_delta: float):
 			setup_move_preview()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if !is_visible_in_tree():
+		return
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
 			if event.pressed:
@@ -82,7 +90,7 @@ func setup_move_preview():
 				selected_piece_type = GameState.Type.WALL
 		elif game_state.flats_left[c] == 0:
 			selected_piece_type = GameState.Type.CAP
-	$MovePreview.setup(game_state.color_to_place(), selected_piece_type)
+	$Root3D/MovePreview.setup(game_state.color_to_place(), selected_piece_type)
 
 func create_board():
 	squares = {}
@@ -91,20 +99,20 @@ func create_board():
 			var square := square_scene.instantiate()
 			square.position = Vector3(x, 0, -y)
 			square.square = Vector2i(x, y)
-			$Board.add_child(square)
+			$Root3D/Board.add_child(square)
 			squares[Vector2i(x, y)] = square
 			square.entered.connect(square_entered)
 			square.exited.connect(square_exited)
 			square.clicked.connect(square_clicked)
 	
-	$Camera.board_size = game_state.size
+	$Root3D/Camera.board_size = game_state.size
 	
 	update_board()
 
 func update_board():
 	var piece_map = {}
 	var pieces_to_place := []
-	for piece in $Pieces.get_children():
+	for piece in $Root3D/Pieces.get_children():
 		piece_map[piece.board_pos] = piece
 	
 	# don't touch pieces that didn't move
@@ -152,7 +160,7 @@ func update_board():
 		var piece_node = piece_scene.instantiate()
 		var piece = to_place.piece
 		piece_node.setup(piece.color, piece.type)
-		$Pieces.add_child(piece_node)
+		$Root3D/Pieces.add_child(piece_node)
 		piece_node.place(to_place.pos)
 
 	# apply move highlights
@@ -160,7 +168,7 @@ func update_board():
 		squares[c].clear_move_highlight()
 
 	piece_map = {}
-	for piece in $Pieces.get_children():
+	for piece in $Root3D/Pieces.get_children():
 		piece_map[piece.board_pos] = piece
 		
 	if !game_state.moves.is_empty():
@@ -207,7 +215,7 @@ func square_entered(square):
 	var sq = squares[square]
 	if !_can_input_move:
 		sq.clear_hover_highlight()
-		$MovePreview.hide()
+		$Root3D/MovePreview.hide()
 		return
 		
 	var stack = game_state.board[square.x][square.y]
@@ -229,20 +237,20 @@ func square_entered(square):
 	if stack.is_empty():
 		sq.set_hover_highlight(Color(0.3, 0.6, 0.3))
 		setup_move_preview()
-		$MovePreview.place(Vector3i(square.x, 0, square.y), false)
-		$MovePreview.show()
+		$Root3D/MovePreview.place(Vector3i(square.x, 0, square.y), false)
+		$Root3D/MovePreview.show()
 	else:
 		if !game_state.is_setup_turn() && stack.back().color == game_state.side_to_move():
 			sq.set_hover_highlight(Color(0.3, 0.6, 0.3))#, max(0, stack.size() - game_state.size))
 		else:
 			sq.set_hover_highlight(Color(0.5, 0.2, 0.2))
-		$MovePreview.hide()
+		$Root3D/MovePreview.hide()
 
 func square_exited(square):
 	current_hover_square = null
 	var sq = squares[square]
 	sq.clear_hover_highlight()
-	$MovePreview.hide()
+	$Root3D/MovePreview.hide()
 
 func square_clicked(square):
 	if !_can_input_move:
@@ -272,7 +280,7 @@ func square_clicked(square):
 		can_input_move = false
 	elif !game_state.is_setup_turn() && stack.back().color == game_state.side_to_move():
 		held_pieces = []
-		for piece in $Pieces.get_children():
+		for piece in $Root3D/Pieces.get_children():
 			if piece.board_pos.x == square.x && piece.board_pos.z == square.y:
 				held_pieces.push_back(piece)
 		held_pieces.sort_custom(func (a, b): return a.board_pos.y < b.board_pos.y)
@@ -285,33 +293,14 @@ func square_clicked(square):
 func cancel_stack_move():
 	pending_move = null
 	held_pieces = []
-	for piece in $Pieces.get_children():
+	for piece in $Root3D/Pieces.get_children():
 		piece.set_temp_pos(null)
 
 func setup_quality():
-	var env: Environment
-	var light_energy := 6.0
 	var quality: String = config.get_value("display", "quality", "mid")
 	var rendering_method := RenderingServer.get_current_rendering_method()
-	if rendering_method == "gl_compatibility":
-		quality = "low"
-	var viewport = get_viewport()
-	match quality:
-		"high":
-			env = load("res://Scenes/env_high.tres")
-			viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
-			viewport.scaling_3d_scale = 0.75
-		"low":
-			env = load("res://Scenes/env_low.tres")
-			light_energy = 2.0
-			viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
-			viewport.scaling_3d_scale = 1.0
-		_:
-			env = load("res://Scenes/env_mid.tres")
-			viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
-			viewport.scaling_3d_scale = 0.5
-	$WorldEnvironment.environment = env
+	var light_energy := 2.0 if quality == "low" else 6.0
 	if rendering_method == "gl_compatibility":
 		$Camera.attributes = load("res://Scenes/cam_attr_compat.tres")
 		light_energy = 1.0
-	$Light.light_energy = light_energy
+	$Root3D/Light.light_energy = light_energy

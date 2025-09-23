@@ -6,7 +6,8 @@ enum State {
 	OFFLINE,
 	CONNECTING,
 	LOGGING_IN,
-	ONLINE
+	ONLINE,
+	DISCONNECTED
 }
 
 #var ws_url = "ws://localhost:9999/ws"
@@ -16,6 +17,8 @@ var ws := WebSocketPeer.new()
 var state := State.OFFLINE
 var user_pw: String
 var username: String
+var was_online := false
+var reconnect_timer := 0.0
 
 var last_ping: float = 0
 
@@ -70,6 +73,7 @@ func login(lgn: Login):
 	if state != State.OFFLINE:
 		close_connection()
 	ws.supported_protocols = PackedStringArray(["binary"])
+	ws.heartbeat_interval = 5.0
 	ws.connect_to_url(ws_url)
 	state = State.CONNECTING
 
@@ -95,7 +99,14 @@ func send_move(game_id:int, move: GameState.Move):
 		
 	send(move_string)
 
-func _process(_delta):
+func _process(delta):
+	if state == State.DISCONNECTED:
+		reconnect_timer -= delta
+		if reconnect_timer <= 0:
+			reconnect()
+		else:
+			return
+	
 	if state == State.OFFLINE:
 		return
 	
@@ -106,7 +117,8 @@ func _process(_delta):
 		WebSocketPeer.STATE_CLOSING:
 			return
 		WebSocketPeer.STATE_CLOSED:
-			state = State.OFFLINE # TODO: reconnect when we were ONLINE
+			state = State.DISCONNECTED if was_online else State.OFFLINE
+			reconnect_timer = 10.0
 			state_changed.emit()
 			return
 	
@@ -127,8 +139,8 @@ func _process(_delta):
 					game_move.emit(id, GameState.Move.place(sqr, type))
 				["M", var from, var to, ..]:
 					var sqr = GameState.Move.square_from_str(from)
-					var delta = GameState.Move.square_from_str(to) - sqr
-					var dir = GameState.Direction.LEFT if delta.x < 0 else GameState.Direction.RIGHT if delta.x > 0 else GameState.Direction.DOWN if delta.y < 0 else GameState.Direction.UP
+					var diff = GameState.Move.square_from_str(to) - sqr
+					var dir = GameState.Direction.LEFT if diff.x < 0 else GameState.Direction.RIGHT if diff.x > 0 else GameState.Direction.DOWN if diff.y < 0 else GameState.Direction.UP
 					var drops: Array[int] = []
 					var count = 0
 					for d in parts.slice(4):
@@ -151,8 +163,8 @@ func _process(_delta):
 				["Welcome", var uname]:
 					username = uname.left(-1)
 					state = State.ONLINE
+					was_online = true
 					last_ping = Time.get_unix_time_from_system()
-					print("Connected as " + username)
 					state_changed.emit()
 				["Seek", "new", var id, var user, var size, var time, var inc, var color, var half_komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var opp, var bot_seek]:
 					if opp != "0" && opp.to_lower() != username.to_lower():
@@ -214,7 +226,8 @@ func _process(_delta):
 					game_list.push_back(game)
 					game_list_changed.emit()
 				["GameList", "Remove", var id, ..]:
-					var index = game_list.find_custom(func (g): return g.id == id)
+					var int_id = id.to_int()
+					var index = game_list.find_custom(func (g): return g.id == int_id)
 					if index >= 0:
 						game_list.remove_at(index)
 						game_list_changed.emit()
@@ -255,5 +268,12 @@ func close_connection():
 	ws.close()
 	while ws.get_ready_state() != WebSocketPeer.STATE_CLOSED:
 		await get_tree().create_timer(0.1).timeout
+	was_online = false
 	state = State.OFFLINE
 	state_changed.emit()
+
+func reconnect():
+	if state != State.DISCONNECTED:
+		return
+	ws.connect_to_url(ws_url)
+	state = State.CONNECTING
