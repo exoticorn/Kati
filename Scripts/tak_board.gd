@@ -55,6 +55,8 @@ func _process(_delta: float):
 			selected_piece_type = GameState.Type.WALL if selected_piece_type == GameState.Type.CAP else GameState.Type.CAP
 		if selected_piece_type != old:
 			setup_move_preview()
+		if Input.is_action_just_pressed("cancel") && pending_move != null:
+			cancel_stack_move()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if !is_visible_in_tree():
@@ -271,13 +273,13 @@ func square_clicked(square):
 			pending_move.add_drop(square)
 			dropped_piece.set_temp_pos(Vector3i(square.x, height, square.y))
 			if held_pieces.is_empty():
-				move_input.emit(pending_move)
 				can_input_move = false
+				move_input.emit(pending_move)
 		return
 	
 	if stack.is_empty():
-		move_input.emit(GameState.Move.place(square, selected_piece_type))
 		can_input_move = false
+		move_input.emit(GameState.Move.place(square, selected_piece_type))
 	elif !game_state.is_setup_turn() && stack.back().color == game_state.side_to_move():
 		held_pieces = []
 		for piece in $Root3D/Pieces.get_children():
@@ -301,6 +303,6 @@ func setup_quality():
 	var rendering_method := RenderingServer.get_current_rendering_method()
 	var light_energy := 2.0 if quality == "low" else 6.0
 	if rendering_method == "gl_compatibility":
-		$Camera.attributes = load("res://Scenes/cam_attr_compat.tres")
+		$Root3D/Camera.attributes = load("res://Scenes/cam_attr_compat.tres")
 		light_energy = 1.0
 	$Root3D/Light.light_energy = light_energy

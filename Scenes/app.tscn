@@ -189,7 +189,7 @@ popup/item_3/id = 3
 popup/item_4/text = "2"
 popup/item_4/id = 4
 
-[node name="You Play" type="Label" parent="Screens/LocalGameScreen/Grid"]
+[node name="YouPlay" type="Label" parent="Screens/LocalGameScreen/Grid"]
 layout_mode = 2
 size_flags_horizontal = 8
 text = "You play: "

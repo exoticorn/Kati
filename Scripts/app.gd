@@ -30,6 +30,10 @@ func _ready():
 	$Screens/Watch.setup(playtak)
 	switch_screen(Screen.MAIN_MENU)
 
+func _process(_delta: float):
+	if Input.is_action_just_pressed("cancel"):
+		switch_screen(Screen.NONE)
+
 func _on_local_game_pressed() -> void:
 	switch_screen(Screen.LOCAL_GAME)
 
@@ -99,7 +103,7 @@ func apply_settings():
 	var rendering_method := RenderingServer.get_current_rendering_method()
 	if rendering_method == "gl_compatibility":
 		quality = "low"
-		settings.set_valid("display", "quality", "low")
+		settings.set_value("display", "quality", "low")
 	var viewport = get_viewport()
 	match quality:
 		"high":
@@ -118,8 +122,7 @@ func apply_settings():
 
 
 func _on_help_pressed() -> void:
-	switch_screen(Screen.HELP)
-
+	switch_screen(Screen.HELP if active_screen != Screen.HELP else Screen.NONE)
 
 func _on_reconnect_button_pressed() -> void:
 	if playtak.state == PlaytakInterface.State.DISCONNECTED:

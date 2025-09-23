@@ -4,4 +4,4 @@ export-web:
     brotli -f export/web/index.pck
 
 deploy-web: export-web
-    rsync -vr export/web/. exoticorn.de:/var/www/html/kati/.
+    rsync -rP export/web/. exoticorn.de:/var/www/html/kati/.

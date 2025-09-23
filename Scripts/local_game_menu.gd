@@ -2,6 +2,12 @@ extends PanelContainer
 
 signal start_game(settings: Dictionary)
 
+func _ready():
+	if OS.has_feature('web'):
+		$Grid/Colors/Both.button_pressed = true
+		$Grid/YouPlay.hide()
+		$Grid/Colors.hide()
+
 func _on_play_pressed() -> void:
 	var board_size := 5
 	if $Grid/Sizes/Six.button_pressed:
