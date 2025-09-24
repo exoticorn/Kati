@@ -52,3 +52,7 @@ func switch_game() -> void:
 	index = (index + 1) % games.size()
 	for i in games.size():
 		games[i].shown = i == index
+
+func apply_settings():
+	for game in get_children():
+		game.board.setup_quality()

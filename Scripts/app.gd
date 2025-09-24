@@ -12,7 +12,8 @@ enum Screen {
 	SEEKS,
 	WATCH,
 	LOCAL_GAME,
-	HELP
+	HELP,
+	SETTINGS
 }
 
 var active_screen := Screen.MAIN_MENU
@@ -28,6 +29,8 @@ func _ready():
 	%SeeksScreen.set_playtak(playtak)
 	$Screens/Games.setup(playtak)
 	$Screens/Watch.setup(playtak)
+	$Screens/Settings.setup(settings)
+	$Screens/LocalGameScreen.setup(settings)
 	switch_screen(Screen.MAIN_MENU)
 
 func _process(_delta: float):
@@ -86,6 +89,7 @@ func switch_screen(screen: Screen):
 	%LocalGameScreen.visible = screen == Screen.LOCAL_GAME
 	%Screens/Watch.visible = screen == Screen.WATCH
 	%Screens/Help.visible = screen == Screen.HELP
+	%Screens/Settings.visible = screen == Screen.SETTINGS
 	active_screen = screen
 
 func _on_games_pressed() -> void:
@@ -127,3 +131,14 @@ func _on_help_pressed() -> void:
 func _on_reconnect_button_pressed() -> void:
 	if playtak.state == PlaytakInterface.State.DISCONNECTED:
 		playtak.reconnect()
+
+
+func _on_settings_pressed() -> void:
+	switch_screen(Screen.SETTINGS)
+
+
+func _on_settings_settings_changed() -> void:
+	apply_settings()
+	$Screens/Games.apply_settings()
+	$Screens/LocalGameScreen.setup_engine_list()
+	settings.save("user://settings.cfg")

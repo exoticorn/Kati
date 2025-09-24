@@ -36,7 +36,7 @@ func _ready():
 		player_types.push_back(PlayerType.ENGINE if (settings.engine_mask & (1 << i)) != 0 else PlayerType.LOCAL)
 
 	if settings.engine_mask != 0:
-		engine = EngineInterface.new(game_state);
+		engine = EngineInterface.new(game_state, settings.engine_path, settings.engine_parameters);
 		engine.bestmove.connect(move_input)
 		engine.engine_ready.connect(engine_ready)
 		add_child(engine)

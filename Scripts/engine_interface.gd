@@ -19,10 +19,10 @@ var game_state: GameState
 signal engine_ready
 signal bestmove(move: GameState.Move)
 
-func _init(gs: GameState):
+func _init(gs: GameState, path: String, parameters: String = ""):
 	game_state = gs
-	var args = ["--cobblebot"]
-	var result = OS.execute_with_pipe("tmp/tiltak", PackedStringArray(args), false)
+	var args := parameters.split(" ")
+	var result = OS.execute_with_pipe(path, args, false)
 	if result.is_empty():
 		printerr("Failed to start engine exe")
 		state = State.ERROR
