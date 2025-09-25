@@ -57,6 +57,14 @@ func _process(_delta: float):
 			setup_move_preview()
 		if Input.is_action_just_pressed("cancel") && pending_move != null:
 			cancel_stack_move()
+		if Input.is_action_just_pressed("prev_move"):
+			game_state.step_move(-1)
+		if Input.is_action_just_pressed("next_move"):
+			game_state.step_move(1)
+		if Input.is_action_just_pressed("first_move"):
+			game_state.step_move(-1000)
+		if Input.is_action_just_pressed("last_move"):
+			game_state.step_move(1000)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if !is_visible_in_tree():
@@ -173,8 +181,8 @@ func update_board():
 	for piece in $Root3D/Pieces.get_children():
 		piece_map[piece.board_pos] = piece
 		
-	if !game_state.moves.is_empty():
-		var highlight_squares = game_state.moves.back().highlight_squares()
+	if game_state.selected_move >= 0:
+		var highlight_squares = game_state.moves[game_state.selected_move].highlight_squares()
 		for square in highlight_squares:
 			var count = highlight_squares[square]
 			var color = Color(0.3, 0.45, 0.75) if count > 0 else Color(0.1, 0.15, 0.3)
@@ -215,7 +223,7 @@ func update_board():
 func square_entered(square):
 	current_hover_square = square
 	var sq = squares[square]
-	if !_can_input_move:
+	if !_can_input_move || !game_state.is_at_latest_move():
 		sq.clear_hover_highlight()
 		$Root3D/MovePreview.hide()
 		return
@@ -255,7 +263,7 @@ func square_exited(square):
 	$Root3D/MovePreview.hide()
 
 func square_clicked(square):
-	if !_can_input_move:
+	if !_can_input_move || !game_state.is_at_latest_move():
 		return
 	
 	var stack = game_state.board[square.x][square.y]

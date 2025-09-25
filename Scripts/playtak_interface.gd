@@ -66,6 +66,7 @@ signal players_changed
 signal game_list_changed
 signal game_started(game: Game)
 signal game_move(id: int, move: GameState.Move)
+signal game_undo(id: int)
 signal update_clock(id: int, wtime: float, btime: float)
 
 func login(lgn: Login):
@@ -117,6 +118,9 @@ func _process(delta):
 		WebSocketPeer.STATE_CLOSING:
 			return
 		WebSocketPeer.STATE_CLOSED:
+			seeks = []
+			online_players = []
+			game_list = []
 			state = State.DISCONNECTED if was_online else State.OFFLINE
 			reconnect_timer = 10.0
 			state_changed.emit()
@@ -150,6 +154,8 @@ func _process(delta):
 					game_move.emit(id, GameState.Move.stack(sqr, count, dir, drops))
 				["Timems", var wtime, var btime]:
 					update_clock.emit(id, wtime.to_int() / 1000.0, btime.to_int() / 1000.0)
+				["Undo"]:
+					game_undo.emit(id)
 		else:
 			match Array(line.split(" ")):
 				["Login", "or", "Register"] when state == State.CONNECTING:

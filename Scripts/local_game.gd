@@ -48,7 +48,7 @@ func _ready():
 	setup_move_input()
 	
 func move_input(move: GameState.Move):
-	game_state.do_move(move)
+	game_state.push_move(move)
 	setup_move_input()
 
 func engine_ready():

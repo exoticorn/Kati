@@ -2,6 +2,7 @@ extends Control
 
 func setup(playtak_interface: PlaytakInterface):
 	playtak_interface.game_move.connect(game_move)
+	playtak_interface.game_undo.connect(game_undo)
 	playtak_interface.update_clock.connect(update_clock)
 
 func add_game(game: Control):
@@ -28,6 +29,11 @@ func game_move(id: int, move: GameState.Move):
 	var game := find_game(id)
 	if game != null:
 		game.remote_move(move)
+
+func game_undo(id: int):
+	var game := find_game(id)
+	if game != null:
+		game.undo_move()
 
 func update_clock(id: int, wtime: float, btime: float):
 	var game := find_game(id)

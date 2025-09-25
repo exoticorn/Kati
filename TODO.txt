@@ -1,0 +1,10 @@
+Next steps:
+
+Add analysis mode
+Stop clocks at 0:00, handle end of game message
+Chat
+Full login (not just guest)
+Add animations for undo
+Undo requests + Resign
+
+Bugs:

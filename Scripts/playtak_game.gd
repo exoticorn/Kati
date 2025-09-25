@@ -34,12 +34,17 @@ func _ready():
 	$BlackClock.setup(game.player_black, game.time)
 
 func move_input(move: GameState.Move):
-	game_state.do_move(move)
+	game_state.push_move(move)
 	playtak_interface.send_move(game.id, move)
 	update_clock_running()
 
 func remote_move(move: GameState.Move):
-	game_state.do_move(move)
+	game_state.push_move(move)
+	setup_move_input()
+	update_clock_running()
+
+func undo_move():
+	game_state.pop_move()
 	setup_move_input()
 	update_clock_running()
 

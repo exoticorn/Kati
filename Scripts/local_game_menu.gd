@@ -13,6 +13,8 @@ func _ready():
 		$Grid/Colors/Both.button_pressed = true
 		$Grid/YouPlay.hide()
 		$Grid/Colors.hide()
+		$Grid/EngineLabel.hide()
+		$Grid/Engine.hide()
 
 func _on_play_pressed() -> void:
 	var board_size := 5

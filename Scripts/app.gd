@@ -32,6 +32,8 @@ func _ready():
 	$Screens/Settings.setup(settings)
 	$Screens/LocalGameScreen.setup(settings)
 	switch_screen(Screen.MAIN_MENU)
+	if OS.has_feature("web"):
+		%MainMenu/Box/Settings.hide()
 
 func _process(_delta: float):
 	if Input.is_action_just_pressed("cancel"):

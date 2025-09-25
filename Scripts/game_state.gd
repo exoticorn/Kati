@@ -33,6 +33,7 @@ class Move:
 	var direction: Direction
 	var drops: Array[int]
 	var type: Type
+	var smash: bool
 	
 	static func place(s: Vector2i, t: Type) -> Move:
 		var move := Move.new()
@@ -191,6 +192,7 @@ var board: Array # Array[Array[Array[Piece]]]
 var moves: Array[Move] = []
 var result := Result.ONGOING
 var komi := 2.0
+var selected_move := -1
 
 signal changed
 
@@ -228,9 +230,40 @@ func color_to_place() -> Col:
 	else:
 		return side_to_move()
 
-func do_move(move: Move):
-	var move_count := moves.size() / 2
-	var color := moves.size() % 2
+func is_at_latest_move() -> bool:
+	return selected_move + 1 == moves.size()
+
+func push_move(move: Move):
+	moves.push_back(move)
+	if selected_move + 2 == moves.size():
+		selected_move += 1
+		apply_move(selected_move)
+	changed.emit()
+
+func pop_move():
+	if selected_move + 1 == moves.size():
+		unapply_move(selected_move)
+		selected_move -= 1
+	moves.pop_back()
+	changed.emit()
+
+func step_move(by: int):
+	var prev = selected_move
+	while by > 0 && selected_move + 1 < moves.size():
+		selected_move += 1
+		apply_move(selected_move)
+		by -= 1
+	while by < 0 && selected_move >= 0:
+		unapply_move(selected_move)
+		selected_move -= 1
+		by += 1
+	if selected_move != prev:
+		changed.emit()
+
+func apply_move(move_index: int):
+	var move := moves[move_index]
+	var move_count := move_index / 2
+	var color := move_index % 2
 	if move_count == 0:
 		color = 1 - color
 	var square = move.square
@@ -251,13 +284,35 @@ func do_move(move: Move):
 				var top_piece: Piece = stack.back()
 				if top_piece.type == Type.WALL:
 					top_piece.type = Type.FLAT
+					move.smash = true
 			for i in drop_count:
 				board[square.x][square.y].push_back(pieces.pop_front())
-	moves.push_back(move)
-	
 	check_game_end(color)
-	
-	changed.emit()
+
+func unapply_move(move_index: int):
+	var move = moves[move_index]
+	var move_count := move_index / 2
+	var color := move_index % 2
+	if move_count == 0:
+		color = 1 - color
+	var square = move.square
+	if move.count == 0:
+		board[square.x][square.y].clear()
+		if move.type == Type.CAP:
+			caps_left[color] += 1
+		else:
+			flats_left[color] += 1
+	else:
+		var pieces: Array[Piece] = []
+		square += DIR_VEC[move.direction] * move.drops.size()
+		for drop_count in move.drops:
+			var stack = board[square.x][square.y]
+			if pieces.is_empty() && move.smash:
+				stack[-drop_count - 1].type = Type.WALL
+			for i in drop_count:
+				pieces.push_front(stack.pop_back())
+			square -= DIR_VEC[move.direction]
+		board[square.x][square.y].append_array(pieces)
 
 static func from_tps(tps: String, k: float) -> GameState:
 	var parts = tps.split(" ")
