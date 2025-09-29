@@ -11,6 +11,7 @@ enum State {
 }
 
 #var ws_url = "ws://localhost:9999/ws"
+#var ws_url = "ws://localhost:3003"
 var ws_url = "wss://playtak.com/ws"
 
 var ws := WebSocketPeer.new()

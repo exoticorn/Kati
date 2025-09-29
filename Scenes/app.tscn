@@ -36,6 +36,16 @@ text = "Menu"
 layout_mode = 2
 text = "Games"
 
+[node name="Seeks" type="Button" parent="TopBar"]
+visible = false
+layout_mode = 2
+text = "Seeks"
+
+[node name="Watch" type="Button" parent="TopBar"]
+visible = false
+layout_mode = 2
+text = "Watch"
+
 [node name="CenterSpacer" type="Control" parent="TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -482,6 +492,8 @@ environment = ExtResource("7_patxt")
 
 [connection signal="pressed" from="TopBar/MenuButton" to="." method="_on_menu_button_pressed"]
 [connection signal="pressed" from="TopBar/Games" to="." method="_on_games_pressed"]
+[connection signal="pressed" from="TopBar/Seeks" to="." method="_on_seeks_pressed"]
+[connection signal="pressed" from="TopBar/Watch" to="." method="_on_watch_pressed"]
 [connection signal="pressed" from="TopBar/ReconnectButton" to="." method="_on_reconnect_button_pressed"]
 [connection signal="pressed" from="TopBar/Help" to="." method="_on_help_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/Login" to="." method="_on_login_pressed"]

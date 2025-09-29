@@ -70,6 +70,8 @@ func _on_playtak_state_changed():
 		$TopBar/Username.text = "Disconnected"
 	%MainMenu/Box/Seeks.disabled = !is_online
 	%MainMenu/Box/Watch.disabled = !is_online
+	$TopBar/Seeks.visible = is_online
+	$TopBar/Watch.visible = is_online
 	%MainMenu/Box/Login.disabled = false
 	$TopBar/Username.visible = is_online || is_disconnected
 	$TopBar/ReconnectButton.visible = is_disconnected

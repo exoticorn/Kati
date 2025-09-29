@@ -305,7 +305,9 @@ func unapply_move(move_index: int):
 	else:
 		var pieces: Array[Piece] = []
 		square += DIR_VEC[move.direction] * move.drops.size()
-		for drop_count in move.drops:
+		var drops = move.drops.duplicate()
+		drops.reverse()
+		for drop_count in drops:
 			var stack = board[square.x][square.y]
 			if pieces.is_empty() && move.smash:
 				stack[-drop_count - 1].type = Type.WALL

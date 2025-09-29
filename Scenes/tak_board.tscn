@@ -47,86 +47,6 @@ grow_vertical = 2
 mouse_filter = 1
 theme = ExtResource("6_la2l8")
 
-[node name="FlatsWhite" type="PanelContainer" parent="UI"]
-layout_mode = 0
-offset_left = 16.0
-offset_top = 16.0
-offset_right = 127.0
-offset_bottom = 56.0
-
-[node name="Box" type="HBoxContainer" parent="UI/FlatsWhite"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="UI/FlatsWhite/Box"]
-layout_mode = 2
-text = "Flats:"
-
-[node name="Count" type="Label" parent="UI/FlatsWhite/Box"]
-layout_mode = 2
-text = "0"
-
-[node name="CapsWhite" type="PanelContainer" parent="UI"]
-layout_mode = 0
-offset_left = 16.0
-offset_top = 68.0
-offset_right = 201.0
-offset_bottom = 108.0
-
-[node name="Box" type="HBoxContainer" parent="UI/CapsWhite"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="UI/CapsWhite/Box"]
-layout_mode = 2
-text = "Cap Stones:"
-
-[node name="Count" type="Label" parent="UI/CapsWhite/Box"]
-layout_mode = 2
-text = "0"
-
-[node name="FlatsBlack" type="PanelContainer" parent="UI"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -127.0
-offset_top = 16.0
-offset_right = -16.0
-offset_bottom = 56.0
-grow_horizontal = 0
-
-[node name="Box" type="HBoxContainer" parent="UI/FlatsBlack"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="UI/FlatsBlack/Box"]
-layout_mode = 2
-text = "Flats:"
-
-[node name="Count" type="Label" parent="UI/FlatsBlack/Box"]
-layout_mode = 2
-text = "0"
-
-[node name="CapsBlack" type="PanelContainer" parent="UI"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -201.0
-offset_top = 68.0
-offset_right = -16.0
-offset_bottom = 108.0
-grow_horizontal = 0
-
-[node name="Box" type="HBoxContainer" parent="UI/CapsBlack"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="UI/CapsBlack/Box"]
-layout_mode = 2
-text = "Cap Stones:"
-
-[node name="Count" type="Label" parent="UI/CapsBlack/Box"]
-layout_mode = 2
-text = "0"
-
 [node name="GameOver" type="PanelContainer" parent="UI"]
 visible = false
 layout_mode = 1
@@ -154,3 +74,96 @@ text = "Result"
 layout_mode = 2
 size_flags_horizontal = 4
 text = "x - x flats"
+
+[node name="LeftBox" type="VBoxContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/separation = 12
+
+[node name="Reserves" type="VBoxContainer" parent="UI/LeftBox"]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="FlatsWhite" type="PanelContainer" parent="UI/LeftBox/Reserves"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Box" type="HBoxContainer" parent="UI/LeftBox/Reserves/FlatsWhite"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/LeftBox/Reserves/FlatsWhite/Box"]
+layout_mode = 2
+text = "Flats:"
+
+[node name="Count" type="Label" parent="UI/LeftBox/Reserves/FlatsWhite/Box"]
+layout_mode = 2
+text = "0"
+
+[node name="CapsWhite" type="PanelContainer" parent="UI/LeftBox/Reserves"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Box" type="HBoxContainer" parent="UI/LeftBox/Reserves/CapsWhite"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/LeftBox/Reserves/CapsWhite/Box"]
+layout_mode = 2
+text = "Cap Stones:"
+
+[node name="Count" type="Label" parent="UI/LeftBox/Reserves/CapsWhite/Box"]
+layout_mode = 2
+text = "0"
+
+[node name="RightBox" type="VBoxContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -234.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 94.0
+grow_horizontal = 0
+theme_override_constants/separation = 12
+
+[node name="Reserves" type="VBoxContainer" parent="UI/RightBox"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="FlatsBlack" type="PanelContainer" parent="UI/RightBox/Reserves"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="Box" type="HBoxContainer" parent="UI/RightBox/Reserves/FlatsBlack"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/RightBox/Reserves/FlatsBlack/Box"]
+layout_mode = 2
+text = "Flats:"
+
+[node name="Count" type="Label" parent="UI/RightBox/Reserves/FlatsBlack/Box"]
+layout_mode = 2
+text = "0"
+
+[node name="CapsBlack" type="PanelContainer" parent="UI/RightBox/Reserves"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="Box" type="HBoxContainer" parent="UI/RightBox/Reserves/CapsBlack"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/RightBox/Reserves/CapsBlack/Box"]
+layout_mode = 2
+text = "Cap Stones:"
+
+[node name="Count" type="Label" parent="UI/RightBox/Reserves/CapsBlack/Box"]
+layout_mode = 2
+text = "0"

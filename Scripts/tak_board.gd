@@ -57,14 +57,6 @@ func _process(_delta: float):
 			setup_move_preview()
 		if Input.is_action_just_pressed("cancel") && pending_move != null:
 			cancel_stack_move()
-		if Input.is_action_just_pressed("prev_move"):
-			game_state.step_move(-1)
-		if Input.is_action_just_pressed("next_move"):
-			game_state.step_move(1)
-		if Input.is_action_just_pressed("first_move"):
-			game_state.step_move(-1000)
-		if Input.is_action_just_pressed("last_move"):
-			game_state.step_move(1000)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if !is_visible_in_tree():
@@ -89,6 +81,13 @@ func _unhandled_input(event: InputEvent) -> void:
 							_:
 								selected_piece_type = GameState.Type.WALL
 						setup_move_preview()
+	elif event is InputEventKey:
+		if event.is_pressed():
+			match event.keycode:
+				KEY_LEFT: game_state.step_move(-1)
+				KEY_RIGHT: game_state.step_move(1)
+				KEY_UP: game_state.step_move(-1000)
+				KEY_DOWN: game_state.step_move(1000)
 
 func setup_move_preview():
 	if game_state.is_setup_turn():
@@ -190,10 +189,10 @@ func update_board():
 			squares[square].set_move_highlight(color, height - count)
 
 	# update ui
-	$UI/FlatsWhite/Box/Count.text = str(game_state.flats_left[GameState.Col.WHITE])
-	$UI/CapsWhite/Box/Count.text = str(game_state.caps_left[GameState.Col.WHITE])
-	$UI/FlatsBlack/Box/Count.text = str(game_state.flats_left[GameState.Col.BLACK])
-	$UI/CapsBlack/Box/Count.text = str(game_state.caps_left[GameState.Col.BLACK])
+	%FlatsWhite/Box/Count.text = str(game_state.flats_left[GameState.Col.WHITE])
+	%CapsWhite/Box/Count.text = str(game_state.caps_left[GameState.Col.WHITE])
+	%FlatsBlack/Box/Count.text = str(game_state.flats_left[GameState.Col.BLACK])
+	%CapsBlack/Box/Count.text = str(game_state.caps_left[GameState.Col.BLACK])
 	
 	if game_state.result != GameState.Result.ONGOING:
 		var result_string
@@ -314,3 +313,10 @@ func setup_quality():
 		$Root3D/Camera.attributes = load("res://Scenes/cam_attr_compat.tres")
 		light_energy = 1.0
 	$Root3D/Light.light_energy = light_energy
+
+func add_ui(control: Control, right: bool, end: bool = true):
+	control.size_flags_horizontal = Control.SIZE_SHRINK_END if right else Control.SIZE_SHRINK_BEGIN
+	var box = $UI/RightBox if right else $UI/LeftBox
+	box.add_child(control)
+	if !end:
+		box.move_child(control, 0)
