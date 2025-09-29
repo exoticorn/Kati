@@ -33,6 +33,7 @@ func _ready():
 
 	engine = EngineInterface.new(game_state, settings.engine_path, settings.engine_parameters);
 	engine.engine_ready.connect(engine_ready)
+	engine.info.connect(info)
 	add_child(engine)
 	
 	board = TakBoard.instantiate()
@@ -49,3 +50,6 @@ func move_input(move: GameState.Move):
 
 func engine_ready():
 	engine.go_infinite()
+
+func info(move_info: EngineInterface.MoveInfo):
+	print("%s: %.02f%s" % [move_info.move.to_tpn(), move_info.score, "%" if move_info.score_is_winrate else ""])

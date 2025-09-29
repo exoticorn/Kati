@@ -7,6 +7,15 @@ enum State {
 	ERROR
 }
 
+class MoveInfo:
+	var move: GameState.Move
+	var depth: int
+	var seldepth: int
+	var visits: int
+	var pv: Array[GameState.Move]
+	var score: float
+	var score_is_winrate: bool
+
 var pid: int
 var stdio: FileAccess
 var stderr: FileAccess
@@ -19,6 +28,7 @@ var pending_go_cmd
 
 signal engine_ready
 signal bestmove(move: GameState.Move)
+signal info(info: MoveInfo)
 
 func _init(gs: GameState, path: String, parameters: String = ""):
 	game_state = gs
@@ -58,7 +68,8 @@ func _process(_delta):
 	
 	log_line("> ", line)
 
-	match Array(line.split(" ")):
+	var parts = line.split(" ")
+	match Array(parts):
 		["teiok"]:
 			var is_starting := state == State.STARTING
 			state = State.IDLE
@@ -71,6 +82,49 @@ func _process(_delta):
 			bestmove.emit(GameState.Move.from_ptn(move))
 			if pending_go_cmd != null:
 				go_cmd(pending_go_cmd)
+		["info", ..]:
+			if pending_go_cmd == null:
+				var data := {}
+				var index = 1
+				while index < parts.size():
+					var field = parts[index]
+					index += 1
+					match field:
+						"depth":
+							data.depth = parts[index].to_int()
+							index += 1
+						"seldepth":
+							data.seldepth = parts[index].to_int()
+							index += 1
+						"nodes":
+							data.nodes = parts[index].to_int()
+							index += 1
+						"cp":
+							data.cp = parts[index].to_int() / 100.0
+							index += 1
+						"wdl":
+							data.winrate = parts[index].to_int() / 1000.0
+							index += 1
+						"pv":
+							data.pv = parts.slice(index)
+							index = parts.size()
+				if data.depth != null && (data.cp != null || data.winrate != null) && data.pv != null && !data.pv.is_empty():
+					var move_info = MoveInfo.new()
+					move_info.depth = data.depth
+					move_info.seldepth = data.seldepth if data.seldepth != null else data.depth
+					move_info.visits = data.nodes if data.nodes != null else 1
+					var white_to_move = game_state.side_to_move() == GameState.Col.WHITE
+					if data.winrate != null:
+						move_info.score = data.winrate if white_to_move else 1.0 - data.winrate
+					else:
+						move_info.score = data.cp if white_to_move else -data.cp
+					move_info.score_is_winrate = data.winrate != null
+					var pv: Array[GameState.Move] = []
+					for move in data.pv:
+						pv.push_back(GameState.Move.from_ptn(move))
+					move_info.move = pv[0]
+					move_info.pv = pv
+					info.emit(move_info)
 
 func go():
 	go_cmd("go nodes 100")
@@ -105,7 +159,6 @@ func send(line):
 	log_line("< ", line)
 
 func log_line(prefix, line):
-	print(prefix, line)
 	if log_lines.size() > 20:
 		log_lines.pop_front()
 	log_lines.push_back(prefix + line)

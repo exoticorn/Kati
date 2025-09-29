@@ -26,9 +26,9 @@ func setup_engine_grid():
 		child.queue_free()
 	engine_count = 0
 	while config.has_section("engine%d" % engine_count):
-		var name = config.get_value("engine%d" % engine_count, "name")
+		var engine_name = config.get_value("engine%d" % engine_count, "name")
 		var label = Label.new()
-		label.text = name
+		label.text = engine_name
 		$Box/EngineGrid.add_child(label)
 		var edit_button = Button.new()
 		edit_button.text = "Edit.."
