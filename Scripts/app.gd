@@ -44,7 +44,11 @@ func _on_local_game_pressed() -> void:
 
 func _on_local_game_start_game(game_settings: Dictionary) -> void:
 	switch_screen(Screen.NONE)
-	var game = LocalGame.new(game_settings, settings)
+	var game
+	if game_settings.analyze:
+		game = AnalyzeGame.new(game_settings, settings)
+	else:
+		game = LocalGame.new(game_settings, settings)
 	$Screens/Games.add_game(game)
 
 func _on_seeks_pressed() -> void:

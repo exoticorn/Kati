@@ -15,6 +15,7 @@ var state: State = State.STARTING
 var log_lines = []
 
 var game_state: GameState
+var pending_go_cmd
 
 signal engine_ready
 signal bestmove(move: GameState.Move)
@@ -66,16 +67,35 @@ func _process(_delta):
 				send("teinewgame %d" % game_state.size)
 				engine_ready.emit()
 		["bestmove", var move]:
+			state = State.IDLE
 			bestmove.emit(GameState.Move.from_ptn(move))
+			if pending_go_cmd != null:
+				go_cmd(pending_go_cmd)
 
 func go():
-	if state != State.IDLE:
+	go_cmd("go nodes 100")
+
+func go_infinite():
+	go_cmd("go infinite")
+
+func go_cmd(cmd: String):
+	if state == State.SEARCHING:
+		send("stop")
+		pending_go_cmd = cmd
+		return
+	elif state != State.IDLE:
 		printerr("Trying to search in wrong state %s" % state)
+	send_position()
+	send("go infinite")
+	pending_go_cmd = null
+	state = State.SEARCHING	
+
+func send_position():
 	var position = "position startpos moves"
 	for mv in game_state.moves:
 		position += " " + mv.to_tpn()
 	send(position)
-	send("go nodes 100")
+	state = State.SEARCHING
 
 func is_ready() -> bool:
 	return state == State.IDLE
@@ -85,6 +105,7 @@ func send(line):
 	log_line("< ", line)
 
 func log_line(prefix, line):
+	print(prefix, line)
 	if log_lines.size() > 20:
 		log_lines.pop_front()
 	log_lines.push_back(prefix + line)

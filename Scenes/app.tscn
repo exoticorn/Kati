@@ -235,6 +235,13 @@ button_group = SubResource("ButtonGroup_nmq3k")
 text = "Both
 "
 
+[node name="Analyze" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Colors"]
+layout_mode = 2
+size_flags_vertical = 8
+button_group = SubResource("ButtonGroup_nmq3k")
+text = "Analyze
+"
+
 [node name="EngineLabel" type="Label" parent="Screens/LocalGameScreen/Grid"]
 layout_mode = 2
 size_flags_horizontal = 8
@@ -505,6 +512,7 @@ environment = ExtResource("7_patxt")
 [connection signal="pressed" from="Screens/LocalGameScreen/Grid/Colors/White" to="Screens/LocalGameScreen" method="_on_color_changed"]
 [connection signal="pressed" from="Screens/LocalGameScreen/Grid/Colors/Black" to="Screens/LocalGameScreen" method="_on_color_changed"]
 [connection signal="pressed" from="Screens/LocalGameScreen/Grid/Colors/Both" to="Screens/LocalGameScreen" method="_on_color_changed"]
+[connection signal="pressed" from="Screens/LocalGameScreen/Grid/Colors/Analyze" to="Screens/LocalGameScreen" method="_on_color_changed"]
 [connection signal="pressed" from="Screens/LocalGameScreen/Grid/Play" to="Screens/LocalGameScreen" method="_on_play_pressed"]
 [connection signal="settings_changed" from="Screens/Settings" to="." method="_on_settings_settings_changed"]
 [connection signal="pressed" from="Screens/Settings/Box/AddEngine" to="Screens/Settings" method="_on_add_engine_pressed"]
