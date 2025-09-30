@@ -44,13 +44,7 @@ func setup(c: GameState.Col, t: GameState.Type):
 		base_rotation = Quaternion.from_euler(Vector3(PI / 2, PI / 4 * dir, 0)) * base_rotation
 	if is_placed:
 		update_transform(false)
-	match type:
-		GameState.Type.FLAT:
-			mesh_height = flat_aabb.size.y
-		GameState.Type.WALL:
-			mesh_height = flat_aabb.size.x
-		GameState.Type.CAP:
-			mesh_height = white_cap_mesh.get_aabb().size.y
+	mesh_height = piece_height()
 
 func place(pos: Vector3i, animate: bool = true):
 	board_pos = pos
@@ -59,6 +53,18 @@ func place(pos: Vector3i, animate: bool = true):
 		return
 	temp_board_pos = null
 	update_transform(animate)
+
+func piece_height() -> float:
+	match type:
+		GameState.Type.FLAT:
+			return flat_aabb.size.y
+		GameState.Type.WALL:
+			return flat_aabb.size.x
+		_:
+			return white_cap_mesh.get_aabb().size.y
+
+func top_height():
+	return board_pos.y * flat_aabb.size.y + piece_height()
 
 func set_temp_pos(pos):
 	if temp_board_pos != pos:

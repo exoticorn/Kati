@@ -114,7 +114,7 @@ class Move:
 		Direction.UP: "+"
 	}
 	
-	func to_tpn() -> String:
+	func to_ptn() -> String:
 		var sqr = square_to_str(square)
 		var mv = ""
 		if count == 0:
@@ -124,11 +124,26 @@ class Move:
 				Type.CAP:
 					mv = "C"
 			return mv + sqr
-		mv = "%d" % count
+		if count > 1:
+			mv = str(count)
 		mv += sqr
 		mv += DIR_TO_PTN[direction]
-		for d in drops:
-			mv += "%d" % d
+		if drops.size() > 1:
+			for d in drops:
+				mv += "%d" % d
+		return mv
+
+	func to_short_ptn() -> String:
+		if count == 0:
+			match type:
+				Type.FLAT: return "F"
+				Type.WALL: return "S"
+				Type.CAP: return "C"
+		var mv = str(count) if count > 1 else ""
+		mv += DIR_TO_PTN[direction]
+		if drops.size() > 1:
+			for d in drops:
+				mv += "%d" % d
 		return mv
 
 	static func from_ptn(move: String) -> Move:

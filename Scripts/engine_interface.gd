@@ -8,6 +8,7 @@ enum State {
 }
 
 class MoveInfo:
+	var pv_index: int
 	var move: GameState.Move
 	var depth: int
 	var seldepth: int
@@ -24,6 +25,7 @@ var state: State = State.STARTING
 var log_lines = []
 
 var game_state: GameState
+var search_selected_move := false
 var pending_go_cmd
 
 signal engine_ready
@@ -75,6 +77,7 @@ func _process(_delta):
 			state = State.IDLE
 			if is_starting:
 				send("setoption name HalfKomi value %d" % roundi(game_state.komi * 2))
+#				send("setoption name MultiPV value 16")
 				send("teinewgame %d" % game_state.size)
 				engine_ready.emit()
 		["bestmove", var move]:
@@ -99,20 +102,27 @@ func _process(_delta):
 						"nodes":
 							data.nodes = parts[index].to_int()
 							index += 1
+						"visits":
+							data.visits = parts[index].to_int()
+							index += 1
 						"cp":
 							data.cp = parts[index].to_int() / 100.0
 							index += 1
 						"wdl":
 							data.winrate = parts[index].to_int() / 1000.0
 							index += 1
+						"multipv":
+							data.multipv = parts[index].to_int()
+							index += 1
 						"pv":
 							data.pv = parts.slice(index)
 							index = parts.size()
 				if data.depth != null && (data.cp != null || data.winrate != null) && data.pv != null && !data.pv.is_empty():
 					var move_info = MoveInfo.new()
+					move_info.pv_index = data.multipv - 1 if data.multipv != null else 0
 					move_info.depth = data.depth
 					move_info.seldepth = data.seldepth if data.seldepth != null else data.depth
-					move_info.visits = data.nodes if data.nodes != null else 1
+					move_info.visits = data.visits if data.visits != null else data.nodes if data.nodes != null else 1
 					var white_to_move = game_state.side_to_move() == GameState.Col.WHITE
 					if data.winrate != null:
 						move_info.score = data.winrate if white_to_move else 1.0 - data.winrate
@@ -146,8 +156,11 @@ func go_cmd(cmd: String):
 
 func send_position():
 	var position = "position startpos moves"
-	for mv in game_state.moves:
-		position += " " + mv.to_tpn()
+	var moves = game_state.moves
+	if search_selected_move:
+		moves = moves.slice(0, game_state.selected_move + 1)
+	for mv in moves:
+		position += " " + mv.to_ptn()
 	send(position)
 	state = State.SEARCHING
 

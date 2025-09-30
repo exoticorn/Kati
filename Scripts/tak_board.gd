@@ -32,6 +32,9 @@ var shown:
 	get():
 		return visible
 
+var move_infos: Array[EngineInterface.MoveInfo] = []
+var move_infos_changed = false
+
 signal move_input(move: GameState.Move)
 
 func _ready():
@@ -57,6 +60,8 @@ func _process(_delta: float):
 			setup_move_preview()
 		if Input.is_action_just_pressed("cancel") && pending_move != null:
 			cancel_stack_move()
+	if is_visible_in_tree():
+		update_analysis()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if !is_visible_in_tree():
@@ -177,8 +182,16 @@ func update_board():
 		squares[c].clear_move_highlight()
 
 	piece_map = {}
+	var stack_heights = {}
 	for piece in $Root3D/Pieces.get_children():
 		piece_map[piece.board_pos] = piece
+		var sq = Vector2i(piece.board_pos.x, piece.board_pos.z)
+		var height = stack_heights[sq] if stack_heights.has(sq) else 0.0
+		stack_heights[sq] = max(height, piece.top_height())
+	
+	for sq in squares:
+		var height = stack_heights[sq] if stack_heights.has(sq) else 0.0
+		squares[sq].set_stack_height(height)
 		
 	if game_state.selected_move >= 0:
 		var highlight_squares = game_state.moves[game_state.selected_move].highlight_squares()
@@ -281,7 +294,9 @@ func square_clicked(square):
 			dropped_piece.set_temp_pos(Vector3i(square.x, height, square.y))
 			if held_pieces.is_empty():
 				can_input_move = false
-				move_input.emit(pending_move)
+				var move = pending_move
+				pending_move = null
+				move_input.emit(move)
 		return
 	
 	if stack.is_empty():
@@ -320,3 +335,32 @@ func add_ui(control: Control, right: bool, end: bool = true):
 	box.add_child(control)
 	if !end:
 		box.move_child(control, 0)
+
+func set_move_infos(infos: Array[EngineInterface.MoveInfo]):
+	move_infos = infos
+	move_infos_changed = true
+
+func update_analysis():
+	if !move_infos_changed:
+		return
+	
+	if move_infos.is_empty():
+		for sq in squares:
+			squares[sq].clear_move_infos()
+		return
+	
+	var best_move = move_infos[0]
+	
+	var square_infos = {}
+	for info in move_infos:
+		var sq = info.move.square
+		if !square_infos.has(sq):
+			square_infos[sq] = []
+		square_infos[sq].push_back(info)
+
+	for sq in squares:
+		var square = squares[sq]
+		if square_infos.has(sq):
+			square.set_move_infos(square_infos[sq], best_move)
+		else:
+			square.clear_move_infos()

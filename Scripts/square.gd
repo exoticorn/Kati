@@ -40,6 +40,18 @@ var highlight_alpha: float:
 		if highlight:
 			highlight.set_instance_shader_parameter("alpha", alpha)
 
+func _process(_delta: float):
+	var labels = $Analysis.get_children()
+	if labels.size() > 1:
+		var total_size = 0.0
+		for label in labels:
+			total_size += label.get_aabb().size.y
+		var z_offset = -total_size / 2
+		for label in labels:
+			var size = label.get_aabb().size.y
+			label.position.z = z_offset + size / 2
+			z_offset += size
+
 func set_move_highlight(color: Color, height: int):
 	has_move_highlight = true
 	move_highlight_color = color
@@ -110,3 +122,37 @@ func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3,
 	if event is InputEventMouseButton:
 		if event.pressed && event.button_index == 1:
 			clicked.emit(square)
+
+func set_stack_height(height: float):
+	$Analysis.position.y = height + 0.1
+
+func clear_move_infos():
+	for label in $Analysis.get_children():
+		label.queue_free()
+
+func set_move_infos(infos: Array, best_move: EngineInterface.MoveInfo):
+	var labels = $Analysis.get_children()
+	while labels.size() > infos.size():
+		labels.pop_back().queue_free()
+	while labels.size() < infos.size():
+		var label := Label3D.new()
+		label.rotate_x(-PI/2)
+		$Analysis.add_child(label)
+		labels.push_back(label)
+	for i in infos.size():
+		var info = infos[i]
+		var label = labels[i]
+		var text = "%s|" % info.move.to_short_ptn()
+		if info.score_is_winrate:
+			text += "%d%%" % roundi(info.score * 100)
+		else:
+			text += "%.2f" % info.score
+		if infos.size() == 1:
+			text += "\n%.1fkn" % (info.visits / 1000.0)
+		label.text = text
+		var winrate_drop = abs(best_move.score - info.score)
+		var alpha = clamp(pow(2.0, log(float(info.visits) / best_move.visits) / log(20)), 0.0, 1.0)
+		label.modulate = Color.from_hsv(max(0, 0.333 - winrate_drop), 1.0, 1.0, alpha)
+		label.outline_modulate = Color(0, 0, 0, alpha)
+		label.position.z = 0
+	
