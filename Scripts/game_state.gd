@@ -234,9 +234,12 @@ func _init(s: int, k: float):
 		board.push_back(col)
 
 func is_setup_turn() -> bool:
-	return moves.size() < 2
+	return selected_move < 1
 
 func side_to_move() -> Col:
+	return ((selected_move + 1) & 1) as Col
+
+func side_to_move_at_latest_move() -> Col:
 	return (moves.size() & 1) as Col
 
 func color_to_place() -> Col:
@@ -247,6 +250,11 @@ func color_to_place() -> Col:
 
 func is_at_latest_move() -> bool:
 	return selected_move + 1 == moves.size()
+
+func truncate_moves():
+	if !is_at_latest_move():
+		moves = moves.slice(0, selected_move + 1)
+		result = Result.ONGOING
 
 func push_move(move: Move):
 	moves.push_back(move)

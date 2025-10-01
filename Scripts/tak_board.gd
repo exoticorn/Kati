@@ -235,7 +235,7 @@ func update_board():
 func square_entered(square):
 	current_hover_square = square
 	var sq = squares[square]
-	if !_can_input_move || !game_state.is_at_latest_move():
+	if !_can_input_move:
 		sq.clear_hover_highlight()
 		$Root3D/MovePreview.hide()
 		return
@@ -275,7 +275,7 @@ func square_exited(square):
 	$Root3D/MovePreview.hide()
 
 func square_clicked(square):
-	if !_can_input_move || !game_state.is_at_latest_move():
+	if !_can_input_move:
 		return
 	
 	var stack = game_state.board[square.x][square.y]

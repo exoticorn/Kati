@@ -32,6 +32,7 @@ func _ready():
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	
 	game_state = GameState.new(settings.size, settings.komi)
+	game_state.changed.connect(setup_move_input)
 	for i in 2:
 		player_types.push_back(PlayerType.ENGINE if (settings.engine_mask & (1 << i)) != 0 else PlayerType.LOCAL)
 
@@ -49,7 +50,6 @@ func _ready():
 	
 func move_input(move: GameState.Move):
 	game_state.push_move(move)
-	setup_move_input()
 
 func engine_ready():
 	setup_move_input()
@@ -58,8 +58,8 @@ func setup_move_input():
 	if game_state.result != GameState.Result.ONGOING:
 		board.can_input_move = false
 		return
-	if player_types[game_state.side_to_move()] == PlayerType.LOCAL:
-		board.can_input_move = true
+	if player_types[game_state.side_to_move_at_latest_move()] == PlayerType.LOCAL:
+		board.can_input_move = game_state.is_at_latest_move()
 	else:
 		board.can_input_move = false
 		if engine.is_ready():

@@ -27,6 +27,9 @@ var log_lines = []
 var game_state: GameState
 var search_selected_move := false
 var pending_go_cmd
+var move_count := 0
+var options := {}
+var max_multipv = 0
 
 signal engine_ready
 signal bestmove(move: GameState.Move)
@@ -50,91 +53,111 @@ func _process(_delta):
 	if stderr.get_error() == OK:
 		log_line("E> ", line)
 	
-	if state == State.ERROR:
-		return
-	line = stdio.get_line()
-	match stdio.get_error():
-		OK:
-			pass
-		ERR_FILE_CANT_READ:
-			if !OS.is_process_running(pid):
-				printerr("Engine died, log:")
-				for l in log_lines:
-					printerr(l)
+	while state != State.ERROR:
+		line = stdio.get_line()
+		match stdio.get_error():
+			OK:
+				pass
+			ERR_FILE_CANT_READ:
+				if !OS.is_process_running(pid):
+					printerr("Engine died, log:")
+					for l in log_lines:
+						printerr(l)
+					state = State.ERROR
+				return
+			var err:
+				printerr("Failed to read from engine pipe: %s" % err)
 				state = State.ERROR
-			return
-		var err:
-			printerr("Failed to read from engine pipe: %s" % err)
-			state = State.ERROR
-			return
-	
-	log_line("> ", line)
+				return
+		
+		log_line("> ", line)
 
-	var parts = line.split(" ")
-	match Array(parts):
-		["teiok"]:
-			var is_starting := state == State.STARTING
-			state = State.IDLE
-			if is_starting:
-				send("setoption name HalfKomi value %d" % roundi(game_state.komi * 2))
-#				send("setoption name MultiPV value 16")
-				send("teinewgame %d" % game_state.size)
-				engine_ready.emit()
-		["bestmove", var move]:
-			state = State.IDLE
-			bestmove.emit(GameState.Move.from_ptn(move))
-			if pending_go_cmd != null:
-				go_cmd(pending_go_cmd)
-		["info", ..]:
-			if pending_go_cmd == null:
-				var data := {}
-				var index = 1
-				while index < parts.size():
+		var parts = line.split(" ")
+		match Array(parts):
+			["teiok"]:
+				var is_starting := state == State.STARTING
+				state = State.IDLE
+				if is_starting:
+					if options.has("HalfKomi"):
+						send("setoption name HalfKomi value %d" % roundi(game_state.komi * 2))
+					if max_multipv > 1 && options.has("MultiPV"):
+						var pvs = min(max_multipv, options.MultiPV.max) if options.MultiPV.has("max") else max_multipv
+						send("setoption name MultiPV value %d" % pvs)
+					send("teinewgame %d" % game_state.size)
+					engine_ready.emit()
+			["bestmove", var move]:
+				state = State.IDLE
+				bestmove.emit(GameState.Move.from_ptn(move))
+				if pending_go_cmd != null:
+					go_cmd(pending_go_cmd)
+			["option", "name", var name_, "type", var type, ..]:
+				var data := { "type": type }
+				var index = 3
+				while index + 1 < parts.size():
 					var field = parts[index]
-					index += 1
+					var value = parts[index + 1]
+					index += 2
 					match field:
-						"depth":
-							data.depth = parts[index].to_int()
-							index += 1
-						"seldepth":
-							data.seldepth = parts[index].to_int()
-							index += 1
-						"nodes":
-							data.nodes = parts[index].to_int()
-							index += 1
-						"visits":
-							data.visits = parts[index].to_int()
-							index += 1
-						"cp":
-							data.cp = parts[index].to_int() / 100.0
-							index += 1
-						"wdl":
-							data.winrate = parts[index].to_int() / 1000.0
-							index += 1
-						"multipv":
-							data.multipv = parts[index].to_int()
-							index += 1
-						"pv":
-							data.pv = parts.slice(index)
-							index = parts.size()
-				if data.depth != null && (data.cp != null || data.winrate != null) && data.pv != null && !data.pv.is_empty():
-					var move_info = MoveInfo.new()
-					move_info.pv_index = data.multipv - 1 if data.multipv != null else 0
-					move_info.depth = data.depth
-					move_info.seldepth = data.seldepth if data.seldepth != null else data.depth
-					move_info.visits = data.visits if data.visits != null else data.nodes if data.nodes != null else 1
-					var white_to_move = game_state.side_to_move() == GameState.Col.WHITE
-					if data.winrate != null:
-						move_info.score = data.winrate if white_to_move else 1.0 - data.winrate
-					else:
-						move_info.score = data.cp if white_to_move else -data.cp
-					move_info.score_is_winrate = data.winrate != null
-					var pv: Array[GameState.Move] = []
-					for move in data.pv:
-						pv.push_back(GameState.Move.from_ptn(move))
-					move_info.move = pv[0]
-					move_info.pv = pv
-					info.emit(move_info)
+						"min", "max":
+							value = value.to_int()
+						"default" when type == "spin":
+							value = value.to_int()
+						"var":
+							var vars = data.var if data.has("var") else []
+							vars.push_back(value)
+							value = vars
+					data[field] = value
+				options[name_] = data
+			["info", ..]:
+				if pending_go_cmd == null:
+					var data := {}
+					var index = 1
+					while index < parts.size():
+						var field = parts[index]
+						index += 1
+						match field:
+							"depth":
+								data.depth = parts[index].to_int()
+								index += 1
+							"seldepth":
+								data.seldepth = parts[index].to_int()
+								index += 1
+							"nodes":
+								data.nodes = parts[index].to_int()
+								index += 1
+							"visits":
+								data.visits = parts[index].to_int()
+								index += 1
+							"cp":
+								data.cp = parts[index].to_int() / 100.0
+								index += 1
+							"wdl":
+								data.winrate = parts[index].to_int() / 1000.0
+								index += 1
+							"multipv":
+								data.multipv = parts[index].to_int()
+								index += 1
+							"pv":
+								data.pv = parts.slice(index)
+								index = parts.size()
+					if data.has("depth") && (data.has("cp") || data.has("winrate")) && data.has("pv") && !data.pv.is_empty():
+						var move_info = MoveInfo.new()
+						move_info.pv_index = data.multipv - 1 if data.has("multipv") else 0
+						move_info.depth = data.depth
+						move_info.seldepth = data.seldepth if data.has("seldepth") else data.depth
+						move_info.visits = data.visits if data.has("visits") else data.nodes if data.has("nodes") else 1
+						var white_to_move = (move_count & 1) == 0
+						if data.has("winrate"):
+							move_info.score = data.winrate if white_to_move else 1.0 - data.winrate
+						else:
+							move_info.score = data.cp if white_to_move else -data.cp
+						move_info.score_is_winrate = data.has("winrate")
+						var pv: Array[GameState.Move] = []
+						for move in data.pv:
+							pv.push_back(GameState.Move.from_ptn(move))
+						move_info.move = pv[0]
+						move_info.pv = pv
+						info.emit(move_info)
 
 func go():
 	go_cmd("go nodes 100")
@@ -150,7 +173,7 @@ func go_cmd(cmd: String):
 	elif state != State.IDLE:
 		printerr("Trying to search in wrong state %s" % state)
 	send_position()
-	send("go infinite")
+	send(cmd)
 	pending_go_cmd = null
 	state = State.SEARCHING	
 
@@ -159,6 +182,7 @@ func send_position():
 	var moves = game_state.moves
 	if search_selected_move:
 		moves = moves.slice(0, game_state.selected_move + 1)
+	move_count = moves.size()
 	for mv in moves:
 		position += " " + mv.to_ptn()
 	send(position)

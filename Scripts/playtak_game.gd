@@ -24,6 +24,7 @@ func setup(g: PlaytakInterface.Game, i: PlaytakInterface, c: ConfigFile):
 
 func _ready():
 	game_state = GameState.new(game.size, game.komi)
+	game_state.changed.connect(setup_move_input)
 	
 	board = TakBoard.instantiate()
 	board.config = config
@@ -43,12 +44,10 @@ func move_input(move: GameState.Move):
 
 func remote_move(move: GameState.Move):
 	game_state.push_move(move)
-	setup_move_input()
 	update_clock_running()
 
 func undo_move():
 	game_state.pop_move()
-	setup_move_input()
 	update_clock_running()
 
 func update_clock(wtime: float, btime: float):
@@ -64,7 +63,7 @@ func update_clock_running():
 
 func setup_move_input():
 	var can_move = false
-	if game_state.result == GameState.Result.ONGOING:
+	if game_state.result == GameState.Result.ONGOING && game_state.is_at_latest_move():
 		var side_to_move = game_state.side_to_move()
 		if side_to_move == GameState.Col.WHITE && game.color == PlaytakInterface.ColorChoice.WHITE:
 			can_move = true
