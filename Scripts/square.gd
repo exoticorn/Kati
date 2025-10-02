@@ -127,7 +127,7 @@ func _on_input_event(_camera: Node, event: InputEvent, _event_position: Vector3,
 			clicked.emit(square)
 
 func set_stack_height(height: float):
-	$Analysis.position.y = height + 0.1
+	$Analysis.position.y = height + 0.03
 
 func clear_move_infos():
 	for label in $Analysis.get_children():
