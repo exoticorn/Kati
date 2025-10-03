@@ -1,14 +1,18 @@
 class_name LocalGame extends Control
 
+const Move = MoveList.Move
+
 const TakBoard = preload("res://Scenes/tak_board.tscn")
 
 var settings: Dictionary
 var config: ConfigFile
 
-var game_state: GameState
+var move_list: MoveList
+var game_board: BoardState
 
 var engine: EngineInterface
 var board: Node
+var game_result = GameResult.new()
 
 enum PlayerType { LOCAL, ENGINE }
 var player_types: Array[PlayerType] = []
@@ -31,36 +35,43 @@ func _ready():
 	anchor_bottom = ANCHOR_END
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	
-	game_state = GameState.new(settings.size, settings.komi)
-	game_state.changed.connect(setup_move_input)
+	move_list = MoveList.new(settings.size, settings.komi)
+	move_list.changed.connect(setup_move_input)
 	for i in 2:
 		player_types.push_back(PlayerType.ENGINE if (settings.engine_mask & (1 << i)) != 0 else PlayerType.LOCAL)
+	game_board = BoardState.new(settings.size, settings.komi)
 
 	if settings.engine_mask != 0:
-		engine = EngineInterface.new(game_state, settings.engine_path, settings.engine_parameters);
+		engine = EngineInterface.new(engine_position(), settings.engine_path, settings.engine_parameters);
 		engine.bestmove.connect(move_input)
 		engine.engine_ready.connect(engine_ready)
 		add_child(engine)
 	board = TakBoard.instantiate()
 	board.config = config
-	board.game_state = game_state
+	board.board_state = move_list.display_board
 	board.move_input.connect(move_input)
+	board.step_move.connect(move_list.step_move)
 	add_child(board)
 	setup_move_input()
 	
-func move_input(move: GameState.Move):
-	game_state.push_move(move)
+func move_input(move: Move):
+	game_board.apply_move(move)
+	game_result = game_board.game_result()
+	board.show_result(game_result)
+	move_list.push_move(move)
 
 func engine_ready():
 	setup_move_input()
 
 func setup_move_input():
-	if game_state.result != GameState.Result.ONGOING:
-		board.can_input_move = false
-		return
-	if player_types[game_state.side_to_move_at_latest_move()] == PlayerType.LOCAL:
-		board.can_input_move = game_state.is_at_latest_move()
-	else:
-		board.can_input_move = false
-		if engine.is_ready():
-			engine.go()
+	board.can_input_move = false
+	if game_result.is_ongoing():
+		if player_types[move_list.moves.size() & 1] == PlayerType.LOCAL:
+			if move_list.display_move == move_list.moves.size():
+				board.can_input_move = true
+		else:
+			if engine.is_ready():
+				engine.go(engine_position())
+
+func engine_position() -> EngineInterface.Position:
+	return EngineInterface.Position.new(move_list.display_board.size, move_list.display_board.komi, move_list.moves)

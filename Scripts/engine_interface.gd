@@ -1,5 +1,7 @@
 class_name EngineInterface extends Node
 
+const Move = MoveList.Move
+
 enum State {
 	STARTING,
 	IDLE,
@@ -9,13 +11,23 @@ enum State {
 
 class MoveInfo:
 	var pv_index: int
-	var move: GameState.Move
+	var move: Move
 	var depth: int
 	var seldepth: int
 	var visits: int
-	var pv: Array[GameState.Move]
+	var pv: Array[Move]
 	var score: float
 	var score_is_winrate: bool
+
+class Position:
+	var size: int
+	var half_komi: int
+	var moves: Array[Move]
+	
+	func _init(s: int, komi: float, mvs: Array[Move] = []):
+		size = s
+		half_komi = roundi(komi * 2)
+		moves = mvs
 
 var pid: int
 var stdio: FileAccess
@@ -24,7 +36,7 @@ var state: State = State.STARTING
 
 var log_lines = []
 
-var game_state: GameState
+var position: Position
 var search_selected_move := false
 var pending_go_cmd
 var move_count := 0
@@ -32,11 +44,11 @@ var options := {}
 var max_multipv = 0
 
 signal engine_ready
-signal bestmove(move: GameState.Move)
+signal bestmove(move: Move)
 signal info(info: MoveInfo)
 
-func _init(gs: GameState, path: String, parameters: String = ""):
-	game_state = gs
+func _init(pos: Position, path: String, parameters: String = ""):
+	position = pos
 	var args := parameters.split(" ")
 	var result = OS.execute_with_pipe(path, args, false)
 	if result.is_empty():
@@ -79,17 +91,17 @@ func _process(_delta):
 				state = State.IDLE
 				if is_starting:
 					if options.has("HalfKomi"):
-						send("setoption name HalfKomi value %d" % roundi(game_state.komi * 2))
+						send("setoption name HalfKomi value %d" % position.half_komi)
 					if max_multipv > 1 && options.has("MultiPV"):
 						var pvs = min(max_multipv, options.MultiPV.max) if options.MultiPV.has("max") else max_multipv
 						send("setoption name MultiPV value %d" % pvs)
-					send("teinewgame %d" % game_state.size)
+					send("teinewgame %d" % position.size)
 					engine_ready.emit()
 			["bestmove", var move]:
 				state = State.IDLE
-				bestmove.emit(GameState.Move.from_ptn(move))
+				bestmove.emit(Move.from_ptn(move))
 				if pending_go_cmd != null:
-					go_cmd(pending_go_cmd)
+					go_cmd(position, pending_go_cmd)
 			["option", "name", var name_, "type", var type, ..]:
 				var data := { "type": type }
 				var index = 3
@@ -152,20 +164,21 @@ func _process(_delta):
 						else:
 							move_info.score = data.cp if white_to_move else -data.cp
 						move_info.score_is_winrate = data.has("winrate")
-						var pv: Array[GameState.Move] = []
+						var pv: Array[Move] = []
 						for move in data.pv:
-							pv.push_back(GameState.Move.from_ptn(move))
+							pv.push_back(Move.from_ptn(move))
 						move_info.move = pv[0]
 						move_info.pv = pv
 						info.emit(move_info)
 
-func go():
-	go_cmd("go nodes 100")
+func go(pos: Position):
+	go_cmd(pos, "go nodes 100")
 
-func go_infinite():
-	go_cmd("go infinite")
+func go_infinite(pos: Position):
+	go_cmd(pos, "go infinite")
 
-func go_cmd(cmd: String):
+func go_cmd(pos: Position, cmd: String):
+	position = pos
 	if state == State.SEARCHING:
 		send("stop")
 		pending_go_cmd = cmd
@@ -178,14 +191,12 @@ func go_cmd(cmd: String):
 	state = State.SEARCHING	
 
 func send_position():
-	var position = "position startpos moves"
-	var moves = game_state.moves
-	if search_selected_move:
-		moves = moves.slice(0, game_state.selected_move + 1)
+	var pos_str = "position startpos moves"
+	var moves = position.moves
 	move_count = moves.size()
 	for mv in moves:
-		position += " " + mv.to_ptn()
-	send(position)
+		pos_str += " " + mv.to_ptn()
+	send(pos_str)
 	state = State.SEARCHING
 
 func is_ready() -> bool:

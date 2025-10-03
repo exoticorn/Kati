@@ -1,7 +1,6 @@
 Next steps:
 
-Add analysis mode
-Stop clocks at 0:00, handle end of game message
+Stop clocks at 0:00
 Chat
 Full login (not just guest)
 Add animations for undo

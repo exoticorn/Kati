@@ -26,6 +26,7 @@ script = ExtResource("1_nmq3k")
 [node name="TopBar" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 4
+focus_behavior_recursive = 1
 theme = ExtResource("2_fel14")
 
 [node name="MenuButton" type="Button" parent="TopBar"]

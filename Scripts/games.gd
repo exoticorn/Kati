@@ -1,17 +1,22 @@
 extends Control
 
+const Move = MoveList.Move
+
 func setup(playtak_interface: PlaytakInterface):
 	playtak_interface.game_move.connect(game_move)
 	playtak_interface.game_undo.connect(game_undo)
+	playtak_interface.game_result.connect(game_result)
 	playtak_interface.update_clock.connect(update_clock)
 
 func add_game(game: Control):
 	for child in get_children():
 		var remove = false
 		if child is LocalGame:
-			remove = child.game_state.result != GameState.Result.ONGOING || game is LocalGame
+			remove = !child.game_result.is_ongoing() || game is LocalGame
 		elif child is PlaytakGame:
-			remove = child.game_state.result != GameState.Result.ONGOING
+			remove = !child.game_result.is_ongoing()
+		elif child is AnalyzeGame:
+			remove = true
 		if remove:
 			child.queue_free()
 		else:
@@ -25,7 +30,7 @@ func remove_playtak_games():
 		else:
 			game.shown = true
 
-func game_move(id: int, move: GameState.Move):
+func game_move(id: int, move: Move):
 	var game := find_game(id)
 	if game != null:
 		game.remote_move(move)
@@ -34,6 +39,11 @@ func game_undo(id: int):
 	var game := find_game(id)
 	if game != null:
 		game.undo_move()
+
+func game_result(id: int, result: GameResult):
+	var game := find_game(id)
+	if game != null:
+		game.set_result(result)
 
 func update_clock(id: int, wtime: float, btime: float):
 	var game := find_game(id)

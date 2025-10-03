@@ -1,5 +1,8 @@
 extends MeshInstance3D
 
+const PieceType = BoardState.PieceType
+const PlayerColor = BoardState.PlayerColor
+
 var white_flat_mesh: Mesh = preload("res://Assets/imported/white flat.res")
 var black_flat_mesh: Mesh = preload("res://Assets/imported/black flat.res")
 var white_cap_mesh: Mesh = preload("res://Assets/imported/white capstone.res")
@@ -8,8 +11,8 @@ var highlight_overlay_material: Material = preload("res://Shaders/highlight.tres
 var ghost_material: Material = preload("res://Shaders/ghost.tres")
 
 var flat_aabb: AABB
-var type: GameState.Type
-var color: GameState.Col
+var type: PieceType
+var color: PlayerColor
 var base_rotation: Quaternion
 var board_pos: Vector3i
 var temp_board_pos
@@ -22,25 +25,25 @@ var tween: Tween
 func _init():
 	flat_aabb = white_flat_mesh.get_aabb()
 
-func setup(c: GameState.Col, t: GameState.Type):
+func setup(c: PlayerColor, t: PieceType):
 	color = c
 	type = t
 	match [color, type]:
-		[GameState.Col.WHITE, GameState.Type.FLAT], [GameState.Col.WHITE, GameState.Type.WALL]:
+		[PlayerColor.WHITE, PieceType.FLAT], [PlayerColor.WHITE, PieceType.WALL]:
 			mesh = white_flat_mesh
-		[GameState.Col.BLACK, GameState.Type.FLAT], [GameState.Col.BLACK, GameState.Type.WALL]:
+		[PlayerColor.BLACK, PieceType.FLAT], [PlayerColor.BLACK, PieceType.WALL]:
 			mesh = black_flat_mesh
-		[GameState.Col.WHITE, GameState.Type.CAP]:
+		[PlayerColor.WHITE, PieceType.CAP]:
 			mesh = white_cap_mesh
-		[GameState.Col.BLACK, GameState.Type.CAP]:
+		[PlayerColor.BLACK, PieceType.CAP]:
 			mesh = black_cap_mesh
 	if is_ghost:
 		material_override = ghost_material
-		set_instance_shader_parameter("color", Color(0.459, 0.611, 0.471, 1.0) if color == GameState.Col.WHITE else Color(0.164, 0.196, 0.141, 1.0))
-	var flip = randi_range(0, 1) if type != GameState.Type.CAP else 0
+		set_instance_shader_parameter("color", Color(0.459, 0.611, 0.471, 1.0) if color == PlayerColor.WHITE else Color(0.164, 0.196, 0.141, 1.0))
+	var flip = randi_range(0, 1) if type != PieceType.CAP else 0
 	base_rotation = Quaternion.from_euler(Vector3(flip * PI, randi_range(0, 3) * PI / 2, 0))
-	if type == GameState.Type.WALL:
-		var dir = 1 if color == GameState.Col.WHITE else -1
+	if type == PieceType.WALL:
+		var dir = 1 if color == PlayerColor.WHITE else -1
 		base_rotation = Quaternion.from_euler(Vector3(PI / 2, PI / 4 * dir, 0)) * base_rotation
 	if is_placed:
 		update_transform(false)
@@ -56,9 +59,9 @@ func place(pos: Vector3i, animate: bool = true):
 
 func piece_height() -> float:
 	match type:
-		GameState.Type.FLAT:
+		PieceType.FLAT:
 			return flat_aabb.size.y
-		GameState.Type.WALL:
+		PieceType.WALL:
 			return flat_aabb.size.x
 		_:
 			return white_cap_mesh.get_aabb().size.y
@@ -74,9 +77,9 @@ func set_temp_pos(pos):
 func update_transform(animate: bool):
 	var pos = temp_board_pos if temp_board_pos != null else board_pos
 	var offset = 0.0
-	if type == GameState.Type.FLAT:
+	if type == PieceType.FLAT:
 		offset = flat_aabb.size.y * 0.5
-	elif type == GameState.Type.WALL:
+	elif type == PieceType.WALL:
 		offset = flat_aabb.size.x * 0.5
 	var base_pos = Vector3(pos.x, pos.y * flat_aabb.size.y, -pos.z)
 	if is_ghost:
@@ -105,14 +108,14 @@ func update_transform(animate: bool):
 		quaternion = target_quat
 	is_placed = true
 
-func can_be(c: GameState.Col, t: GameState.Type):
+func can_be(c: PlayerColor, t: PieceType):
 	if c != color:
 		return false
 	if t == type:
 		return true
-	return type == GameState.Type.WALL && t == GameState.Type.FLAT
+	return type == PieceType.WALL && t == PieceType.FLAT
 
-func become(t: GameState.Type):
+func become(t: PieceType):
 	if t != type:
 		setup(color, t)
 		update_transform(true)

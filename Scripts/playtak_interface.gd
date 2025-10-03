@@ -1,5 +1,8 @@
 class_name PlaytakInterface extends Node
 
+const Move = MoveList.Move
+const PieceType = BoardState.PieceType
+
 const Login = preload("res://Scripts/login.gd")
 
 enum State {
@@ -66,8 +69,9 @@ signal seeks_changed
 signal players_changed
 signal game_list_changed
 signal game_started(game: Game)
-signal game_move(id: int, move: GameState.Move)
+signal game_move(id: int, move: Move)
 signal game_undo(id: int)
+signal game_result(id: int, result: GameResult)
 signal update_clock(id: int, wtime: float, btime: float)
 
 func login(lgn: Login):
@@ -85,17 +89,17 @@ func accept_seek(id: int):
 func observe(id: int):
 	send("Observe %d" % id)
 
-func send_move(game_id:int, move: GameState.Move):
+func send_move(game_id:int, move: Move):
 	var move_string = "Game#%d " % game_id
 
 	if move.count == 0:
-		move_string += "P %s" % GameState.Move.square_to_str(move.square).to_upper()
-		if move.type == GameState.Type.WALL:
+		move_string += "P %s" % Move.square_to_str(move.square).to_upper()
+		if move.type == PieceType.WALL:
 			move_string += " W"
-		elif move.type == GameState.Type.CAP:
+		elif move.type == PieceType.CAP:
 			move_string += " C"
 	else:
-		move_string += "M %s %s" % [GameState.Move.square_to_str(move.square).to_upper(), GameState.Move.square_to_str(move.square + GameState.DIR_VEC[move.direction] * move.drops.size()).to_upper()]
+		move_string += "M %s %s" % [Move.square_to_str(move.square).to_upper(), Move.square_to_str(move.square + Move.DIR_VEC[move.direction] * move.drops.size()).to_upper()]
 		for drop in move.drops:
 			move_string += " %d" % drop
 		
@@ -137,26 +141,28 @@ func _process(delta):
 			var id = parts[0].to_int()
 			match Array(parts.slice(1)):
 				["P", var square, ..]:
-					var sqr = GameState.Move.square_from_str(square)
-					var type = GameState.Type.FLAT
+					var sqr = Move.square_from_str(square)
+					var type = PieceType.FLAT
 					if parts.size() > 3:
-						type = GameState.Type.WALL if parts[3] == "W" else GameState.Type.CAP
-					game_move.emit(id, GameState.Move.place(sqr, type))
+						type = PieceType.WALL if parts[3] == "W" else PieceType.CAP
+					game_move.emit(id, Move.place(sqr, type))
 				["M", var from, var to, ..]:
-					var sqr = GameState.Move.square_from_str(from)
-					var diff = GameState.Move.square_from_str(to) - sqr
-					var dir = GameState.Direction.LEFT if diff.x < 0 else GameState.Direction.RIGHT if diff.x > 0 else GameState.Direction.DOWN if diff.y < 0 else GameState.Direction.UP
+					var sqr = Move.square_from_str(from)
+					var diff = Move.square_from_str(to) - sqr
+					var dir = MoveList.Direction.LEFT if diff.x < 0 else MoveList.Direction.RIGHT if diff.x > 0 else MoveList.Direction.DOWN if diff.y < 0 else MoveList.Direction.UP
 					var drops: Array[int] = []
 					var count = 0
 					for d in parts.slice(4):
 						var drop = d.to_int()
 						drops.push_back(drop)
 						count += drop
-					game_move.emit(id, GameState.Move.stack(sqr, count, dir, drops))
+					game_move.emit(id, Move.stack(sqr, count, dir, drops))
 				["Timems", var wtime, var btime]:
 					update_clock.emit(id, wtime.to_int() / 1000.0, btime.to_int() / 1000.0)
 				["Undo"]:
 					game_undo.emit(id)
+				["Over", var result]:
+					game_result.emit(id, GameResult.parse(result))
 		else:
 			match Array(line.split(" ")):
 				["Login", "or", "Register"] when state == State.CONNECTING:

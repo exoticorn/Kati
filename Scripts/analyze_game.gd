@@ -1,5 +1,6 @@
 class_name AnalyzeGame extends Control
 
+const Move = MoveList.Move
 
 const TakBoard = preload("res://Scenes/tak_board.tscn")
 const Analysis = preload("res://Scenes/analysis.tscn")
@@ -7,7 +8,7 @@ const Analysis = preload("res://Scenes/analysis.tscn")
 var settings: Dictionary
 var config: ConfigFile
 
-var game_state: GameState
+var move_list: MoveList
 
 var engine: EngineInterface
 var board: Node
@@ -32,10 +33,10 @@ func _ready():
 	anchor_bottom = ANCHOR_END
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	
-	game_state = GameState.new(settings.size, settings.komi)
-	game_state.changed.connect(game_state_changed)
+	move_list = MoveList.new(settings.size, settings.komi)
+	move_list.changed.connect(game_state_changed)
 
-	engine = EngineInterface.new(game_state, settings.engine_path, settings.engine_parameters);
+	engine = EngineInterface.new(engine_position(), settings.engine_path, settings.engine_parameters);
 	engine.search_selected_move = true
 	engine.max_multipv = 16
 	engine.engine_ready.connect(engine_ready)
@@ -46,25 +47,32 @@ func _ready():
 	
 	board = TakBoard.instantiate()
 	board.config = config
-	board.game_state = game_state
+	board.board_state = move_list.display_board
 	board.move_input.connect(move_input)
+	board.step_move.connect(move_list.step_move)
 	board.add_ui(analysis, true)
 	board.can_input_move = true
 	add_child(board)
-	
-func move_input(move: GameState.Move):
-	game_state.truncate_moves()
-	game_state.push_move(move)
+
+func engine_position() -> EngineInterface.Position:
+	return EngineInterface.Position.new(move_list.display_board.size, move_list.display_board.komi, move_list.moves.slice(0, move_list.display_move))
+
+func move_input(move: Move):
+	move_list.truncate_moves()
+	move_list.push_move(move)
 
 func game_state_changed():
-	board.can_input_move = game_state.result == GameState.Result.ONGOING || !game_state.is_at_latest_move()
-	engine.go_infinite()
+	var result = move_list.display_board.game_result()
+	board.can_input_move = result.is_ongoing()
+	board.show_result(result)
+	if result.is_ongoing():
+		engine.go_infinite(engine_position())
 	move_infos = []
 	board.set_move_infos(move_infos)
-	analysis.move_count = game_state.moves.size()
+	analysis.move_count = move_list.display_move
 
 func engine_ready():
-	engine.go_infinite()
+	engine.go_infinite(engine_position())
 
 func info(move_info: EngineInterface.MoveInfo):
 	if move_info.pv_index == 0:
