@@ -50,21 +50,23 @@ func _ready():
 
 func _process(_delta: float):
 	if is_visible_in_tree() && !board_state.is_setup_turn():
-		var old = selected_piece_type
-		if Input.is_action_just_pressed("select_flat"):
-			selected_piece_type = PieceType.FLAT
-		if Input.is_action_just_pressed("select_wall"):
-			selected_piece_type = PieceType.WALL
-		if Input.is_action_just_pressed("select_cap"):
-			selected_piece_type = PieceType.CAP
-		if Input.is_action_just_pressed("toggle_flat_wall"):
-			selected_piece_type = PieceType.WALL if selected_piece_type == PieceType.FLAT else PieceType.FLAT
-		if Input.is_action_just_pressed("toggle_cap_wall"):
-			selected_piece_type = PieceType.WALL if selected_piece_type == PieceType.CAP else PieceType.CAP
-		if selected_piece_type != old:
-			setup_move_preview()
-		if Input.is_action_just_pressed("cancel") && pending_move != null:
-			cancel_stack_move()
+		var viewport = get_viewport()
+		if viewport.gui_get_focus_owner() == null:
+			var old = selected_piece_type
+			if Input.is_action_just_pressed("select_flat"):
+				selected_piece_type = PieceType.FLAT
+			if Input.is_action_just_pressed("select_wall"):
+				selected_piece_type = PieceType.WALL
+			if Input.is_action_just_pressed("select_cap"):
+				selected_piece_type = PieceType.CAP
+			if Input.is_action_just_pressed("toggle_flat_wall"):
+				selected_piece_type = PieceType.WALL if selected_piece_type == PieceType.FLAT else PieceType.FLAT
+			if Input.is_action_just_pressed("toggle_cap_wall"):
+				selected_piece_type = PieceType.WALL if selected_piece_type == PieceType.CAP else PieceType.CAP
+			if selected_piece_type != old:
+				setup_move_preview()
+			if Input.is_action_just_pressed("cancel") && pending_move != null:
+				cancel_stack_move()
 	if is_visible_in_tree():
 		update_analysis()
 

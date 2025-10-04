@@ -1,6 +1,7 @@
 extends Control
 
 const Login = preload("res://Scripts/login.gd")
+const ChatWindow = preload("res://Scripts/chat_window.gd")
 
 var playtak: PlaytakInterface
 var login: Login
@@ -13,7 +14,8 @@ enum Screen {
 	WATCH,
 	LOCAL_GAME,
 	HELP,
-	SETTINGS
+	SETTINGS,
+	CHAT
 }
 
 var active_screen := Screen.MAIN_MENU
@@ -24,6 +26,7 @@ func _ready():
 	playtak = PlaytakInterface.new()
 	playtak.state_changed.connect(_on_playtak_state_changed)
 	playtak.game_started.connect(_on_playtak_game_started)
+	playtak.chat_message.connect(_on_chat_received)
 	add_child(playtak)
 	login = Login.load()
 	%SeeksScreen.set_playtak(playtak)
@@ -77,6 +80,7 @@ func _on_playtak_state_changed():
 	$TopBar/Seeks.visible = is_online
 	$TopBar/Watch.visible = is_online
 	%MainMenu/Box/Login.disabled = false
+	$TopBar/Chat.visible = is_online
 	$TopBar/Username.visible = is_online || is_disconnected
 	$TopBar/ReconnectButton.visible = is_disconnected
 	if !is_online:
@@ -98,6 +102,7 @@ func switch_screen(screen: Screen):
 	%Screens/Watch.visible = screen == Screen.WATCH
 	%Screens/Help.visible = screen == Screen.HELP
 	%Screens/Settings.visible = screen == Screen.SETTINGS
+	%Screens/Chat.visible = screen == Screen.CHAT
 	active_screen = screen
 
 func _on_games_pressed() -> void:
@@ -150,3 +155,10 @@ func _on_settings_settings_changed() -> void:
 	$Screens/Games.apply_settings()
 	$Screens/LocalGameScreen.setup_engine_list()
 	settings.save("user://settings.cfg")
+
+
+func _on_chat_pressed() -> void:
+	switch_screen(Screen.CHAT)
+
+func _on_chat_received(type: ChatWindow.Type, room: String, user: String, text: String):
+	$Screens/Chat.add_message(type, room, user, text)

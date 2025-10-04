@@ -4,6 +4,7 @@ const Move = MoveList.Move
 const PieceType = BoardState.PieceType
 
 const Login = preload("res://Scripts/login.gd")
+const ChatWindow = preload("res://Scripts/chat_window.gd")
 
 enum State {
 	OFFLINE,
@@ -73,6 +74,7 @@ signal game_move(id: int, move: Move)
 signal game_undo(id: int)
 signal game_result(id: int, result: GameResult)
 signal update_clock(id: int, wtime: float, btime: float)
+signal chat_message(type: ChatWindow.Type, room: String, user: String, message: String)
 
 func login(lgn: Login):
 	user_pw = "%s %s" % [lgn.user, lgn.password]
@@ -266,6 +268,18 @@ func _process(delta):
 					for player in line.right(-14).split(","):
 						online_players.push_back(player.lstrip("[\" ").rstrip("]\"")) # advanced parsing!
 					players_changed.emit()
+				["Tell", var user, ..]:
+					var cleaned_user = user.trim_prefix("<").trim_suffix(">")
+					var message = line.split(" ", true, 2)[2]
+					chat_message.emit(ChatWindow.Type.DIRECT, cleaned_user, cleaned_user, message)
+				["Shout", var user, ..]:
+					var cleaned_user = user.trim_prefix("<").trim_suffix(">")
+					var message = line.split(" ", true, 2)[2]
+					chat_message.emit(ChatWindow.Type.GROUP, "Global", cleaned_user, message)
+				["ShoutRoom", var room, var user, ..]:
+					var cleaned_user = user.trim_prefix("<").trim_suffix(">")
+					var message = line.split(" ", true, 3)[3]
+					chat_message.emit(ChatWindow.Type.GROUP, room, cleaned_user, message)
 	
 	if state == State.ONLINE:
 		var t = Time.get_unix_time_from_system()

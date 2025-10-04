@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://chsho2bb3oa4o"]
+
+[ext_resource type="Theme" uid="uid://d8am5lbm0wbt" path="res://chat_theme.tres" id="1_tgqin"]
+[ext_resource type="Script" uid="uid://ocaa77dsf35h" path="res://Scripts/chat_window.gd" id="1_vvcln"]
+
+[node name="ChatWindow" type="PanelContainer"]
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_tgqin")
+script = ExtResource("1_vvcln")
+
+[node name="Box" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Tabs" type="TabBar" parent="Box"]
+layout_mode = 2
+focus_mode = 0
+tab_close_display_policy = 1
+
+[node name="Panel" type="PanelContainer" parent="Box"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"ChatPanel"
+
+[node name="Chat" type="ScrollContainer" parent="Box/Panel"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Grid" type="GridContainer" parent="Box/Panel/Chat"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 3
+
+[node name="Input" type="LineEdit" parent="Box"]
+layout_mode = 2
+keep_editing_on_text_submit = true
+emoji_menu_enabled = false
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="tab_changed" from="Box/Tabs" to="." method="_on_tabs_tab_changed"]

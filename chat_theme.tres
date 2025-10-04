@@ -1,0 +1,46 @@
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://d8am5lbm0wbt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lda37"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.14509805)
+border_width_top = 1
+border_color = Color(1, 1, 1, 0.105882354)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tr3mi"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0.069490954, 0.069490954, 0.06949095, 0.4862745)
+border_width_top = 2
+border_color = Color(0.8, 0.8, 0.8, 0.7764706)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_47vt3"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0, 0, 0, 0.4862745)
+border_width_top = 2
+border_color = Color(0.8, 0.8, 0.8, 0.7764706)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qhiva"]
+content_margin_left = 4.0
+content_margin_right = 4.0
+bg_color = Color(0, 0, 0, 0.19215687)
+border_width_top = 2
+border_color = Color(0.8, 0.8, 0.8, 0.15294118)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+
+[resource]
+ChatPanel/base_type = &"PanelContainer"
+ChatPanel/styles/panel = SubResource("StyleBoxFlat_lda37")
+Label/font_sizes/font_size = 18
+TabBar/font_sizes/font_size = 20
+TabBar/styles/tab_hovered = SubResource("StyleBoxFlat_tr3mi")
+TabBar/styles/tab_selected = SubResource("StyleBoxFlat_47vt3")
+TabBar/styles/tab_unselected = SubResource("StyleBoxFlat_qhiva")

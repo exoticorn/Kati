@@ -10,20 +10,22 @@ var last_drag_pos = null
 func _process(delta: float):
 	if !is_visible_in_tree():
 		return
-	if Input.is_action_pressed("cam_left"):
-		speed.x += (-1 - speed.x) * delta
-	if Input.is_action_pressed("cam_right"):
-		speed.x += (1 - speed.x) * delta
-	if Input.is_action_pressed("cam_up"):
-		speed.y += (-1 - speed.y) * delta
-	if Input.is_action_pressed("cam_down"):
-		speed.y += (1 - speed.y) * delta
+	
+	var viewport := get_viewport()
+	if viewport.gui_get_focus_owner() == null:
+		if Input.is_action_pressed("cam_left"):
+			speed.x += (-1 - speed.x) * delta
+		if Input.is_action_pressed("cam_right"):
+			speed.x += (1 - speed.x) * delta
+		if Input.is_action_pressed("cam_up"):
+			speed.y += (-1 - speed.y) * delta
+		if Input.is_action_pressed("cam_down"):
+			speed.y += (1 - speed.y) * delta
 	speed *= 0.05 ** delta
 	rot += speed * (delta * 3)
 	rot.x = fmod(rot.x, PI * 2)
 	rot.y = clampf(rot.y, 0.1, 1.4)
 	
-	var viewport := get_viewport()
 	keep_aspect = Camera3D.KEEP_HEIGHT if viewport.size.x > viewport.size.y else Camera3D.KEEP_WIDTH
 	
 	basis = Basis.from_euler(Vector3(-rot.y, -rot.x, 0))
