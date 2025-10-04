@@ -1,9 +1,9 @@
 Next steps:
 
-Stop clocks at 0:00
 Chat
+Undo requests + Resign + Draw
 Full login (not just guest)
+Finish board + table gfx (including coordinates)
 Add animations for undo
-Undo requests + Resign
 
 Bugs:

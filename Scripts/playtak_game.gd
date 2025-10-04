@@ -69,11 +69,13 @@ func update_clock_running():
 func set_result(result: GameResult):
 	game_result = result
 	board.show_result(result)
+	setup_move_input()
+	update_clock_running()
 
 func setup_move_input():
 	var can_move = false
 	if move_list.display_move == move_list.moves.size():
-		if move_list.display_board.game_result().is_ongoing():
+		if game_result.is_ongoing() && move_list.display_board.game_result().is_ongoing():
 			var side_to_move = move_list.display_board.side_to_move()
 			if side_to_move == PlayerColor.WHITE && game.color == PlaytakInterface.ColorChoice.WHITE:
 				can_move = true

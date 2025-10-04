@@ -18,7 +18,7 @@ func setup(name_: String, initial_time: float):
 
 func _process(delta: float):
 	if running:
-		_time -= delta
+		_time = max(0, _time - delta)
 		display_time()
 
 func display_time():
