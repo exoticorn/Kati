@@ -74,6 +74,7 @@ signal game_move(id: int, move: Move)
 signal game_undo(id: int)
 signal game_result(id: int, result: GameResult)
 signal update_clock(id: int, wtime: float, btime: float)
+signal add_chat_room(type: ChatWindow.Type, room: String)
 signal chat_message(type: ChatWindow.Type, room: String, user: String, message: String)
 
 func login(lgn: Login):
@@ -226,6 +227,8 @@ func _process(delta):
 					game.extra_time = extra_time.to_int()
 					game.bot = is_bot == "1"
 					game_started.emit(game)
+					var opponent = game.player_black if game.color == ColorChoice.WHITE else game.player_white
+					add_chat_room.emit(ChatWindow.Type.DIRECT, opponent)
 				["GameList", "Add", var id, var player_white, var player_black, var size, var time, var inc, var komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time]:
 					var game := Game.new()
 					game.id = id.to_int()
@@ -267,6 +270,9 @@ func _process(delta):
 					game.extra_time = extra_time.to_int()
 					game.bot = false
 					game_started.emit(game)
+					var players = [player_white, player_black]
+					players.sort()
+					send("JoinRoom %s-%s" % [players[0], players[1]])
 				["OnlinePlayers", ..]:
 					online_players = []
 					for player in line.right(-14).split(","):
@@ -288,6 +294,8 @@ func _process(delta):
 					var cleaned_user = user.trim_prefix("<").trim_suffix(">")
 					var message = line.split(" ", true, 3)[3]
 					chat_message.emit(ChatWindow.Type.GROUP, room, cleaned_user, message)
+				["Joined", "room", var room]:
+					add_chat_room.emit(ChatWindow.Type.GROUP, room)
 				["Message", ..]:
 					chat_message.emit(ChatWindow.Type.SYSTEM, "<system>", "<server>", line.split(" ", true, 1)[1])
 				["Error", ..]:
@@ -308,7 +316,10 @@ func send_chat_message(type: ChatWindow.Type, room: String, text: String):
 		ChatWindow.Type.GROUP when room == "Global":
 			send("Shout %s" % text)
 		ChatWindow.Type.GROUP:
-			send("ShoutRoomt %s %s" % [room, text])
+			send("ShoutRoom %s %s" % [room, text])
+
+func leave_room(room: String):
+	send("LeaveRoom %s" % room)
 
 func send(line: String):
 	print("< " + line)
@@ -316,9 +327,9 @@ func send(line: String):
 
 func close_connection():
 	ws.close()
+	was_online = false
 	while ws.get_ready_state() != WebSocketPeer.STATE_CLOSED:
 		await get_tree().create_timer(0.1).timeout
-	was_online = false
 	state = State.OFFLINE
 	state_changed.emit()
 

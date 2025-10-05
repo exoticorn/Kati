@@ -27,7 +27,9 @@ func _ready():
 	playtak.state_changed.connect(_on_playtak_state_changed)
 	playtak.game_started.connect(_on_playtak_game_started)
 	playtak.chat_message.connect(_on_chat_received)
+	playtak.add_chat_room.connect($Screens/Chat.add_room)
 	$Screens/Chat.send_message.connect(playtak.send_chat_message)
+	$Screens/Chat.leave_room.connect(playtak.leave_room)
 	add_child(playtak)
 	login = Login.load()
 	%SeeksScreen.set_playtak(playtak)
@@ -42,6 +44,8 @@ func _ready():
 func _process(_delta: float):
 	if Input.is_action_just_pressed("cancel"):
 		switch_screen(Screen.NONE)
+	if Input.is_action_just_pressed("open_chat", true):
+		switch_screen(Screen.CHAT if active_screen != Screen.CHAT else Screen.NONE)
 
 func _on_local_game_pressed() -> void:
 	switch_screen(Screen.LOCAL_GAME)

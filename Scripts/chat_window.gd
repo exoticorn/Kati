@@ -28,6 +28,7 @@ var last_added_message_control
 
 signal unread_count(count: int)
 signal send_message(type: Type, room_name: String, msg: String)
+signal leave_room(room_name: String)
 
 func _ready():
 	add_room(Type.GROUP, "Global")
@@ -35,6 +36,18 @@ func _ready():
 func _process(_delta: float):
 	if is_visible_in_tree() && last_added_message_control != null:
 		scroll_to_last_message.call_deferred()
+
+func _input(event: InputEvent):
+	if is_visible_in_tree():
+		if event is InputEventKey:
+			if event.pressed == true && event.keycode == KEY_TAB:
+				if rooms.size() > 1:
+					var index = $Box/Tabs.current_tab
+					if event.get_modifiers_mask() & KEY_MASK_SHIFT:
+						index = (index + rooms.size() - 1)
+					else:
+						index += 1
+					$Box/Tabs.current_tab = index % rooms.size()
 
 func _on_visibility_changed() -> void:
 	if is_visible_in_tree():
@@ -56,8 +69,10 @@ func add_room(type, room) -> int:
 		if rooms[i].name == room && rooms[i].type == type:
 			return i
 	$Box/Tabs.add_tab(room)
+	var room_index = rooms.size()
 	rooms.push_back(Room.new(type, room))
-	return rooms.size() - 1
+	$Box/Tabs.current_tab = room_index
+	return room_index
 
 func add_message_to_chat(message):
 	var grid = $Box/Panel/Chat/Grid
@@ -111,3 +126,14 @@ func _on_input_text_submitted(new_text: String):
 		var room = rooms[room_index]
 		send_message.emit(room.type, room.name, new_text)
 	$Box/Input.text = ""
+
+
+func _on_tabs_tab_close_pressed(tab: int) -> void:
+	var current_tab = $Box/Tabs.current_tab
+	var room = rooms[tab]
+	if room.type == Type.GROUP && room.name != "Global":
+		leave_room.emit(room.name)
+	$Box/Tabs.remove_tab(tab)
+	rooms.remove_at(tab)
+	if tab == current_tab && $Box/Tabs.current_tab == current_tab:
+		_on_tabs_tab_changed(current_tab)
