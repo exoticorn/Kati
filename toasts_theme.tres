@@ -1,0 +1,15 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://4w0nwl75r20n"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lowqh"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0, 0, 0, 0.2)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[resource]
+Label/constants/outline_size = 3
+Label/font_sizes/font_size = 20
+Label/styles/normal = SubResource("StyleBoxFlat_lowqh")

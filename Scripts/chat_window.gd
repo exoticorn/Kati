@@ -1,11 +1,12 @@
 extends PanelContainer
 
-enum Type { DIRECT, GROUP }
+enum Type { DIRECT, GROUP, SYSTEM }
 
 class Room:
 	var type: Type
 	var name: String
 	var messages: Array[Message] = []
+	var unread_count := 0
 
 	func _init(t: Type, n: String):
 		type = t
@@ -25,6 +26,9 @@ class Message:
 var rooms: Array[Room]
 var last_added_message_control
 
+signal unread_count(count: int)
+signal send_message(type: Type, room_name: String, msg: String)
+
 func _ready():
 	add_room(Type.GROUP, "Global")
 
@@ -41,8 +45,11 @@ func add_message(type: Type, room_name: String, user: String, msg: String):
 	var room = rooms[room_index]
 	var message = Message.new(user, msg)
 	room.messages.push_back(message)
+	room.unread_count += 1
+	$Box/Tabs.set_tab_title(room_index, "%s (%d)" % [room.name, room.unread_count])
 	if room_index == $Box/Tabs.current_tab:
 		add_message_to_chat(message)
+	emit_unread_count()
 
 func add_room(type, room) -> int:
 	for i in rooms.size():
@@ -79,8 +86,28 @@ func _on_tabs_tab_changed(tab: int) -> void:
 		var room = rooms[tab]
 		for message in room.messages:
 			add_message_to_chat(message)
+		$Box/Input.visible = room.type != Type.SYSTEM
 
 func scroll_to_last_message():
 	if last_added_message_control != null:
 		$Box/Panel/Chat.ensure_control_visible(last_added_message_control)
 		last_added_message_control = null
+		var room_index = $Box/Tabs.current_tab
+		if room_index >= 0 && room_index < rooms.size():
+			var room = rooms[room_index]
+			room.unread_count = 0
+			$Box/Tabs.set_tab_title(room_index, room.name)
+			emit_unread_count()
+
+func emit_unread_count():
+	var unread = 0
+	for room in rooms:
+		unread += room.unread_count
+	unread_count.emit(unread)
+
+func _on_input_text_submitted(new_text: String):
+	var room_index = $Box/Tabs.current_tab
+	if room_index >= 0 && room_index < rooms.size():
+		var room = rooms[room_index]
+		send_message.emit(room.type, room.name, new_text)
+	$Box/Input.text = ""

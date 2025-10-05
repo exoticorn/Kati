@@ -45,3 +45,4 @@ emoji_menu_enabled = false
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="tab_changed" from="Box/Tabs" to="." method="_on_tabs_tab_changed"]
+[connection signal="text_submitted" from="Box/Input" to="." method="_on_input_text_submitted"]

@@ -129,6 +129,8 @@ func _process(delta):
 			online_players = []
 			game_list = []
 			state = State.DISCONNECTED if was_online else State.OFFLINE
+			if was_online:
+				chat_message.emit(ChatWindow.Type.SYSTEM, "<system>", "<client>", "Connection lost")
 			reconnect_timer = 10.0
 			state_changed.emit()
 			return
@@ -178,6 +180,8 @@ func _process(delta):
 				["Welcome", var uname]:
 					username = uname.left(-1)
 					state = State.ONLINE
+					if was_online:
+						chat_message.emit(ChatWindow.Type.SYSTEM, "<system>", "<client>", "Reconnected")
 					was_online = true
 					last_ping = Time.get_unix_time_from_system()
 					state_changed.emit()
@@ -272,6 +276,10 @@ func _process(delta):
 					var cleaned_user = user.trim_prefix("<").trim_suffix(">")
 					var message = line.split(" ", true, 2)[2]
 					chat_message.emit(ChatWindow.Type.DIRECT, cleaned_user, cleaned_user, message)
+				["Told", var user, ..]:
+					var cleaned_user = user.trim_prefix("<").trim_suffix(">")
+					var message = line.split(" ", true, 2)[2]
+					chat_message.emit(ChatWindow.Type.DIRECT, cleaned_user, username, message)					
 				["Shout", var user, ..]:
 					var cleaned_user = user.trim_prefix("<").trim_suffix(">")
 					var message = line.split(" ", true, 2)[2]
@@ -280,12 +288,27 @@ func _process(delta):
 					var cleaned_user = user.trim_prefix("<").trim_suffix(">")
 					var message = line.split(" ", true, 3)[3]
 					chat_message.emit(ChatWindow.Type.GROUP, room, cleaned_user, message)
+				["Message", ..]:
+					chat_message.emit(ChatWindow.Type.SYSTEM, "<system>", "<server>", line.split(" ", true, 1)[1])
+				["Error", ..]:
+					chat_message.emit(ChatWindow.Type.SYSTEM, "<system>", "<error>", line.split(" ", true, 1)[1])
 	
 	if state == State.ONLINE:
 		var t = Time.get_unix_time_from_system()
 		if t >= last_ping + 30:
 			send("PING")
 			last_ping = t
+
+func send_chat_message(type: ChatWindow.Type, room: String, text: String):
+	if state != State.ONLINE:
+		return
+	match type:
+		ChatWindow.Type.DIRECT:
+			send("Tell %s %s" % [room, text])
+		ChatWindow.Type.GROUP when room == "Global":
+			send("Shout %s" % text)
+		ChatWindow.Type.GROUP:
+			send("ShoutRoomt %s %s" % [room, text])
 
 func send(line: String):
 	print("< " + line)

@@ -27,6 +27,7 @@ func _ready():
 	playtak.state_changed.connect(_on_playtak_state_changed)
 	playtak.game_started.connect(_on_playtak_game_started)
 	playtak.chat_message.connect(_on_chat_received)
+	$Screens/Chat.send_message.connect(playtak.send_chat_message)
 	add_child(playtak)
 	login = Login.load()
 	%SeeksScreen.set_playtak(playtak)
@@ -162,3 +163,9 @@ func _on_chat_pressed() -> void:
 
 func _on_chat_received(type: ChatWindow.Type, room: String, user: String, text: String):
 	$Screens/Chat.add_message(type, room, user, text)
+	if user != playtak.username:
+		$Screens/Toasts.add_toast("%s: %s" % [user, text])
+
+
+func _on_chat_unread_count(count: int) -> void:
+	$TopBar/Chat.text = "Chat" if count == 0 else "Chat (%d)" % count

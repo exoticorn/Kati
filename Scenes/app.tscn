@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bct47lm2yejq8"]
+[gd_scene load_steps=15 format=3 uid="uid://bct47lm2yejq8"]
 
 [ext_resource type="Script" uid="uid://b6ftb44rorpa" path="res://Scripts/app.gd" id="1_nmq3k"]
 [ext_resource type="Theme" uid="uid://bkrs4n0b5x0vf" path="res://topbar_theme.tres" id="2_fel14"]
@@ -9,6 +9,8 @@
 [ext_resource type="Script" uid="uid://c8h2aqg2cdt8q" path="res://Scripts/settings.gd" id="7_jgaas"]
 [ext_resource type="Environment" uid="uid://gio35wn5euew" path="res://Scenes/env_low.tres" id="7_patxt"]
 [ext_resource type="PackedScene" uid="uid://chsho2bb3oa4o" path="res://Scenes/chat_window.tscn" id="8_cdfq8"]
+[ext_resource type="Theme" uid="uid://4w0nwl75r20n" path="res://toasts_theme.tres" id="9_vl6qb"]
+[ext_resource type="Script" uid="uid://d00iwy70rhjso" path="res://Scripts/toasts.gd" id="10_bypbs"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_sb7qb"]
 
@@ -506,6 +508,22 @@ text = "Ok"
 visible = false
 layout_mode = 1
 
+[node name="Toasts" type="VBoxContainer" parent="Screens"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme = ExtResource("9_vl6qb")
+script = ExtResource("10_bypbs")
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("7_patxt")
 
@@ -531,3 +549,4 @@ environment = ExtResource("7_patxt")
 [connection signal="pressed" from="Screens/Settings/Box/AddEngine" to="Screens/Settings" method="_on_add_engine_pressed"]
 [connection signal="pressed" from="Screens/Settings/EnginePopup/Box/Buttons/Cancel" to="Screens/Settings" method="_on_cancel_pressed"]
 [connection signal="pressed" from="Screens/Settings/EnginePopup/Box/Buttons/Ok" to="Screens/Settings" method="_on_ok_pressed"]
+[connection signal="unread_count" from="Screens/Chat" to="." method="_on_chat_unread_count"]
