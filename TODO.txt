@@ -1,8 +1,8 @@
 Next steps:
 
-Chat
-Undo requests + Resign + Draw
 Full login (not just guest)
+Create seeks
+Sort seeks + display count in top bar
 Finish board + table gfx (including coordinates)
 Add animations for undo
 

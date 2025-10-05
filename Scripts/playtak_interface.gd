@@ -5,6 +5,7 @@ const PieceType = BoardState.PieceType
 
 const Login = preload("res://Scripts/login.gd")
 const ChatWindow = preload("res://Scripts/chat_window.gd")
+const GameAction = preload("res://Scripts/game_actions.gd").Action
 
 enum State {
 	OFFLINE,
@@ -14,9 +15,10 @@ enum State {
 	DISCONNECTED
 }
 
-#var ws_url = "ws://localhost:9999/ws"
-#var ws_url = "ws://localhost:3003"
-var ws_url = "wss://playtak.com/ws"
+#const ws_url = "ws://localhost:9999/ws"
+#const ws_url = "ws://localhost:3003"
+const ws_url = "wss://playtak.com/ws"
+const ENABLE_LOGGING = false
 
 var ws := WebSocketPeer.new()
 var state := State.OFFLINE
@@ -73,6 +75,7 @@ signal game_started(game: Game)
 signal game_move(id: int, move: Move)
 signal game_undo(id: int)
 signal game_result(id: int, result: GameResult)
+signal game_action(id: int, action: GameAction)
 signal update_clock(id: int, wtime: float, btime: float)
 signal add_chat_room(type: ChatWindow.Type, room: String)
 signal chat_message(type: ChatWindow.Type, room: String, user: String, message: String)
@@ -92,7 +95,7 @@ func accept_seek(id: int):
 func observe(id: int):
 	send("Observe %d" % id)
 
-func send_move(game_id:int, move: Move):
+func send_move(game_id: int, move: Move):
 	var move_string = "Game#%d " % game_id
 
 	if move.count == 0:
@@ -107,6 +110,14 @@ func send_move(game_id:int, move: Move):
 			move_string += " %d" % drop
 		
 	send(move_string)
+
+func send_game_action(game_id: int, action: GameAction):
+	match action:
+		GameAction.REQUEST_UNDO: send("Game#%d RequestUndo" % game_id)
+		GameAction.REMOVE_UNDO: send("Game#%d RemoveUndo" % game_id)
+		GameAction.OFFER_DRAW: send("Game#%d OfferDraw" % game_id)
+		GameAction.REMOVE_DRAW: send("Game#%d RemoveDraw" % game_id)
+		GameAction.RESIGN: send("Game#%d Resign" % game_id)
 
 func _process(delta):
 	if state == State.DISCONNECTED:
@@ -139,7 +150,8 @@ func _process(delta):
 	while ws.get_available_packet_count() > 0:
 		var line = ws.get_packet().get_string_from_ascii().rstrip(" \n")
 		
-		print("> " + line)
+		if ENABLE_LOGGING:
+			print("> " + line)
 		
 		if line.begins_with("Game#"):
 			var parts = line.right(-5).split(" ")
@@ -168,6 +180,14 @@ func _process(delta):
 					game_undo.emit(id)
 				["Over", var result]:
 					game_result.emit(id, GameResult.parse(result))
+				["RequestUndo"]:
+					game_action.emit(id, GameAction.REQUEST_UNDO)
+				["RemoveUndo"]:
+					game_action.emit(id, GameAction.REMOVE_UNDO)
+				["OfferDraw"]:
+					game_action.emit(id, GameAction.OFFER_DRAW)
+				["RemoveDraw"]:
+					game_action.emit(id, GameAction.REMOVE_DRAW)
 		else:
 			match Array(line.split(" ")):
 				["Login", "or", "Register"] when state == State.CONNECTING:
@@ -322,7 +342,8 @@ func leave_room(room: String):
 	send("LeaveRoom %s" % room)
 
 func send(line: String):
-	print("< " + line)
+	if ENABLE_LOGGING:
+		print("< " + line)
 	ws.send_text(line)
 
 func close_connection():

@@ -1,12 +1,14 @@
 extends Control
 
 const Move = MoveList.Move
+const GameAction = preload("res://Scripts/game_actions.gd").Action
 
 func setup(playtak_interface: PlaytakInterface):
 	playtak_interface.game_move.connect(game_move)
 	playtak_interface.game_undo.connect(game_undo)
 	playtak_interface.game_result.connect(game_result)
 	playtak_interface.update_clock.connect(update_clock)
+	playtak_interface.game_action.connect(game_action)
 
 func add_game(game: Control):
 	for child in get_children():
@@ -44,6 +46,11 @@ func game_result(id: int, result: GameResult):
 	var game := find_game(id)
 	if game != null:
 		game.set_result(result)
+
+func game_action(id: int, action: GameAction):
+	var game := find_game(id)
+	if game != null:
+		game.receive_game_action(action)
 
 func update_clock(id: int, wtime: float, btime: float):
 	var game := find_game(id)

@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://d14umnlmuexad"]
+
+[ext_resource type="Script" uid="uid://cu24xi6x1vamg" path="res://Scripts/game_actions.gd" id="1_f6oxs"]
+[ext_resource type="Theme" uid="uid://frih5hqyg4ly" path="res://game_actions.tres" id="1_vhf83"]
+
+[node name="GameActions" type="HBoxContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -65.5
+offset_right = 150.0
+offset_bottom = 65.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_vhf83")
+script = ExtResource("1_f6oxs")
+
+[node name="Undo" type="Button" parent="."]
+layout_mode = 2
+tooltip_text = "Request undo"
+focus_mode = 0
+toggle_mode = true
+text = "⎌"
+
+[node name="Draw" type="Button" parent="."]
+layout_mode = 2
+tooltip_text = "Offer draw"
+focus_mode = 0
+toggle_mode = true
+text = "⊜"
+
+[node name="Resign" type="Button" parent="."]
+layout_mode = 2
+tooltip_text = "Resign"
+focus_mode = 0
+toggle_mode = true
+text = "⚐"
+
+[connection signal="pressed" from="Undo" to="." method="_on_undo_pressed"]
+[connection signal="pressed" from="Draw" to="." method="_on_draw_pressed"]
+[connection signal="pressed" from="Resign" to="." method="_on_resign_pressed"]
