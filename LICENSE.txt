@@ -22,8 +22,16 @@ All assets by Dennis Ranke and licensed under CC0, except the following:
 
 Medieval Cafe by Dimitrios Savva and Jarod Guest under CC0
 
+Extracts from Font Awesome
+
+   Copyright (C) 2016 by Dave Gandy
+
+   Author:    Dave Gandy
+   License:   SIL ()
+   Homepage:  http://fortawesome.github.com/Font-Awesome/
+
+
 Font Oswald-Regular:
-====================
 
 Copyright (c) 2012, Vernon Adams (vern@newtypography.co.uk),
 with Reserved Font Name Oswald

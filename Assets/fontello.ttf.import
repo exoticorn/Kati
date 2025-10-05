@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://b85faygpvx8cj"
-path="res://.godot/imported/Oswald-Regular.ttf-75f411d2f91df1806da7ae8a423fbadb.fontdata"
+uid="uid://byc8ind8m4u14"
+path="res://.godot/imported/fontello.ttf-29ad0ea5e1453807cb6f0d80fcfe69f2.fontdata"
 
 [deps]
 
-source_file="res://Assets/Oswald-Regular.ttf"
-dest_files=["res://.godot/imported/Oswald-Regular.ttf-75f411d2f91df1806da7ae8a423fbadb.fontdata"]
+source_file="res://Assets/fontello.ttf"
+dest_files=["res://.godot/imported/fontello.ttf-29ad0ea5e1453807cb6f0d80fcfe69f2.fontdata"]
 
 [params]
 
@@ -27,7 +27,7 @@ subpixel_positioning=4
 keep_rounding_remainders=true
 oversampling=0.0
 Fallbacks=null
-fallbacks=[Resource("uid://byc8ind8m4u14", "res://Assets/fontello.ttf")]
+fallbacks=[]
 Compress=null
 compress=true
 preload=[]

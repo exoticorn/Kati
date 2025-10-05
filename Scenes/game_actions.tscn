@@ -23,21 +23,21 @@ layout_mode = 2
 tooltip_text = "Request undo"
 focus_mode = 0
 toggle_mode = true
-text = "⎌"
+text = ""
 
 [node name="Draw" type="Button" parent="."]
 layout_mode = 2
 tooltip_text = "Offer draw"
 focus_mode = 0
 toggle_mode = true
-text = "⊜"
+text = ""
 
 [node name="Resign" type="Button" parent="."]
 layout_mode = 2
 tooltip_text = "Resign"
 focus_mode = 0
 toggle_mode = true
-text = "⚐"
+text = ""
 
 [connection signal="pressed" from="Undo" to="." method="_on_undo_pressed"]
 [connection signal="pressed" from="Draw" to="." method="_on_draw_pressed"]
