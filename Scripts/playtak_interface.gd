@@ -22,7 +22,7 @@ const ENABLE_LOGGING = false
 
 var ws := WebSocketPeer.new()
 var state := State.OFFLINE
-var user_pw: String
+var _login: Login
 var username: String
 var was_online := false
 var reconnect_timer := 0.0
@@ -81,13 +81,14 @@ signal add_chat_room(type: ChatWindow.Type, room: String)
 signal chat_message(type: ChatWindow.Type, room: String, user: String, message: String)
 
 func login(lgn: Login):
-	user_pw = "%s %s" % [lgn.user, lgn.password]
+	_login = lgn
 	if state != State.OFFLINE:
 		close_connection()
 	ws.supported_protocols = PackedStringArray(["binary"])
 	ws.heartbeat_interval = 5.0
 	ws.connect_to_url(ws_url)
 	state = State.CONNECTING
+	state_changed.emit()
 
 func accept_seek(id: int):
 	send("Accept %d" % id)
@@ -193,7 +194,7 @@ func _process(delta):
 				["Login", "or", "Register"] when state == State.CONNECTING:
 					send("Client Kati")
 					send("Protocol 2")
-					send("Login " + user_pw)
+					send("Login %s %s" % [_login.user, _login.password])
 					state = State.LOGGING_IN
 				["Authentication", "failure"]:
 					printerr("Failed to login to playtak server")
@@ -205,6 +206,7 @@ func _process(delta):
 						chat_message.emit(ChatWindow.Type.SYSTEM, "<system>", "<client>", "Reconnected")
 					was_online = true
 					last_ping = Time.get_unix_time_from_system()
+					_login.save()
 					state_changed.emit()
 				["Seek", "new", var id, var user, var size, var time, var inc, var color, var half_komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var opp, var bot_seek]:
 					if opp != "0" && opp.to_lower() != username.to_lower():

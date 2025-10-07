@@ -19,9 +19,13 @@
 [sub_resource type="ButtonGroup" id="ButtonGroup_patxt"]
 
 [node name="App" type="VBoxContainer"]
-anchors_preset = 15
+anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_nmq3k")
@@ -38,7 +42,7 @@ text = "Menu"
 
 [node name="Games" type="Button" parent="TopBar"]
 layout_mode = 2
-text = "Games"
+text = "Board"
 
 [node name="Seeks" type="Button" parent="TopBar"]
 visible = false
@@ -110,25 +114,67 @@ layout_mode = 2
 [node name="Titel" type="Label" parent="Screens/MainMenu/Box"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_type_variation = &"MenuTitel"
+theme_type_variation = &"MenuTitle"
 text = "Kati"
 
-[node name="Login" type="Button" parent="Screens/MainMenu/Box"]
+[node name="LoginGrid" type="GridContainer" parent="Screens/MainMenu/Box"]
 layout_mode = 2
-size_flags_horizontal = 4
+columns = 2
+
+[node name="UserLabel" type="Label" parent="Screens/MainMenu/Box/LoginGrid"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Username:"
+
+[node name="Username" type="LineEdit" parent="Screens/MainMenu/Box/LoginGrid"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="PWLabel" type="Label" parent="Screens/MainMenu/Box/LoginGrid"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Password:"
+
+[node name="Password" type="LineEdit" parent="Screens/MainMenu/Box/LoginGrid"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+secret = true
+
+[node name="RememberMe" type="CheckButton" parent="Screens/MainMenu/Box/LoginGrid"]
+layout_mode = 2
+text = "Remember me"
+
+[node name="Login" type="Button" parent="Screens/MainMenu/Box/LoginGrid"]
+layout_mode = 2
+size_flags_horizontal = 8
 text = "Login"
 
-[node name="Seeks" type="Button" parent="Screens/MainMenu/Box"]
+[node name="Empty" type="Control" parent="Screens/MainMenu/Box/LoginGrid"]
 layout_mode = 2
-size_flags_horizontal = 4
-disabled = true
-text = "Seeks"
 
-[node name="Watch" type="Button" parent="Screens/MainMenu/Box"]
+[node name="GuestLogin" type="Button" parent="Screens/MainMenu/Box/LoginGrid"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Login as Guest"
+
+[node name="Connecting" type="Label" parent="Screens/MainMenu/Box"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
-disabled = true
-text = "Watch"
+text = "Connecting..."
+
+[node name="LoggedIn" type="HBoxContainer" parent="Screens/MainMenu/Box"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Name" type="Label" parent="Screens/MainMenu/Box/LoggedIn"]
+layout_mode = 2
+text = "Username"
+
+[node name="LogOut" type="Button" parent="Screens/MainMenu/Box/LoggedIn"]
+layout_mode = 2
+text = "Log out"
 
 [node name="LocalGame" type="Button" parent="Screens/MainMenu/Box"]
 layout_mode = 2
@@ -534,9 +580,9 @@ environment = ExtResource("7_patxt")
 [connection signal="pressed" from="TopBar/Chat" to="." method="_on_chat_pressed"]
 [connection signal="pressed" from="TopBar/ReconnectButton" to="." method="_on_reconnect_button_pressed"]
 [connection signal="pressed" from="TopBar/Help" to="." method="_on_help_pressed"]
-[connection signal="pressed" from="Screens/MainMenu/Box/Login" to="." method="_on_login_pressed"]
-[connection signal="pressed" from="Screens/MainMenu/Box/Seeks" to="." method="_on_seeks_pressed"]
-[connection signal="pressed" from="Screens/MainMenu/Box/Watch" to="." method="_on_watch_pressed"]
+[connection signal="pressed" from="Screens/MainMenu/Box/LoginGrid/Login" to="." method="_on_login_pressed"]
+[connection signal="pressed" from="Screens/MainMenu/Box/LoginGrid/GuestLogin" to="." method="_on_guest_login_pressed"]
+[connection signal="pressed" from="Screens/MainMenu/Box/LoggedIn/LogOut" to="." method="_on_log_out_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/LocalGame" to="." method="_on_local_game_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/Settings" to="." method="_on_settings_pressed"]
 [connection signal="start_game" from="Screens/LocalGameScreen" to="." method="_on_local_game_start_game"]

@@ -40,6 +40,8 @@ func _ready():
 	switch_screen(Screen.MAIN_MENU)
 	if OS.has_feature("web"):
 		%MainMenu/Box/Settings.hide()
+	if login.is_valid() && !login.is_guest():
+		playtak.login(login)
 
 func _process(_delta: float):
 	if Input.is_action_just_pressed("cancel"):
@@ -63,28 +65,26 @@ func _on_seeks_pressed() -> void:
 	switch_screen(Screen.SEEKS)
 
 func _on_login_pressed() -> void:
-	if playtak.state == PlaytakInterface.State.ONLINE:
-		playtak.close_connection()
-	else:
-		login.make_guest()
-		login.save()
-		playtak.login(login)
-	%MainMenu/Box/Login.disabled = true
+	login.user = %MainMenu/Box/LoginGrid/Username.text
+	login.password = %MainMenu/Box/LoginGrid/Password.text
+	login.remember_me = %MainMenu/Box/LoginGrid/RememberMe.button_pressed
+	playtak.login(login)
+
+func _on_guest_login_pressed() -> void:
+	login.make_guest()
+	playtak.login(login)
 
 func _on_playtak_state_changed():
 	var is_online = playtak.state == PlaytakInterface.State.ONLINE
 	var is_disconnected = playtak.state == PlaytakInterface.State.DISCONNECTED
+	%MainMenu/Box/LoginGrid.visible = playtak.state == PlaytakInterface.State.OFFLINE
+	%MainMenu/Box/Connecting.visible = playtak.state == PlaytakInterface.State.CONNECTING || playtak.state == PlaytakInterface.State.LOGGING_IN
+	%MainMenu/Box/LoggedIn.visible = is_online || is_disconnected
 	if is_online:
-		%MainMenu/Box/Login.text = "Logout " + playtak.username
+		%MainMenu/Box/LoggedIn/Name.text = playtak.username
 		$TopBar/Username.text = playtak.username
-	else:
-		%MainMenu/Box/Login.text = "Login"
-		$TopBar/Username.text = "Disconnected"
-	%MainMenu/Box/Seeks.disabled = !is_online
-	%MainMenu/Box/Watch.disabled = !is_online
 	$TopBar/Seeks.visible = is_online
 	$TopBar/Watch.visible = is_online
-	%MainMenu/Box/Login.disabled = false
 	$TopBar/Chat.visible = is_online
 	$TopBar/Username.visible = is_online || is_disconnected
 	$TopBar/ReconnectButton.visible = is_disconnected
@@ -173,3 +173,9 @@ func _on_chat_received(type: ChatWindow.Type, room: String, user: String, text: 
 
 func _on_chat_unread_count(count: int) -> void:
 	$TopBar/Chat.text = "Chat" if count == 0 else "Chat (%d)" % count
+
+
+func _on_log_out_pressed() -> void:
+	playtak.close_connection()
+	if login.is_valid() && !login.is_guest():
+		login.forget()

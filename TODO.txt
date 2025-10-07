@@ -1,6 +1,5 @@
 Next steps:
 
-Full login (not just guest)
 Create seeks
 Sort seeks + display count in top bar
 Finish board + table gfx (including coordinates)
