@@ -174,7 +174,9 @@ func update_board():
 			piece.place(pieces_to_place[best_index].pos)
 			pieces_to_place.remove_at(best_index)
 		else:
-			piece.queue_free()
+			$Root3D/Pieces.remove_child(piece)
+			$Root3D.add_child(piece)
+			piece.move_off()
 
 	# put down pieces left to place
 	for to_place in pieces_to_place:

@@ -46,7 +46,7 @@ func setup(c: PlayerColor, t: PieceType):
 		var dir = 1 if color == PlayerColor.WHITE else -1
 		base_rotation = Quaternion.from_euler(Vector3(PI / 2, PI / 4 * dir, 0)) * base_rotation
 	if is_placed:
-		update_transform(false)
+		update_transform(true)
 	mesh_height = piece_height()
 
 func place(pos: Vector3i, animate: bool = true):
@@ -74,7 +74,7 @@ func set_temp_pos(pos):
 		temp_board_pos = pos
 		update_transform(true)
 
-func update_transform(animate: bool):
+func calc_target_pos():
 	var pos = temp_board_pos if temp_board_pos != null else board_pos
 	var offset = 0.0
 	if type == PieceType.FLAT:
@@ -84,7 +84,10 @@ func update_transform(animate: bool):
 	var base_pos = Vector3(pos.x, pos.y * flat_aabb.size.y, -pos.z)
 	if is_ghost:
 		base_pos.y += flat_aabb.size.y * 0.5
-	var target_pos = base_pos + Vector3(randf_range(-0.03, 0.03), offset, randf_range(-0.03, 0.03))
+	return base_pos + Vector3(randf_range(-0.03, 0.03), offset, randf_range(-0.03, 0.03))
+
+func update_transform(animate: bool):
+	var target_pos = calc_target_pos()
 	var target_quat = Quaternion.from_euler(Vector3(0, randf_range(-0.1, 0.1), 0)) * base_rotation
 	if tween != null:
 		tween.kill()
@@ -111,9 +114,7 @@ func update_transform(animate: bool):
 func can_be(c: PlayerColor, t: PieceType):
 	if c != color:
 		return false
-	if t == type:
-		return true
-	return type == PieceType.WALL && t == PieceType.FLAT
+	return t == type || (t != PieceType.CAP && type != PieceType.CAP)
 
 func become(t: PieceType):
 	if t != type:
@@ -122,3 +123,12 @@ func become(t: PieceType):
 
 func set_highlight(flag: bool):
 	material_overlay = highlight_overlay_material if flag else null
+
+func move_off():
+	if tween != null:
+		tween.kill()
+	tween = create_tween()
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "position", calc_target_pos() + Vector3.UP * 10, 0.4)
+	tween.tween_callback(self.queue_free)

@@ -345,7 +345,10 @@ func leave_room(room: String):
 
 func send(line: String):
 	if ENABLE_LOGGING:
-		print("< " + line)
+		if line.begins_with("Login "):
+			print("< Login %s Swordfish" % line.get_slice(" ", 1))
+		else:
+			print("< " + line)
 	ws.send_text(line)
 
 func close_connection():

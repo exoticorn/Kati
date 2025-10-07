@@ -3,6 +3,5 @@ Next steps:
 Create seeks
 Sort seeks + display count in top bar
 Finish board + table gfx (including coordinates)
-Add animations for undo
 
 Bugs:
