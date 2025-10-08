@@ -2,6 +2,7 @@ class_name PlaytakGame extends Control
 
 const Move = MoveList.Move
 const PlayerColor = BoardState.PlayerColor
+const ColorChoice = PlaytakInterface.ColorChoice
 
 const TakBoard = preload("res://Scenes/tak_board.tscn")
 const Clock = preload("res://Scenes/clock.tscn")
@@ -12,6 +13,7 @@ var config: ConfigFile
 var game: PlaytakInterface.Game
 var move_list: MoveList
 var board: Node
+var stream_player: AudioStreamPlayer = AudioStreamPlayer.new()
 var game_result := GameResult.new()
 var clocks: Array[Control]
 var game_actions
@@ -43,9 +45,10 @@ func _ready():
 		board.add_ui(game_actions, game.color == PlaytakInterface.ColorChoice.BLACK, false)
 	for i in 2:
 		clocks.push_back(Clock.instantiate())
-		clocks[i].setup(game.player_white if i == 0 else game.player_black, game.time)
+		clocks[i].setup(game.player_white if i == 0 else game.player_black, game.time, game.color == i)
 		board.add_ui(clocks[i], i == 1, false)
 	add_child(board)
+	add_child(stream_player)
 	setup_move_input()
 
 func move_input(move: Move):
@@ -81,6 +84,15 @@ func update_clock_running():
 func set_result(result: GameResult):
 	game_result = result
 	board.show_result(result)
+	var sample = null
+	if result.is_win():
+		if game.color == ColorChoice.NONE || game.color == result.winner():
+			sample = load("res://sfx/win.wav")
+		else:
+			sample = load("res://sfx/loss.wav")
+	if sample != null:
+		stream_player.stream = sample
+		stream_player.play()
 	setup_move_input()
 	update_clock_running()
 

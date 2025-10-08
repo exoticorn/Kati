@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://c44b8ks63tvgq"]
+
+[ext_resource type="Script" uid="uid://bv0urpr4onws7" path="res://ui/badge_button.gd" id="1_t1xf6"]
+[ext_resource type="StyleBox" uid="uid://beagn8ua253x6" path="res://ui/badge_red_style.tres" id="1_uo6my"]
+
+[node name="BadgeButton" type="MarginContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -8.0
+offset_right = 24.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_t1xf6")
+text = "Some other text"
+count = 16
+red = true
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+
+[node name="Margins" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_behavior_recursive = 1
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 4
+
+[node name="HBox" type="HBoxContainer" parent="Margins"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Margins/HBox"]
+layout_mode = 2
+mouse_filter = 1
+text = "..."
+
+[node name="Badge" type="Label" parent="Margins/HBox"]
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/normal = ExtResource("1_uo6my")
+text = "0"

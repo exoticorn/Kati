@@ -50,3 +50,9 @@ func to_str() -> String:
 
 func is_ongoing() -> bool:
 	return state == State.ONGOING
+
+func is_win() -> bool:
+	return state == State.WIN_WHITE || state == State.WIN_BLACK
+
+func winner() -> PlayerColor:
+	return PlayerColor.WHITE if state == State.WIN_WHITE else PlayerColor.BLACK
