@@ -26,7 +26,7 @@ class Message:
 var rooms: Array[Room]
 var last_added_message_control
 
-signal unread_count(count: int)
+signal unread_count(count: int, direct: bool)
 signal send_message(type: Type, room_name: String, msg: String)
 signal leave_room(room_name: String)
 
@@ -116,9 +116,13 @@ func scroll_to_last_message():
 
 func emit_unread_count():
 	var unread = 0
+	var direct = false
 	for room in rooms:
-		unread += room.unread_count
-	unread_count.emit(unread)
+		if room.type != Type.SYSTEM:
+			unread += room.unread_count
+		if room.type == Type.DIRECT && room.unread_count > 0:
+			direct = true
+	unread_count.emit(unread, direct)
 
 func _on_input_text_submitted(new_text: String):
 	var room_index = $Box/Tabs.current_tab

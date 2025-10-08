@@ -16,9 +16,6 @@ offset_bottom = 8.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_t1xf6")
-text = "Some other text"
-count = 16
-red = true
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 2
@@ -42,5 +39,6 @@ text = "..."
 [node name="Badge" type="Label" parent="Margins/HBox"]
 layout_mode = 2
 mouse_filter = 1
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = ExtResource("1_uo6my")
 text = "0"

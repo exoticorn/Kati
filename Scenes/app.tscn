@@ -1,8 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://bct47lm2yejq8"]
+[gd_scene load_steps=16 format=3 uid="uid://bct47lm2yejq8"]
 
 [ext_resource type="Script" uid="uid://b6ftb44rorpa" path="res://Scripts/app.gd" id="1_nmq3k"]
 [ext_resource type="Theme" uid="uid://bkrs4n0b5x0vf" path="res://topbar_theme.tres" id="2_fel14"]
 [ext_resource type="Script" uid="uid://872wvye2kvm2" path="res://Scripts/local_game_menu.gd" id="2_sb7qb"]
+[ext_resource type="PackedScene" uid="uid://c44b8ks63tvgq" path="res://ui/badge_button.tscn" id="3_76bsv"]
 [ext_resource type="Script" uid="uid://didjayc8ohs03" path="res://Scripts/games.gd" id="3_fdjpt"]
 [ext_resource type="Script" uid="uid://c43nj0jgrp3mh" path="res://Scripts/seeks_screen.gd" id="4_u0ug8"]
 [ext_resource type="Script" uid="uid://bf18o4ey614js" path="res://Scripts/watch_screen.gd" id="6_atls0"]
@@ -19,7 +20,7 @@
 [sub_resource type="ButtonGroup" id="ButtonGroup_patxt"]
 
 [node name="App" type="VBoxContainer"]
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 16.0
@@ -49,7 +50,7 @@ visible = false
 layout_mode = 2
 text = "Seeks"
 
-[node name="Watch" type="Button" parent="TopBar"]
+[node name="Watch" parent="TopBar" instance=ExtResource("3_76bsv")]
 visible = false
 layout_mode = 2
 text = "Watch"
@@ -58,7 +59,7 @@ text = "Watch"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Chat" type="Button" parent="TopBar"]
+[node name="Chat" parent="TopBar" instance=ExtResource("3_76bsv")]
 visible = false
 layout_mode = 2
 text = "Chat"
@@ -480,7 +481,7 @@ text = "Low"
 [node name="Mid" type="CheckBox" parent="Screens/Settings/Box/Quality"]
 layout_mode = 2
 button_group = SubResource("ButtonGroup_patxt")
-text = "Mid"
+text = "Mid "
 
 [node name="High" type="CheckBox" parent="Screens/Settings/Box/Quality"]
 layout_mode = 2

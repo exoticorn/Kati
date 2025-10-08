@@ -28,6 +28,7 @@ func _ready():
 	playtak.game_started.connect(_on_playtak_game_started)
 	playtak.chat_message.connect(_on_chat_received)
 	playtak.add_chat_room.connect($Screens/Chat.add_room)
+	playtak.game_list_changed.connect(_on_game_list_changed)
 	$Screens/Chat.send_message.connect(playtak.send_chat_message)
 	$Screens/Chat.leave_room.connect(playtak.leave_room)
 	add_child(playtak)
@@ -100,6 +101,14 @@ func _on_playtak_game_started(game: PlaytakInterface.Game):
 	game_control.setup(game, playtak, settings)
 	$Screens/Games.add_game(game_control)
 
+func _on_game_list_changed():
+	$TopBar/Watch.count = playtak.game_list.size()
+	var has_tournament_game = false
+	for game in playtak.game_list:
+		if game.game_type == PlaytakInterface.GameType.TOURNAMENT:
+			has_tournament_game = true
+	$TopBar/Watch.red = has_tournament_game
+
 func switch_screen(screen: Screen):
 	%MainMenu.visible = screen == Screen.MAIN_MENU
 	%SeeksScreen.visible = screen == Screen.SEEKS
@@ -171,9 +180,9 @@ func _on_chat_received(type: ChatWindow.Type, room: String, user: String, text: 
 		$Screens/Toasts.add_toast("%s: %s" % [user, text])
 
 
-func _on_chat_unread_count(count: int) -> void:
-	$TopBar/Chat.text = "Chat" if count == 0 else "Chat (%d)" % count
-
+func _on_chat_unread_count(count: int, direct: bool) -> void:
+	$TopBar/Chat.count = count
+	$TopBar/Chat.red = direct
 
 func _on_log_out_pressed() -> void:
 	playtak.close_connection()
