@@ -37,21 +37,15 @@ func sync_games():
 			row.game = game
 			var name_ = LinkButton.new()
 			name_.text = "%s - %s" % [game.player_white, game.player_black]
+			if game.game_type == PlaytakInterface.GameType.TOURNAMENT:
+				name_.text = " " + name_.text
 			name_.pressed.connect(playtak.observe.bind(game.id))
 			row.controls.push_back(name_)
 			var rules = Label.new()
-			var rules_string = "%dx%d" % [game.size, game.size]
-			if game.komi != 0:
-				var half_komi = roundi(game.komi * 2)
-				if half_komi % 2 == 0:
-					rules_string += ", %d Komi" % roundi(game.komi)
-				else:
-					rules_string += ", %.1f Komi" % game.komi
-			rules.text = rules_string
+			rules.text = game.rules.format()
 			row.controls.push_back(rules)
 			var time = Label.new()
-			var time_string = "%d+%d" % [game.time, game.inc]
-			time.text = time_string
+			time.text = game.clock.format()
 			row.controls.push_back(time)
 
 			rows.push_back(row)

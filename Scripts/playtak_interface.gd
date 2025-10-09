@@ -15,12 +15,15 @@ enum State {
 	DISCONNECTED
 }
 
+const RATING_URL = "https://api.playtak.com/v1/ratings/"
+
 #const ws_url = "ws://localhost:9999/ws"
 #const ws_url = "ws://localhost:3003"
 const ws_url = "wss://playtak.com/ws"
 const ENABLE_LOGGING = false
 
 var ws := WebSocketPeer.new()
+var http := HTTPRequest.new()
 var state := State.OFFLINE
 var _login: Login
 var username: String
@@ -35,16 +38,10 @@ enum GameType { RATED, UNRATED, TOURNAMENT }
 class Seek:
 	var id: int
 	var user: String
-	var size: int
-	var time: int
-	var inc: int
+	var rules: Common.GameRules
+	var clock: Common.ClockSettings
 	var color: ColorChoice
-	var komi: float
-	var flat_count: int
-	var capstone_count: int
 	var game_type: GameType
-	var extra_time_move: int
-	var extra_time: int
 	var bot: bool
 
 class Game:
@@ -52,20 +49,16 @@ class Game:
 	var player_white: String
 	var player_black: String
 	var color: ColorChoice
-	var size: int
-	var time: int
-	var inc: int
-	var komi: float
-	var flat_count: int
-	var capstone_count: int
+	var rules: Common.GameRules
+	var clock: Common.ClockSettings
 	var game_type: GameType
-	var extra_time_move: int
-	var extra_time: int
 	var bot: bool
 
 var seeks: Array[Seek] = []
 var online_players: Array[String] = []
 var game_list: Array[Game] = []
+var ratings = {}
+var pending_ratings: Array[String] = []
 
 signal state_changed
 signal seeks_changed
@@ -79,6 +72,10 @@ signal game_action(id: int, action: GameAction)
 signal update_clock(id: int, wtime: float, btime: float)
 signal add_chat_room(type: ChatWindow.Type, room: String)
 signal chat_message(type: ChatWindow.Type, room: String, user: String, message: String)
+signal ratings_changed()
+
+func _ready():
+	add_child(http)
 
 func login(lgn: Login):
 	_login = lgn
@@ -202,6 +199,7 @@ func _process(delta):
 				["Welcome", var uname]:
 					username = uname.left(-1)
 					state = State.ONLINE
+					fetch_rating(username)
 					if was_online:
 						chat_message.emit(ChatWindow.Type.SYSTEM, "<system>", "<client>", "Reconnected")
 					was_online = true
@@ -214,91 +212,76 @@ func _process(delta):
 					var seek := Seek.new()
 					seek.id = id.to_int()
 					seek.user = user
-					seek.size = size.to_int()
-					seek.time = time.to_int()
-					seek.inc = inc.to_int()
+					seek.rules = Common.GameRules.new(size.to_int(), half_komi.to_int(), flat_count.to_int(), capstone_count.to_int())
+					seek.clock = Common.ClockSettings.new(time.to_int(), inc.to_int(), extra_time_move.to_int(), extra_time.to_int())
 					seek.color = ColorChoice.WHITE if color == "W" else ColorChoice.BLACK if color == "B" else ColorChoice.NONE
-					seek.komi = half_komi.to_int() / 2.0
-					seek.flat_count = flat_count.to_int()
-					seek.capstone_count = capstone_count.to_int()
 					seek.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
-					seek.extra_time_move = extra_time_move.to_int()
-					seek.extra_time = extra_time.to_int()
 					seek.bot = bot_seek == "1"
 					seeks.push_back(seek)
 					seeks_changed.emit()
+					fetch_rating(user)
 				["Seek", "remove", var id, ..]:
 					var int_id = id.to_int()
 					var index = seeks.find_custom(func (s): return s.id == int_id)
 					seeks.remove_at(index)
 					seeks_changed.emit()
-				["Game", "Start", var id, var player_white, "vs", var player_black, var color, var size, var time, var inc, var komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var is_bot]:
+				["Game", "Start", var id, var player_white, "vs", var player_black, var color, var size, var time, var inc, var half_komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var is_bot]:
 					var game := Game.new()
 					game.id = id.to_int()
 					game.player_white = player_white
 					game.player_black = player_black
 					game.color = ColorChoice.WHITE if color == "white" else ColorChoice.BLACK
-					game.size = size.to_int()
-					game.time = time.to_int()
-					game.inc = inc.to_int()
-					game.komi = komi.to_int() * 0.5
-					game.flat_count = flat_count.to_int()
-					game.capstone_count = capstone_count.to_int()
+					game.rules = Common.GameRules.new(size.to_int(), half_komi.to_int(), flat_count.to_int(), capstone_count.to_int())
+					game.clock = Common.ClockSettings.new(time.to_int(), inc.to_int(), extra_time_move.to_int(), extra_time.to_int())
 					game.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
-					game.extra_time_move = extra_time_move.to_int()
-					game.extra_time = extra_time.to_int()
 					game.bot = is_bot == "1"
 					game_started.emit(game)
 					var opponent = game.player_black if game.color == ColorChoice.WHITE else game.player_white
 					add_chat_room.emit(ChatWindow.Type.DIRECT, opponent)
-				["GameList", "Add", var id, var player_white, var player_black, var size, var time, var inc, var komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time]:
+					fetch_rating(player_white)
+					fetch_rating(player_black)
+				["GameList", "Add", var id, var player_white, var player_black, var size, var time, var inc, var half_komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time]:
 					var game := Game.new()
 					game.id = id.to_int()
 					game.player_white = player_white
 					game.player_black = player_black
 					game.color = ColorChoice.NONE
-					game.size = size.to_int()
-					game.time = time.to_int()
-					game.inc = inc.to_int()
-					game.komi = komi.to_int() * 0.5
-					game.flat_count = flat_count.to_int()
-					game.capstone_count = capstone_count.to_int()
+					game.rules = Common.GameRules.new(size.to_int(), half_komi.to_int(), flat_count.to_int(), capstone_count.to_int())
+					game.clock = Common.ClockSettings.new(time.to_int(), inc.to_int(), extra_time_move.to_int(), extra_time.to_int())
 					game.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
-					game.extra_time_move = extra_time_move.to_int()
-					game.extra_time = extra_time.to_int()
 					game.bot = false
 					game_list.push_back(game)
 					game_list_changed.emit()
+					fetch_rating(player_white)
+					fetch_rating(player_black)
 				["GameList", "Remove", var id, ..]:
 					var int_id = id.to_int()
 					var index = game_list.find_custom(func (g): return g.id == int_id)
 					if index >= 0:
 						game_list.remove_at(index)
 						game_list_changed.emit()
-				["Observe", var id, var player_white, var player_black, var size, var time, var inc, var komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time]:
+				["Observe", var id, var player_white, var player_black, var size, var time, var inc, var half_komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time]:
 					var game := Game.new()
 					game.id = id.to_int()
 					game.player_white = player_white
 					game.player_black = player_black
 					game.color = ColorChoice.NONE
-					game.size = size.to_int()
-					game.time = time.to_int()
-					game.inc = inc.to_int()
-					game.komi = komi.to_int() * 0.5
-					game.flat_count = flat_count.to_int()
-					game.capstone_count = capstone_count.to_int()
+					game.rules = Common.GameRules.new(size.to_int(), half_komi.to_int(), flat_count.to_int(), capstone_count.to_int())
+					game.clock = Common.ClockSettings.new(time.to_int(), inc.to_int(), extra_time_move.to_int(), extra_time.to_int())
 					game.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
-					game.extra_time_move = extra_time_move.to_int()
-					game.extra_time = extra_time.to_int()
 					game.bot = false
 					game_started.emit(game)
 					var players = [player_white, player_black]
 					players.sort()
 					send("JoinRoom %s-%s" % [players[0], players[1]])
+					fetch_rating(player_white)
+					fetch_rating(player_black)
 				["OnlinePlayers", ..]:
+					var json = JSON.new()
+					json.parse(line.right(-14))
 					online_players = []
-					for player in line.right(-14).split(","):
-						online_players.push_back(player.lstrip("[\" ").rstrip("]\"")) # advanced parsing!
+					for player in json.get_data():
+						online_players.push_back(player)
 					players_changed.emit()
 				["Tell", var user, ..]:
 					var cleaned_user = user.trim_prefix("<").trim_suffix(">")
@@ -307,7 +290,7 @@ func _process(delta):
 				["Told", var user, ..]:
 					var cleaned_user = user.trim_prefix("<").trim_suffix(">")
 					var message = line.split(" ", true, 2)[2]
-					chat_message.emit(ChatWindow.Type.DIRECT, cleaned_user, username, message)					
+					chat_message.emit(ChatWindow.Type.DIRECT, cleaned_user, username, message)
 				["Shout", var user, ..]:
 					var cleaned_user = user.trim_prefix("<").trim_suffix(">")
 					var message = line.split(" ", true, 2)[2]
@@ -364,3 +347,29 @@ func reconnect():
 		return
 	ws.connect_to_url(ws_url)
 	state = State.CONNECTING
+
+func fetch_rating(user: String):
+	if user.begins_with("Guest"):
+		return
+	if ratings.has(user):
+		return
+	if pending_ratings.find(user) >= 0:
+		return
+	pending_ratings.push_back(user)
+	fetch_next_rating()
+
+func fetch_next_rating():
+	if pending_ratings.is_empty():
+		return
+	var user = pending_ratings.pop_front()
+	if http.request(RATING_URL + user) != OK:
+		pending_ratings.push_front(user)
+		return
+	var result = await http.request_completed
+	if result[0] == HTTPRequest.RESULT_SUCCESS:
+		var json = JSON.new()
+		json.parse(result[3].get_string_from_utf8())
+		var response = json.get_data()
+		ratings[response.name] = { "rating": response.rating, "is_bot": response.isbot }
+		ratings_changed.emit()
+		fetch_next_rating.call_deferred()

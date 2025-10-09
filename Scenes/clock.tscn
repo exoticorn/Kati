@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://y8pkdrakgd36"]
+[gd_scene load_steps=4 format=3 uid="uid://y8pkdrakgd36"]
 
 [ext_resource type="Theme" uid="uid://je1ecuklaqff" path="res://board_ui_theme.tres" id="1_s7hhp"]
 [ext_resource type="Script" uid="uid://bmrjv4t3he2ph" path="res://Scripts/clock.gd" id="2_pdqta"]
+[ext_resource type="PackedScene" uid="uid://dvr4sw18454lb" path="res://ui/player_name.tscn" id="3_ga67c"]
 
 [node name="Clock" type="PanelContainer"]
 offset_right = 64.0
@@ -13,10 +14,8 @@ script = ExtResource("2_pdqta")
 [node name="Box" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Name" type="Label" parent="Box"]
+[node name="Name" parent="Box" instance=ExtResource("3_ga67c")]
 layout_mode = 2
-size_flags_horizontal = 4
-text = "Player name"
 
 [node name="Time" type="Label" parent="Box"]
 layout_mode = 2

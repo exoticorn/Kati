@@ -31,7 +31,7 @@ func setup(g: PlaytakInterface.Game, i: PlaytakInterface, c: ConfigFile):
 	config = c
 
 func _ready():
-	move_list = MoveList.new(game.size, game.komi)
+	move_list = MoveList.new(game.rules)
 	move_list.changed.connect(setup_move_input)
 	
 	board = TakBoard.instantiate()
@@ -45,7 +45,7 @@ func _ready():
 		board.add_ui(game_actions, game.color == PlaytakInterface.ColorChoice.BLACK, false)
 	for i in 2:
 		clocks.push_back(Clock.instantiate())
-		clocks[i].setup(game.player_white if i == 0 else game.player_black, game.time, game.color == i)
+		clocks[i].setup(playtak_interface, game.player_white if i == 0 else game.player_black, game.clock.time, game.color == i)
 		board.add_ui(clocks[i], i == 1, false)
 	add_child(board)
 	add_child(stream_player)

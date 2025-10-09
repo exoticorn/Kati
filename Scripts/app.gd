@@ -38,6 +38,7 @@ func _ready():
 	$Screens/Watch.setup(playtak)
 	$Screens/Settings.setup(settings)
 	$Screens/LocalGameScreen.setup(settings)
+	$TopBar/Username.setup(playtak)
 	switch_screen(Screen.MAIN_MENU)
 	if OS.has_feature("web"):
 		%MainMenu/Box/Settings.hide()
@@ -83,7 +84,7 @@ func _on_playtak_state_changed():
 	%MainMenu/Box/LoggedIn.visible = is_online || is_disconnected
 	if is_online:
 		%MainMenu/Box/LoggedIn/Name.text = playtak.username
-		$TopBar/Username.text = playtak.username
+		$TopBar/Username.user = playtak.username
 	$TopBar/Seeks.visible = is_online
 	$TopBar/Watch.visible = is_online
 	$TopBar/Chat.visible = is_online

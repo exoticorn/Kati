@@ -27,23 +27,15 @@ var caps_left: Array
 var board: Array # Array[Array[Array[Piece]]]
 var half_move_count: int = 0
 var last_move
-var komi := 2.0
+var half_komi := 4
 
 signal changed
 
-const StoneCounts = {
-	4: [15, 0],
-	5: [21, 1],
-	6: [30, 1],
-	7: [40, 2],
-	8: [50, 2]
-}
-
-func _init(s: int, k: float):
-	size = s
-	komi = k
-	var f = StoneCounts[s][0]
-	var c = StoneCounts[s][1]
+func _init(rules: Common.GameRules):
+	size = rules.size
+	half_komi = rules.half_komi
+	var f = rules.flats
+	var c = rules.caps
 	flats_left = [f, f]
 	caps_left = [c, c]
 	board = []
@@ -125,11 +117,11 @@ func unapply_move(prev_move):
 		board[square.x][square.y].append_array(pieces)
 	changed.emit()
 
-static func from_tps(tps: String, k: float) -> BoardState:
+static func from_tps(tps: String, hk: int) -> BoardState:
 	var parts = tps.split(" ")
 	var rows = parts[0].split("/")
 	var sze = rows.size()
-	var game_state := BoardState.new(sze, k)
+	var game_state := BoardState.new(Common.GameRules.new(sze, hk))
 	
 	for y in rows.size():
 		var x = 0
@@ -171,8 +163,8 @@ func game_result() -> GameResult:
 	
 	if !has_empty_squares || (flats_left[color] == 0 && caps_left[color] == 0):
 		var count = flat_count()
-		var w = count[0]
-		var b = count[1] + komi
+		var w = count[0] * 2
+		var b = count[1] * 2 + half_komi
 		if w > b:
 			return GameResult.flats_win(PlayerColor.WHITE)
 		elif b > w:

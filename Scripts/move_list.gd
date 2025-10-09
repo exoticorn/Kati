@@ -181,8 +181,8 @@ var display_board: BoardState
 
 signal changed
 
-func _init(size: int, komi: float):
-	display_board = BoardState.new(size, komi)
+func _init(rules: Common.GameRules):
+	display_board = BoardState.new(rules)
 
 func push_move(move: Move):
 	moves.push_back(move)

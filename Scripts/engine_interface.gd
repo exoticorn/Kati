@@ -24,9 +24,9 @@ class Position:
 	var half_komi: int
 	var moves: Array[Move]
 	
-	func _init(s: int, komi: float, mvs: Array[Move] = []):
+	func _init(s: int, hk: int, mvs: Array[Move] = []):
 		size = s
-		half_komi = roundi(komi * 2)
+		half_komi = hk
 		moves = mvs
 
 var pid: int

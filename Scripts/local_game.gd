@@ -34,12 +34,13 @@ func _ready():
 	anchor_top = ANCHOR_BEGIN
 	anchor_bottom = ANCHOR_END
 	mouse_filter = Control.MOUSE_FILTER_PASS
+	var game_rules = Common.GameRules.new(settings.size, roundi(settings.komi * 2))
 	
-	move_list = MoveList.new(settings.size, settings.komi)
+	move_list = MoveList.new(game_rules)
 	move_list.changed.connect(setup_move_input)
 	for i in 2:
 		player_types.push_back(PlayerType.ENGINE if (settings.engine_mask & (1 << i)) != 0 else PlayerType.LOCAL)
-	game_board = BoardState.new(settings.size, settings.komi)
+	game_board = BoardState.new(game_rules)
 
 	if settings.engine_mask != 0:
 		engine = EngineInterface.new(engine_position(), settings.engine_path, settings.engine_parameters);
@@ -74,4 +75,4 @@ func setup_move_input():
 				engine.go(engine_position())
 
 func engine_position() -> EngineInterface.Position:
-	return EngineInterface.Position.new(move_list.display_board.size, move_list.display_board.komi, move_list.moves)
+	return EngineInterface.Position.new(move_list.display_board.size, move_list.display_board.half_komi, move_list.moves)

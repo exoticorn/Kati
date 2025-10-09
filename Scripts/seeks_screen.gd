@@ -40,18 +40,10 @@ func sync_seeks():
 			name_.pressed.connect(playtak.accept_seek.bind(seek.id))
 			s.controls.push_back(name_)
 			var rules = Label.new()
-			var rules_string = "%dx%d" % [seek.size, seek.size]
-			if seek.komi != 0:
-				var half_komi = roundi(seek.komi * 2)
-				if half_komi % 2 == 0:
-					rules_string += ", %d Komi" % roundi(seek.komi)
-				else:
-					rules_string += ", %.1f Komi" % seek.komi
-			rules.text = rules_string
+			rules.text = seek.rules.format()
 			s.controls.push_back(rules)
 			var time = Label.new()
-			var time_string = "%d+%d" % [seek.time, seek.inc]
-			time.text = time_string
+			time.text = seek.clock.format()
 			s.controls.push_back(time)
 
 			seeks.push_back(s)

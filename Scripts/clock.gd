@@ -14,8 +14,9 @@ var running := false
 var is_local_player := false
 var samples = []
 
-func setup(name_: String, initial_time: float, is_local_player_: bool):
-	$Box/Name.text = name_
+func setup(playtak: PlaytakInterface, name_: String, initial_time: float, is_local_player_: bool):
+	$Box/Name.setup(playtak)
+	$Box/Name.user = name_
 	_time = initial_time
 	display_time()
 	is_local_player = is_local_player_

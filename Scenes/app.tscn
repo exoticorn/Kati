@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://bct47lm2yejq8"]
+[gd_scene load_steps=17 format=3 uid="uid://bct47lm2yejq8"]
 
 [ext_resource type="Script" uid="uid://b6ftb44rorpa" path="res://Scripts/app.gd" id="1_nmq3k"]
 [ext_resource type="Theme" uid="uid://bkrs4n0b5x0vf" path="res://topbar_theme.tres" id="2_fel14"]
 [ext_resource type="Script" uid="uid://872wvye2kvm2" path="res://Scripts/local_game_menu.gd" id="2_sb7qb"]
 [ext_resource type="PackedScene" uid="uid://c44b8ks63tvgq" path="res://ui/badge_button.tscn" id="3_76bsv"]
 [ext_resource type="Script" uid="uid://didjayc8ohs03" path="res://Scripts/games.gd" id="3_fdjpt"]
+[ext_resource type="PackedScene" uid="uid://dvr4sw18454lb" path="res://ui/player_name.tscn" id="4_85vr7"]
 [ext_resource type="Script" uid="uid://c43nj0jgrp3mh" path="res://Scripts/seeks_screen.gd" id="4_u0ug8"]
 [ext_resource type="Script" uid="uid://bf18o4ey614js" path="res://Scripts/watch_screen.gd" id="6_atls0"]
 [ext_resource type="Script" uid="uid://c8h2aqg2cdt8q" path="res://Scripts/settings.gd" id="7_jgaas"]
@@ -64,10 +65,9 @@ visible = false
 layout_mode = 2
 text = "Chat"
 
-[node name="Username" type="Label" parent="TopBar"]
+[node name="Username" parent="TopBar" instance=ExtResource("4_85vr7")]
 visible = false
 layout_mode = 2
-text = "Username"
 
 [node name="ReconnectButton" type="Button" parent="TopBar"]
 visible = false

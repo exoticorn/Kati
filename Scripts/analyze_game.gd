@@ -33,7 +33,7 @@ func _ready():
 	anchor_bottom = ANCHOR_END
 	mouse_filter = Control.MOUSE_FILTER_PASS
 	
-	move_list = MoveList.new(settings.size, settings.komi)
+	move_list = MoveList.new(Common.GameRules.new(settings.size, roundi(settings.komi * 2)))
 	move_list.changed.connect(game_state_changed)
 
 	engine = EngineInterface.new(engine_position(), settings.engine_path, settings.engine_parameters);
@@ -55,7 +55,7 @@ func _ready():
 	add_child(board)
 
 func engine_position() -> EngineInterface.Position:
-	return EngineInterface.Position.new(move_list.display_board.size, move_list.display_board.komi, move_list.moves.slice(0, move_list.display_move))
+	return EngineInterface.Position.new(move_list.display_board.size, move_list.display_board.half_komi, move_list.moves.slice(0, move_list.display_move))
 
 func move_input(move: Move):
 	move_list.truncate_moves()
