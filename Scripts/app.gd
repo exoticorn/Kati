@@ -29,6 +29,7 @@ func _ready():
 	playtak.chat_message.connect(_on_chat_received)
 	playtak.add_chat_room.connect($Screens/Chat.add_room)
 	playtak.game_list_changed.connect(_on_game_list_changed)
+	playtak.seeks_changed.connect(_on_seeks_changed)
 	$Screens/Chat.send_message.connect(playtak.send_chat_message)
 	$Screens/Chat.leave_room.connect(playtak.leave_room)
 	add_child(playtak)
@@ -109,6 +110,14 @@ func _on_game_list_changed():
 		if game.game_type == PlaytakInterface.GameType.TOURNAMENT:
 			has_tournament_game = true
 	$TopBar/Watch.red = has_tournament_game
+
+func _on_seeks_changed():
+	$TopBar/Seeks.count = playtak.seeks.size()
+	var has_direct = false
+	for seek in playtak.seeks:
+		if seek.direct:
+			has_direct = true
+	$TopBar/Seeks.red = has_direct
 
 func switch_screen(screen: Screen):
 	%MainMenu.visible = screen == Screen.MAIN_MENU

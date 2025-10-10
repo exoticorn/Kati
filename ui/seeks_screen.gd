@@ -2,6 +2,7 @@ extends PanelContainer
 
 class SeekRow:
 	var seek: PlaytakInterface.Seek
+	var rating: int = 0
 	var controls: Array[Control]
 
 var playtak: PlaytakInterface
@@ -10,6 +11,7 @@ var seeks: Array[SeekRow]
 func set_playtak(p: PlaytakInterface):
 	playtak = p
 	playtak.seeks_changed.connect(sync_seeks)
+	playtak.ratings_changed.connect(update_ratings)
 
 func sync_seeks():
 	var seek_index = seeks.size() - 1
@@ -36,9 +38,15 @@ func sync_seeks():
 			var s = SeekRow.new()
 			s.seek = seek
 			var name_ = LinkButton.new()
-			name_.text = seek.user
+			var name_str = seek.user
+			if seek.bot:
+				name_str = " " + name_str
+			if seek.game_type == PlaytakInterface.GameType.TOURNAMENT:
+				name_str = " " + name_str
+			name_.text = name_str
 			name_.pressed.connect(playtak.accept_seek.bind(seek.id))
 			s.controls.push_back(name_)
+			s.controls.push_back(Label.new())
 			var rules = Label.new()
 			rules.text = seek.rules.format()
 			s.controls.push_back(rules)
@@ -49,3 +57,21 @@ func sync_seeks():
 			seeks.push_back(s)
 			for c in s.controls:
 				$MainBox/Seeks.add_child(c)
+
+			update_ratings()
+
+func update_ratings():
+	var ratings = playtak.ratings
+	for seek in seeks:
+		if ratings.has(seek.seek.user):
+			var entry = ratings[seek.seek.user]
+			seek.rating = entry.rating
+			seek.controls[1].text = str(seek.rating)
+
+	for i in seeks.size() - 1:
+		for j in range(i + 1, seeks.size()):
+			if seeks[i].rating < seeks[j].rating:
+				var seek = seeks.pop_at(j)
+				seeks.insert(i, seek)
+				for k in seek.controls.size():
+					$MainBox/Seeks.move_child(seek.controls[k], (i + 1) * 4 + k)

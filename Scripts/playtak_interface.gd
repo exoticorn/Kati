@@ -38,6 +38,7 @@ enum GameType { RATED, UNRATED, TOURNAMENT }
 class Seek:
 	var id: int
 	var user: String
+	var direct: bool
 	var rules: Common.GameRules
 	var clock: Common.ClockSettings
 	var color: ColorChoice
@@ -212,6 +213,7 @@ func _process(delta):
 					var seek := Seek.new()
 					seek.id = id.to_int()
 					seek.user = user
+					seek.direct = opp != "0"
 					seek.rules = Common.GameRules.new(size.to_int(), half_komi.to_int(), flat_count.to_int(), capstone_count.to_int())
 					seek.clock = Common.ClockSettings.new(time.to_int(), inc.to_int(), extra_time_move.to_int(), extra_time.to_int())
 					seek.color = ColorChoice.WHITE if color == "W" else ColorChoice.BLACK if color == "B" else ColorChoice.NONE
@@ -223,8 +225,9 @@ func _process(delta):
 				["Seek", "remove", var id, ..]:
 					var int_id = id.to_int()
 					var index = seeks.find_custom(func (s): return s.id == int_id)
-					seeks.remove_at(index)
-					seeks_changed.emit()
+					if index >= 0:
+						seeks.remove_at(index)
+						seeks_changed.emit()
 				["Game", "Start", var id, var player_white, "vs", var player_black, var color, var size, var time, var inc, var half_komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var is_bot]:
 					var game := Game.new()
 					game.id = id.to_int()
@@ -370,6 +373,7 @@ func fetch_next_rating():
 		var json = JSON.new()
 		json.parse(result[3].get_string_from_utf8())
 		var response = json.get_data()
-		ratings[response.name] = { "rating": response.rating, "is_bot": response.isbot }
-		ratings_changed.emit()
+		if !response.has("statusCode"):
+			ratings[response.name] = { "rating": response.rating, "is_bot": response.isbot }
+			ratings_changed.emit()
 		fetch_next_rating.call_deferred()
