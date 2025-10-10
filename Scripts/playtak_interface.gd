@@ -359,7 +359,7 @@ func fetch_rating(user: String):
 	fetch_next_rating()
 
 func fetch_next_rating():
-	if pending_ratings.is_empty():
+	if pending_ratings.is_empty() || http.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
 		return
 	var user = pending_ratings.pop_front()
 	if http.request(RATING_URL + user) != OK:
