@@ -27,7 +27,5 @@ func update():
 		var entry = ratings[_user]
 		_rating = entry.rating
 		_is_bot = entry.is_bot
-		name_text = "%s (%d)" % [name_text, entry.rating]
-		if _is_bot:
-			name_text = " " + name_text
+		name_text = Common.format_player(_user, entry)
 	text = name_text

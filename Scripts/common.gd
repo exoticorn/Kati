@@ -20,6 +20,13 @@ static func format_secs(secs: int) -> String:
 	else:
 		return "%d:%02d" % [secs / 60, secs % 60]
 
+static func format_player(name: String, rating_entry: Dictionary):
+	if rating_entry != null:
+		var name_text = " " if rating_entry.is_bot else ""
+		name_text += "%s (%d)" % [name, rating_entry.rating]
+		return name_text
+	return name
+
 class ClockSettings:
 	var time: int
 	var increment: int
