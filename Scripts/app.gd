@@ -10,6 +10,7 @@ var settings := ConfigFile.new()
 enum Screen {
 	NONE,
 	MAIN_MENU,
+	CREATE_GAME,
 	SEEKS,
 	WATCH,
 	LOCAL_GAME,
@@ -18,7 +19,7 @@ enum Screen {
 	CHAT
 }
 
-var active_screen := Screen.MAIN_MENU
+var active_screen := Screen.NONE
 
 func _ready():
 	settings.load("user://settings.cfg")
@@ -34,6 +35,7 @@ func _ready():
 	$Screens/Chat.leave_room.connect(playtak.leave_room)
 	add_child(playtak)
 	login = Login.load()
+	%PostSeek.setup(playtak)
 	%SeeksScreen.set_playtak(playtak)
 	$Screens/Games.setup(playtak)
 	$Screens/Watch.setup(playtak)
@@ -86,6 +88,7 @@ func _on_playtak_state_changed():
 	if is_online:
 		%MainMenu/Box/LoggedIn/Name.text = playtak.username
 		$TopBar/Username.user = playtak.username
+	$TopBar/CreateGame.visible = is_online
 	$TopBar/Seeks.visible = is_online
 	$TopBar/Watch.visible = is_online
 	$TopBar/Chat.visible = is_online
@@ -120,7 +123,10 @@ func _on_seeks_changed():
 	$TopBar/Seeks.red = has_direct
 
 func switch_screen(screen: Screen):
+	if active_screen == screen:
+		screen = Screen.NONE
 	%MainMenu.visible = screen == Screen.MAIN_MENU
+	%PostSeek.visible = screen == Screen.CREATE_GAME
 	%SeeksScreen.visible = screen == Screen.SEEKS
 	%LocalGameScreen.visible = screen == Screen.LOCAL_GAME
 	%Screens/Watch.visible = screen == Screen.WATCH
@@ -198,3 +204,7 @@ func _on_log_out_pressed() -> void:
 	playtak.close_connection()
 	if login.is_valid() && !login.is_guest():
 		login.forget()
+
+
+func _on_create_game_pressed() -> void:
+	switch_screen(Screen.CREATE_GAME)

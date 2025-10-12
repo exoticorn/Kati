@@ -33,7 +33,7 @@ var reconnect_timer := 0.0
 var last_ping: float = 0
 
 enum ColorChoice { WHITE, BLACK, NONE}
-enum GameType { RATED, UNRATED, TOURNAMENT }
+enum GameType { RATED, TOURNAMENT, UNRATED }
 
 class Seek:
 	var id: int
@@ -328,6 +328,18 @@ func send_chat_message(type: ChatWindow.Type, room: String, text: String):
 
 func leave_room(room: String):
 	send("LeaveRoom %s" % room)
+
+func send_seek(seek: Seek):
+	send("Seek %d %d %d %s %d %d %d %d %d %d %d %s" % [
+		seek.rules.size,
+		seek.clock.time, seek.clock.increment,
+		"W" if seek.color == ColorChoice.WHITE else "B" if seek.color == ColorChoice.BLACK else "A",
+		seek.rules.half_komi, seek.rules.flats, seek.rules.caps,
+		1 if seek.game_type == GameType.UNRATED else 0,
+		1 if seek.game_type == GameType.TOURNAMENT else 0,
+		seek.clock.extra_time_move, seek.clock.extra_time,
+		seek.user
+	])
 
 func send(line: String):
 	if ENABLE_LOGGING:

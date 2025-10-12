@@ -1,0 +1,187 @@
+[gd_scene load_steps=2 format=3 uid="uid://kprx4qv0rpon"]
+
+[ext_resource type="Script" uid="uid://nthjr67h7pf7" path="res://ui/post_seek_screen.gd" id="1_myrli"]
+
+[node name="PostSeek" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -103.0
+offset_top = -79.5
+offset_right = 103.0
+offset_bottom = 79.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_myrli")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"MenuTitle"
+text = "Seek Game"
+
+[node name="Grid" type="GridContainer" parent="VBox"]
+layout_mode = 2
+columns = 4
+
+[node name="PresetLabel" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "Preset:"
+
+[node name="Preset" type="OptionButton" parent="VBox/Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 1
+popup/item_0/text = "None"
+popup/item_0/id = 0
+
+[node name="OpponentLabel" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "Opponent:"
+
+[node name="Opponent" type="LineEdit" parent="VBox/Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ColorLabel" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "My Color:"
+
+[node name="Color" type="OptionButton" parent="VBox/Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 2
+item_count = 3
+popup/item_0/text = "White"
+popup/item_0/id = 0
+popup/item_1/text = "Black"
+popup/item_1/id = 1
+popup/item_2/text = "Random"
+popup/item_2/id = 2
+
+[node name="TypeLabel" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "Game Type:"
+
+[node name="GameType" type="OptionButton" parent="VBox/Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Normal"
+popup/item_0/id = 0
+popup/item_1/text = "Tournament"
+popup/item_1/id = 1
+popup/item_2/text = "Unrated"
+popup/item_2/id = 2
+
+[node name="SizeLabel" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "Board Size:"
+
+[node name="Size" type="OptionButton" parent="VBox/Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 3
+item_count = 6
+popup/item_0/text = "3x3"
+popup/item_0/id = 0
+popup/item_1/text = "4x4"
+popup/item_1/id = 1
+popup/item_2/text = "5x5"
+popup/item_2/id = 2
+popup/item_3/text = "6x6"
+popup/item_3/id = 3
+popup/item_4/text = "7x7"
+popup/item_4/id = 4
+popup/item_5/text = "8x8"
+popup/item_5/id = 5
+
+[node name="KomiLabel" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "Komi:"
+
+[node name="Komi" type="OptionButton" parent="VBox/Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 4
+item_count = 9
+popup/item_0/text = "0"
+popup/item_0/id = 0
+popup/item_1/text = "½"
+popup/item_1/id = 1
+popup/item_2/text = "1"
+popup/item_2/id = 2
+popup/item_3/text = "1½"
+popup/item_3/id = 3
+popup/item_4/text = "2"
+popup/item_4/id = 4
+popup/item_5/text = "2½"
+popup/item_5/id = 5
+popup/item_6/text = "3"
+popup/item_6/id = 6
+popup/item_7/text = "3½"
+popup/item_7/id = 7
+popup/item_8/text = "4"
+popup/item_8/id = 8
+
+[node name="TimeLabel" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "Tme:"
+
+[node name="Time" type="SpinBox" parent="VBox/Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 180.0
+value = 15.0
+
+[node name="IncLabel" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "Increment:"
+
+[node name="Increment" type="SpinBox" parent="VBox/Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 180.0
+value = 10.0
+
+[node name="ExtraMoveLabel" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "Extra Time at Move"
+
+[node name="ExtraMove" type="SpinBox" parent="VBox/Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ExtraTimeLabel" type="Label" parent="VBox/Grid"]
+layout_mode = 2
+text = "Extra Time"
+
+[node name="ExtraTime" type="SpinBox" parent="VBox/Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ButtonBox" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="Message" type="Label" parent="VBox/ButtonBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 2
+
+[node name="ConfirmButton" type="Button" parent="VBox/ButtonBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Post Seek"
+
+[connection signal="item_selected" from="VBox/Grid/Preset" to="." method="_on_preset_item_selected"]
+[connection signal="text_changed" from="VBox/Grid/Opponent" to="." method="_on_opponent_text_changed"]
+[connection signal="pressed" from="VBox/ButtonBox/ConfirmButton" to="." method="_on_confirm_button_pressed"]
