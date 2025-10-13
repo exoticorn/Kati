@@ -139,6 +139,9 @@ func _process(delta):
 			seeks = []
 			online_players = []
 			game_list = []
+			seeks_changed.emit()
+			players_changed.emit()
+			game_list_changed.emit()
 			state = State.DISCONNECTED if was_online else State.OFFLINE
 			if was_online:
 				chat_message.emit(ChatWindow.Type.SYSTEM, "<system>", "<client>", "Connection lost")

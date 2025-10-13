@@ -17,6 +17,9 @@ func add_game(game: Control):
 			remove = !child.game_result.is_ongoing() || game is LocalGame
 		elif child is PlaytakGame:
 			remove = !child.game_result.is_ongoing()
+			if game is PlaytakGame:
+				if child.is_observe() && !game.is_observe():
+					remove = true
 		elif child is AnalyzeGame:
 			remove = true
 		if remove:

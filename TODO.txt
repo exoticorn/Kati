@@ -1,5 +1,6 @@
 Next steps:
 
+Add Readme, release first version
 Add missing info in seek list (color & game type)
 Add missing sound effects
 Highlight side to move
@@ -7,5 +8,10 @@ Display current move number (and last few moves)
 Improve game result popup + Rematch
 Finish board + table gfx (including coordinates)
 UI Polish pass
+Texture pieces
+
+Add more options when playing against engine
+Add support to load PTN files
+Implement move-tree for analysis mode
 
 Bugs:

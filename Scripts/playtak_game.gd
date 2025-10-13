@@ -112,3 +112,6 @@ func send_game_action(action: GameAction):
 
 func receive_game_action(action: GameAction):
 	game_actions.receive_action(action)
+
+func is_observe() -> bool:
+	return game.color == ColorChoice.NONE
