@@ -377,6 +377,81 @@ theme_override_font_sizes/normal_font_size = 20
 theme_override_font_sizes/bold_font_size = 24
 theme_override_font_sizes/italics_font_size = 20
 bbcode_enabled = true
+text = "[b]Kati[/b] is a playtak.com client aimed at players on PC, ideally with a mouse (althought touchpad + keyboard works fine as well). The native versions (io. non-web) also act as a TEI frontent.
+
+Kati is still in active development, and while most things expected of a playtak client work very well, there are still rough edges and missing features to be found.
+
+[b]Main menu[/b]
+The main menu is open when starting Kati and can otherwise be accessed with the 'Menu' button in the top left. Here you can login to/logout from playtak.com (either as a guest, or with an existing account), start a local game and access the settings (not in the web build).
+
+[b]Game board[/b]
+Press the 'Board' button to close any menu screen and return focus to the game board. If you are observing multiple games, pressing the 'Board' button cycles through the games.
+
+[b]Mouse:[/b]
+
+[i]Left click[/i] on an empty square to place the selected piece.
+[i]Left click[/i] on a stack you control to pick it up, then click on the squares you want to move to.
+
+[i]Right click[/i] (without moving the mouse) to switch the selected piece to place or to cancel a stack move.
+[i]Right drag[/i] to rotate the camera.
+
+[b]Keyboard:[/b]
+
+[i]WASD:[/i] rotates the camera
+[i]1:[/i] selects flat
+[i]2:[/i] selects wall
+[i]3:[/i] selects capstone
+[i]Q:[/i] toggles between flat/wall
+[i]E:[/i] toggles between capstone/wall
+
+[i]Arrow Left:[/i] Go back one move
+[i]Arrow Right:[/i] Go forward one move
+[i]Arrow Up:[/i] Go to start of game
+[i]Arrow Down:[/i] Return to latest move
+
+[b]Global keyboard shortcuts:[/b]
+
+[i]Escape:[/i] close currently active screen, returning to the game board
+[i]CTRL+C:[/i] toggles the chat screen
+
+[b]Create Game[/b]
+
+Let's you post a seek. Add the name of a player in the 'opponent' field to directly challenge this player. Select a preset to play a common time control or a tournament game.
+
+[b]Seeks[/b]
+
+Lists the open seeks. Click on the name of a player to accept the seek. The badge on the 'Seeks' button turns red if you have a direct challenge.
+
+[b]Watch[/b]
+
+Lists the games currently being played on the server. Click on the game to observe it. The badge on the 'Watch' button turns red if there are any tournament games being played.
+
+[b]Chat[/b]
+
+Opens the chat window. Select the room to view/chat in with the tabs at the top. The badge on the [Chat] button displays the number of unread messages and turns red if there are any unread direct messages.
+
+[i]Tab:[/i] Cycle through chats.
+
+[b]Local game[/b]
+
+In the web build, you can only start a game between two local human players.
+In the native build, you can select which color to play, with the other color being played by a TEI engine, 'Both' to play a local game between human players or 'Analyze' to input moves and have the evluation of a TEI engine displayed on the board.
+At the moment, when playing against an engine, it is always limited to 100 nodes per move. It isn't possible to configure that, yet.
+
+[b]Settings[/b]
+
+In the native version, you can select the rendering quality. (Work in progress)
+The default 'Low' setting is best for laptops/PCs with an integrated GPU.
+'Mid' might be best for high-end integrated GPUs or old/low-end gaming GPUs.
+'High' is meant for gaming GPUs.
+
+You can also configure TEI engines to be used in local games. This is currently a little clunky, sorry.
+
+[b]Source code[/b]
+
+You can find the [url=https://github.com/exoticorn/kati]source code on github[/url].
+Kati is licensed as MIT for the source code, SIL for the fonts and CC0 for the other assets. See the [url=https://github.com/exoticorn/Kati/blob/main/LICENSE.txt]license[/url] for details.
+"
 
 [node name="Settings" type="PanelContainer" parent="Screens"]
 visible = false

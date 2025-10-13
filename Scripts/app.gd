@@ -47,7 +47,6 @@ func _ready():
 		%MainMenu/Box/Settings.hide()
 	if login.is_valid() && !login.is_guest():
 		playtak.login(login)
-	load_help_text()
 
 func _process(_delta: float):
 	if Input.is_action_just_pressed("cancel"):
@@ -209,12 +208,6 @@ func _on_log_out_pressed() -> void:
 
 func _on_create_game_pressed() -> void:
 	switch_screen(Screen.CREATE_GAME)
-
-func load_help_text():
-	var file = FileAccess.open("res://ui/help.bb.txt", FileAccess.READ)
-	$Screens/Help/Box/RichTextLabel.text = file.get_as_text()
-	file.close()
-
 
 func _on_help_meta_clicked(meta: Variant) -> void:
 	OS.shell_open(str(meta))
