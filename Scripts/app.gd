@@ -210,4 +210,7 @@ func _on_create_game_pressed() -> void:
 	switch_screen(Screen.CREATE_GAME)
 
 func _on_help_meta_clicked(meta: Variant) -> void:
-	OS.shell_open(str(meta))
+	if meta == "print_log":
+		playtak.print_log()
+	else:
+		OS.shell_open(str(meta))

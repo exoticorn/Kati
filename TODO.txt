@@ -15,3 +15,5 @@ Add support to load PTN files
 Implement move-tree for analysis mode
 
 Bugs:
+
+Flat count at the end of engine (all local?) games is off by one

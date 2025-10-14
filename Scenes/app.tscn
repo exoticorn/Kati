@@ -451,7 +451,10 @@ You can also configure TEI engines to be used in local games. This is currently 
 
 You can find the [url=https://github.com/exoticorn/kati]source code on github[/url].
 Kati is licensed as MIT for the source code, SIL for the fonts and CC0 for the other assets. See the [url=https://github.com/exoticorn/Kati/blob/main/LICENSE.txt]license[/url] for details.
-"
+
+[b]Debugging[/b]
+
+In case the client misbehaves on playtak.com, you can [url=print_log]click here to print the connection log to the console[/url]. (Login password is removed from the log.)"
 
 [node name="Settings" type="PanelContainer" parent="Screens"]
 visible = false

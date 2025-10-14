@@ -20,7 +20,6 @@ const RATING_URL = "https://api.playtak.com/v1/ratings/"
 #const ws_url = "ws://localhost:9999/ws"
 #const ws_url = "ws://localhost:3003"
 const ws_url = "wss://playtak.com/ws"
-const ENABLE_LOGGING = false
 
 var ws := WebSocketPeer.new()
 var http := HTTPRequest.new()
@@ -29,6 +28,7 @@ var _login: Login
 var username: String
 var was_online := false
 var reconnect_timer := 0.0
+var connection_log = []
 
 var last_ping: float = 0
 
@@ -152,8 +152,7 @@ func _process(delta):
 	while ws.get_available_packet_count() > 0:
 		var line = ws.get_packet().get_string_from_ascii().rstrip(" \n")
 		
-		if ENABLE_LOGGING:
-			print("> " + line)
+		append_log(">", line)
 		
 		if line.begins_with("Game#"):
 			var parts = line.right(-5).split(" ")
@@ -198,8 +197,14 @@ func _process(delta):
 					send("Login %s %s" % [_login.user, _login.password])
 					state = State.LOGGING_IN
 				["Authentication", "failure"]:
-					printerr("Failed to login to playtak server")
+					chat_message.emit(ChatWindow.Type.SYSTEM, "<system>", "<error>", "Login failed")
 					close_connection()
+				["NOK"]:
+					if state == State.LOGGING_IN:
+						chat_message.emit(ChatWindow.Type.SYSTEM, "<system>", "<error>", "Login failed (NOK)")
+						close_connection()
+					else:
+						chat_message.emit(ChatWindow.Type.SYSTEM, "<system>", "<error>", "Error sending command to server")
 				["Welcome", var uname]:
 					username = uname.left(-1)
 					state = State.ONLINE
@@ -345,12 +350,21 @@ func send_seek(seek: Seek):
 	])
 
 func send(line: String):
-	if ENABLE_LOGGING:
-		if line.begins_with("Login "):
-			print("< Login %s Swordfish" % line.get_slice(" ", 1))
-		else:
-			print("< " + line)
+	if line.begins_with("Login "):
+		append_log("<", "Login %s Swordfish" % line.get_slice(" ", 1))
+	else:
+		append_log("<", line)
 	ws.send_text(line)
+
+func append_log(prefix: String, line: String):
+	if connection_log.size() > 1000:
+		connection_log.pop_front()
+	connection_log.push_back("%.1f %s %s" % [Time.get_ticks_msec() / 1000.0, prefix, line])
+
+func print_log():
+	for line in connection_log:
+		print(line)
+	connection_log = []
 
 func close_connection():
 	ws.close()
