@@ -324,11 +324,7 @@ func cancel_stack_move():
 
 func setup_quality():
 	var quality: String = config.get_value("display", "quality", "mid")
-	var rendering_method := RenderingServer.get_current_rendering_method()
 	var light_energy := 2.0 if quality == "low" else 6.0
-	if rendering_method == "gl_compatibility":
-		$Root3D/Camera.attributes = load("res://Scenes/cam_attr_compat.tres")
-		light_energy = 1.0
 	$Root3D/Light.light_energy = light_energy
 
 func add_ui(control: Control, right: bool, end: bool = true):
