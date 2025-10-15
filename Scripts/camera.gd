@@ -3,7 +3,7 @@ extends Camera3D
 var rot := Vector2(0, 0.8)
 var speed := Vector2(0, 0)
 var board_size := 6
-var distance_factor := 1.0
+var distance_factor := 0.9
 
 var last_drag_pos = null
 
@@ -21,6 +21,10 @@ func _process(delta: float):
 			speed.y += (-1 - speed.y) * delta
 		if Input.is_action_pressed("cam_down"):
 			speed.y += (1 - speed.y) * delta
+		if Input.is_action_just_pressed("cam_in"):
+			distance_factor *= 0.9
+		if Input.is_action_just_pressed("cam_out"):
+			distance_factor /= 0.9
 	speed *= 0.05 ** delta
 	rot += speed * (delta * 3)
 	rot.x = fmod(rot.x, PI * 2)
@@ -54,6 +58,8 @@ func _unhandled_input(event: InputEvent):
 			var delta = event.position - last_drag_pos
 			last_drag_pos = event.position
 			rot += delta * 4 / get_viewport().get_visible_rect().size
+	elif event is InputEventPanGesture:
+		rot += event.delta * 0.003
 
 func calculate_camera_pos() -> Vector3:
 	var inv_basis := basis.inverse()

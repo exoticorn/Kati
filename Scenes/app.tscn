@@ -369,7 +369,7 @@ size_flags_horizontal = 4
 theme_type_variation = &"MenuTitle"
 text = "Help"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Screens/Help/Box"]
+[node name="HelpText" type="RichTextLabel" parent="Screens/Help/Box"]
 custom_minimum_size = Vector2(700, 0)
 layout_mode = 2
 size_flags_vertical = 3
@@ -398,6 +398,8 @@ Press the 'Board' button to close any menu screen and return focus to the game b
 [b]Keyboard:[/b]
 
 [i]WASD:[/i] rotates the camera
+[i]R:[/i] moves the camera in
+[i]F:[/i] moves the camera out
 [i]1:[/i] selects flat
 [i]2:[/i] selects wall
 [i]3:[/i] selects capstone
@@ -454,7 +456,7 @@ Kati is licensed as MIT for the source code, SIL for the fonts and CC0 for the o
 
 [b]Debugging[/b]
 
-In case the client misbehaves on playtak.com, you can [url=print_log]click here to print the connection log to the console[/url]. (Login password is removed from the log.)"
+In case the client misbehaves on playtak.com, you can [url=show_log]click here to show the connection log[/url]. (Login password is removed from the log.)"
 
 [node name="Settings" type="PanelContainer" parent="Screens"]
 visible = false
@@ -586,6 +588,28 @@ grow_vertical = 0
 theme = ExtResource("9_vl6qb")
 script = ExtResource("10_bypbs")
 
+[node name="ConnectionLog" type="PanelContainer" parent="Screens"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Screens/ConnectionLog"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Screens/ConnectionLog/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"MenuTitle"
+text = "Connection Log"
+
+[node name="Log" type="TextEdit" parent="Screens/ConnectionLog/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("7_patxt")
 
@@ -608,7 +632,7 @@ environment = ExtResource("7_patxt")
 [connection signal="pressed" from="Screens/LocalGameScreen/Grid/Colors/Both" to="Screens/LocalGameScreen" method="_on_color_changed"]
 [connection signal="pressed" from="Screens/LocalGameScreen/Grid/Colors/Analyze" to="Screens/LocalGameScreen" method="_on_color_changed"]
 [connection signal="pressed" from="Screens/LocalGameScreen/Grid/Play" to="Screens/LocalGameScreen" method="_on_play_pressed"]
-[connection signal="meta_clicked" from="Screens/Help/Box/RichTextLabel" to="." method="_on_help_meta_clicked"]
+[connection signal="meta_clicked" from="Screens/Help/Box/HelpText" to="." method="_on_help_meta_clicked"]
 [connection signal="settings_changed" from="Screens/Settings" to="." method="_on_settings_settings_changed"]
 [connection signal="pressed" from="Screens/Settings/Box/AddEngine" to="Screens/Settings" method="_on_add_engine_pressed"]
 [connection signal="pressed" from="Screens/Settings/EnginePopup/Box/Buttons/Cancel" to="Screens/Settings" method="_on_cancel_pressed"]

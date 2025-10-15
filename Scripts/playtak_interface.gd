@@ -22,7 +22,7 @@ const RATING_URL = "https://api.playtak.com/v1/ratings/"
 const ws_url = "wss://playtak.com/ws"
 
 var ws := WebSocketPeer.new()
-var http := HTTPRequest.new()
+var http_requests: Array[HTTPRequest] = []
 var state := State.OFFLINE
 var _login: Login
 var username: String
@@ -76,7 +76,10 @@ signal chat_message(type: ChatWindow.Type, room: String, user: String, message: 
 signal ratings_changed()
 
 func _ready():
-	add_child(http)
+	for i in 4:
+		var http = HTTPRequest.new()
+		add_child(http)
+		http_requests.push_back(http)
 
 func login(lgn: Login):
 	_login = lgn
@@ -119,6 +122,9 @@ func send_game_action(game_id: int, action: GameAction):
 		GameAction.RESIGN: send("Game#%d Resign" % game_id)
 
 func _process(delta):
+	if !http_requests.is_empty() && !pending_ratings.is_empty():
+		fetch_next_rating()
+	
 	if state == State.DISCONNECTED:
 		reconnect_timer -= delta
 		if reconnect_timer <= 0:
@@ -361,10 +367,8 @@ func append_log(prefix: String, line: String):
 		connection_log.pop_front()
 	connection_log.push_back("%.1f %s %s" % [Time.get_ticks_msec() / 1000.0, prefix, line])
 
-func print_log():
-	for line in connection_log:
-		print(line)
-	connection_log = []
+func get_log() -> String:
+	return "\n".join(connection_log)
 
 func close_connection():
 	ws.close()
@@ -388,21 +392,20 @@ func fetch_rating(user: String):
 	if pending_ratings.find(user) >= 0:
 		return
 	pending_ratings.push_back(user)
-	fetch_next_rating()
 
 func fetch_next_rating():
-	if pending_ratings.is_empty() || http.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
-		return
+	var http = http_requests.pop_back()
 	var user = pending_ratings.pop_front()
-	if http.request(RATING_URL + user) != OK:
-		pending_ratings.push_front(user)
-		return
-	var result = await http.request_completed
-	if result[0] == HTTPRequest.RESULT_SUCCESS:
-		var json = JSON.new()
-		json.parse(result[3].get_string_from_utf8())
-		var response = json.get_data()
-		if !response.has("statusCode"):
-			ratings[response.name] = { "rating": response.rating, "is_bot": response.isbot }
-			ratings_changed.emit()
-		fetch_next_rating.call_deferred()
+	if http.request(RATING_URL + user) == OK:
+		var result = await http.request_completed
+		if result[0] == HTTPRequest.RESULT_SUCCESS:
+			var json = JSON.new()
+			json.parse(result[3].get_string_from_utf8())
+			var response = json.get_data()
+			if !response.has("statusCode"):
+				ratings[response.name] = { "rating": response.rating, "is_bot": response.isbot }
+				ratings_changed.emit()
+	else:
+		print("Rating request for user '%s' failed" % user)
+
+	http_requests.push_back(http)

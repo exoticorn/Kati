@@ -16,7 +16,8 @@ enum Screen {
 	LOCAL_GAME,
 	HELP,
 	SETTINGS,
-	CHAT
+	CHAT,
+	LOG
 }
 
 var active_screen := Screen.NONE
@@ -51,8 +52,8 @@ func _ready():
 func _process(_delta: float):
 	if Input.is_action_just_pressed("cancel"):
 		switch_screen(Screen.NONE)
-	if Input.is_action_just_pressed("open_chat", true):
-		switch_screen(Screen.CHAT if active_screen != Screen.CHAT else Screen.NONE)
+	if Input.is_action_just_pressed("open_chat", true) && active_screen != Screen.LOG:
+		switch_screen(Screen.CHAT)
 
 func _on_local_game_pressed() -> void:
 	switch_screen(Screen.LOCAL_GAME)
@@ -133,6 +134,7 @@ func switch_screen(screen: Screen):
 	%Screens/Help.visible = screen == Screen.HELP
 	%Screens/Settings.visible = screen == Screen.SETTINGS
 	%Screens/Chat.visible = screen == Screen.CHAT
+	%Screens/ConnectionLog.visible = screen == Screen.LOG
 	active_screen = screen
 
 func _on_games_pressed() -> void:
@@ -210,7 +212,8 @@ func _on_create_game_pressed() -> void:
 	switch_screen(Screen.CREATE_GAME)
 
 func _on_help_meta_clicked(meta: Variant) -> void:
-	if meta == "print_log":
-		playtak.print_log()
+	if meta == "show_log":
+		$Screens/ConnectionLog/VBox/Log.text = playtak.get_log()
+		switch_screen(Screen.LOG)
 	else:
 		OS.shell_open(str(meta))
