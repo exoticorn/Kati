@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="Kati"
+config/description="A playtak.com client for PC"
+config/version="0.1"
 run/main_scene="uid://bct47lm2yejq8"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.5", "Forward Plus")
+boot_splash/fullsize=false
+boot_splash/image="uid://cqdlvhj816ba7"
 config/icon="res://icon.svg"
 
 [debug]
@@ -108,4 +112,5 @@ cam_out={
 
 [rendering]
 
+textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0.23135275, 0.27466062, 0.2870408, 1)
