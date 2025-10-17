@@ -1,4 +1,4 @@
-release: release-linux
+release: release-linux release-win release-mac deploy-web
 
 export-web:
     mkdir -p export/web
@@ -16,3 +16,14 @@ release-linux:
     cp README.md LICENSE.txt export/kati-linux
     cd export && tar czf kati-linux.tgz kati-linux
     
+release-win:
+    rm -rf export/kati-windows
+    mkdir -p export/kati-windows
+    godot --export-release "Windows Desktop" export/kati-windows/Kati.exe
+    cp README.md LICENSE.txt export/kati-windows
+    cd export && zip -r -9 kati-windows.zip kati-windows
+
+release-mac:
+    mkdir -p export
+    godot --export-release macOS export/kati-macos.zip
+    zip export/kati-macos.zip README.md LICENSE.txt

@@ -4,7 +4,7 @@ A [playtak.com](https://playtak.com) client for PC focusing on delivering a nice
 
 Being a client for PC, the controls are optimized for a mouse (a pointer device with two buttons) or, as a secondary target, a touchpad + keyboard. With a mouse, you click left to place pieces or move stacks, click right to switch the type of piece to place and drag right to move the camera. There is no support for touch (mobile) devices.
 
-You can download a native app from the releases section on [the project's github page](https://github.com/exoticorn/Kati), which is the preferred way to run Kati. However, there is also a web based version to be found at [kati.exoticorn.de](https://kati.exoticorn.de).
+You can download a native app from the releases section on [the project's github page](https://github.com/exoticorn/Kati), which is the preferred way to run Kati. However, there is also a web based version to be found at [kati.exoticorn.de](https://kati.exoticorn.de). Note that MacOS version is completely untested, so I have no idea whether it even works.
 
 There is an overview of the UI and the controls to be found by clicking the '?' button in the top right corner.
 
