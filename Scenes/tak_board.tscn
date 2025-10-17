@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://ckm3kb4aosxb4"]
+[gd_scene load_steps=7 format=3 uid="uid://ckm3kb4aosxb4"]
 
 [ext_resource type="Script" uid="uid://dgduyultasupv" path="res://Scripts/tak_board.gd" id="1_1wqm5"]
 [ext_resource type="CameraAttributesPractical" uid="uid://gtybhomfgbns" path="res://Scenes/cam_attr_normal.tres" id="2_la2l8"]
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="3_yhhd6"]
 [ext_resource type="PackedScene" uid="uid://dkwxditx1ga2f" path="res://Scenes/piece.tscn" id="5_63v3t"]
 [ext_resource type="Theme" uid="uid://je1ecuklaqff" path="res://board_ui_theme.tres" id="6_la2l8"]
+[ext_resource type="Script" uid="uid://fn28utmhgstd" path="res://ui/game_over.gd" id="6_yhhd6"]
 
 [node name="TakBoard" type="Control"]
 layout_mode = 3
@@ -55,25 +56,32 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -85.5
-offset_top = -47.0
-offset_right = 85.5
-offset_bottom = 47.0
+offset_left = -52.5
+offset_top = -22.0
+offset_right = 52.5
+offset_bottom = 22.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("6_yhhd6")
 
 [node name="Box" type="VBoxContainer" parent="UI/GameOver"]
 layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="UI/GameOver/Box"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"MenuTitle"
+text = "Game Over!"
 
 [node name="Result" type="Label" parent="UI/GameOver/Box"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Result"
-
-[node name="FlatCount" type="Label" parent="UI/GameOver/Box"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "x - x flats"
+horizontal_alignment = 1
 
 [node name="LeftBox" type="VBoxContainer" parent="UI"]
 layout_mode = 1

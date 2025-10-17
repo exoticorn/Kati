@@ -166,9 +166,9 @@ func game_result() -> GameResult:
 		var w = count[0] * 2
 		var b = count[1] * 2 + half_komi
 		if w > b:
-			return GameResult.flats_win(PlayerColor.WHITE)
+			return GameResult.flats_win(PlayerColor.WHITE, flat_count(), half_komi)
 		elif b > w:
-			return GameResult.flats_win(PlayerColor.BLACK)
+			return GameResult.flats_win(PlayerColor.BLACK, flat_count(), half_komi)
 		else:
 			return GameResult.draw()
 	return GameResult.new()

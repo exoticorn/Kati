@@ -11,6 +11,7 @@ const GameAction = preload("res://Scripts/game_actions.gd").Action
 var playtak_interface: PlaytakInterface
 var config: ConfigFile
 var game: PlaytakInterface.Game
+var game_board: BoardState
 var move_list: MoveList
 var board: Node
 var stream_player: AudioStreamPlayer = AudioStreamPlayer.new()
@@ -32,6 +33,7 @@ func setup(g: PlaytakInterface.Game, i: PlaytakInterface, c: ConfigFile):
 
 func _ready():
 	move_list = MoveList.new(game.rules)
+	game_board = BoardState.new(game.rules)
 	move_list.changed.connect(setup_move_input)
 	
 	board = TakBoard.instantiate()
@@ -53,6 +55,7 @@ func _ready():
 
 func move_input(move: Move):
 	move_list.push_move(move)
+	game_board.apply_move(move)
 	playtak_interface.send_move(game.id, move)
 	update_clock_running()
 	if game_actions != null:
@@ -60,12 +63,13 @@ func move_input(move: Move):
 
 func remote_move(move: Move):
 	move_list.push_move(move)
+	game_board.apply_move(move)
 	update_clock_running()
 	if game_actions != null:
 		game_actions.reset()
 
 func undo_move():
-	move_list.pop_move()
+	move_list.pop_move(game_board)
 	update_clock_running()
 	if game_actions != null:
 		game_actions.reset()
@@ -83,6 +87,7 @@ func update_clock_running():
 
 func set_result(result: GameResult):
 	game_result = result
+	game_result.set_flat_count(game_board.flat_count(), game_board.half_komi)
 	board.show_result(result)
 	var sample = null
 	if result.is_win():

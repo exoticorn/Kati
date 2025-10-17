@@ -1,5 +1,8 @@
 extends PanelContainer
 
+const ColorChoice = PlaytakInterface.ColorChoice
+const GameType = PlaytakInterface.GameType
+
 class SeekRow:
 	var seek: PlaytakInterface.Seek
 	var rating: int = 0
@@ -53,6 +56,12 @@ func sync_seeks():
 			var time = Label.new()
 			time.text = seek.clock.format()
 			s.controls.push_back(time)
+			var color = Label.new()
+			color.text = "black" if seek.color == ColorChoice.WHITE else "white" if seek.color == ColorChoice.BLACK else "random"
+			s.controls.push_back(color)
+			var mode = Label.new()
+			mode.text = "tournament" if seek.game_type == GameType.TOURNAMENT else "unrated" if seek.game_type == GameType.UNRATED else "rated"
+			s.controls.push_back(mode)
 
 			seeks.push_back(s)
 			for c in s.controls:
@@ -74,4 +83,4 @@ func update_ratings():
 				var seek = seeks.pop_at(j)
 				seeks.insert(i, seek)
 				for k in seek.controls.size():
-					$MainBox/Seeks.move_child(seek.controls[k], (i + 1) * 4 + k)
+					$MainBox/Seeks.move_child(seek.controls[k], (i + 1) * 6 + k)

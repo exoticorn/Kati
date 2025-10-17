@@ -226,10 +226,7 @@ func update_board():
 
 func show_result(result: GameResult):
 	if !result.is_ongoing():
-		$UI/GameOver/Box/Result.text = result.to_str()
-		var flat_count = board_state.flat_count()
-		var komi = str(board_state.half_komi / 2) if (board_state.half_komi & 1) == 0 else "%.1f" % (board_state.half_komi * 0.5)
-		$UI/GameOver/Box/FlatCount.text = "%d - %d+%s flats" % [flat_count[0], flat_count[1], komi]
+		$UI/GameOver.result = result
 		$UI/GameOver.show()
 	else:
 		$UI/GameOver.hide()

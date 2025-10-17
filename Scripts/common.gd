@@ -27,6 +27,12 @@ static func format_player(name: String, rating_entry: Dictionary):
 		return name_text
 	return name
 
+static func format_komi(half_komi: int) -> String:
+	if (half_komi & 1) == 0:
+		return "%d" % (half_komi / 2)
+	else:
+		return "%.1f" % (half_komi * 0.5)
+
 class ClockSettings:
 	var time: int
 	var increment: int
@@ -62,10 +68,7 @@ class GameRules:
 	func format() -> String:
 		var s := "%dx%d" % [size, size]
 		if half_komi > 0:
-			if (half_komi & 1) == 0:
-				s += ", Komi %d" % (half_komi / 2)
-			else:
-				s += ", Komi %.1f" % (half_komi * 0.5)
+			s += ", Komi %s" % Common.format_komi(half_komi)
 		if flats != Common.StoneCounts[size].flats || caps != Common.StoneCounts[size].caps:
 			s += " [%d/%d]" % [flats, caps] 
 		return s

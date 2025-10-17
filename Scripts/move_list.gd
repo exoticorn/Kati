@@ -191,9 +191,11 @@ func push_move(move: Move):
 		display_board.apply_move(move)
 	changed.emit()
 
-func pop_move():
+func pop_move(board: BoardState = null):
+	var prev_move = moves[-2] if moves.size() > 1 else null
+	if board != null:
+		board.unapply_move(prev_move)
 	if display_move == moves.size():
-		var prev_move = moves[-2] if moves.size() > 1 else null
 		display_board.unapply_move(prev_move)
 		display_move -= 1
 	moves.pop_back()
