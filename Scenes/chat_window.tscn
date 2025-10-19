@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://chsho2bb3oa4o"]
 
-[ext_resource type="Theme" uid="uid://d8am5lbm0wbt" path="res://chat_theme.tres" id="1_tgqin"]
+[ext_resource type="Theme" uid="uid://d8am5lbm0wbt" path="res://ui/chat_theme.tres" id="1_tgqin"]
 [ext_resource type="Script" uid="uid://ocaa77dsf35h" path="res://Scripts/chat_window.gd" id="1_vvcln"]
 
 [node name="ChatWindow" type="PanelContainer"]

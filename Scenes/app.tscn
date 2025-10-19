@@ -1,7 +1,7 @@
 [gd_scene load_steps=18 format=3 uid="uid://bct47lm2yejq8"]
 
 [ext_resource type="Script" uid="uid://b6ftb44rorpa" path="res://Scripts/app.gd" id="1_nmq3k"]
-[ext_resource type="Theme" uid="uid://bkrs4n0b5x0vf" path="res://topbar_theme.tres" id="2_fel14"]
+[ext_resource type="Theme" uid="uid://bkrs4n0b5x0vf" path="res://ui/topbar_theme.tres" id="2_fel14"]
 [ext_resource type="Script" uid="uid://872wvye2kvm2" path="res://Scripts/local_game_menu.gd" id="2_sb7qb"]
 [ext_resource type="PackedScene" uid="uid://c44b8ks63tvgq" path="res://ui/badge_button.tscn" id="3_76bsv"]
 [ext_resource type="Script" uid="uid://didjayc8ohs03" path="res://Scripts/games.gd" id="3_fdjpt"]
@@ -12,7 +12,7 @@
 [ext_resource type="Environment" uid="uid://gio35wn5euew" path="res://Scenes/env_low.tres" id="7_patxt"]
 [ext_resource type="PackedScene" uid="uid://ca4yqv7jv3jad" path="res://ui/watch_screen.tscn" id="8_85vr7"]
 [ext_resource type="PackedScene" uid="uid://chsho2bb3oa4o" path="res://Scenes/chat_window.tscn" id="8_cdfq8"]
-[ext_resource type="Theme" uid="uid://4w0nwl75r20n" path="res://toasts_theme.tres" id="9_vl6qb"]
+[ext_resource type="Theme" uid="uid://4w0nwl75r20n" path="res://ui/toasts_theme.tres" id="9_vl6qb"]
 [ext_resource type="Script" uid="uid://d00iwy70rhjso" path="res://Scripts/toasts.gd" id="10_bypbs"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_sb7qb"]

@@ -4,7 +4,7 @@
 [ext_resource type="CameraAttributesPractical" uid="uid://gtybhomfgbns" path="res://Scenes/cam_attr_normal.tres" id="2_la2l8"]
 [ext_resource type="Script" uid="uid://bs1712e7qggo7" path="res://Scripts/camera.gd" id="3_yhhd6"]
 [ext_resource type="PackedScene" uid="uid://dkwxditx1ga2f" path="res://Scenes/piece.tscn" id="5_63v3t"]
-[ext_resource type="Theme" uid="uid://je1ecuklaqff" path="res://board_ui_theme.tres" id="6_la2l8"]
+[ext_resource type="Theme" uid="uid://je1ecuklaqff" path="res://ui/board_ui_theme.tres" id="6_la2l8"]
 [ext_resource type="Script" uid="uid://fn28utmhgstd" path="res://ui/game_over.gd" id="6_yhhd6"]
 
 [node name="TakBoard" type="Control"]

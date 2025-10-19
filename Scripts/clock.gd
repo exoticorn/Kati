@@ -34,6 +34,9 @@ func _process(delta: float):
 	if running:
 		_time = max(0, _time - delta)
 		display_time()
+		theme_type_variation = "RunningClockPanel"
+	else:
+		theme_type_variation = ""
 
 func display_time():
 	var s = ceili(_time)
