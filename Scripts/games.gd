@@ -82,3 +82,13 @@ func switch_game() -> void:
 func apply_settings():
 	for game in get_children():
 		game.board.setup_quality()
+
+func game_count() -> int:
+	return get_children().size()
+
+func has_new_moves() -> bool:
+	for game in get_children():
+		if game is PlaytakGame:
+			if game.new_moves > 0:
+				return true
+	return false

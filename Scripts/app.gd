@@ -54,6 +54,13 @@ func _process(_delta: float):
 		switch_screen(Screen.NONE)
 	if Input.is_action_just_pressed("open_chat", true) && active_screen != Screen.LOG:
 		switch_screen(Screen.CHAT)
+	$TopBar/Games.count = $Screens/Games.game_count()
+	$TopBar/Games.red = $Screens/Games.has_new_moves()
+
+func _input(event: InputEvent):
+	if event is InputEventKey:
+		if event.pressed == true && event.keycode == KEY_TAB && active_screen == Screen.NONE:
+			%Screens/Games.switch_game()
 
 func _on_local_game_pressed() -> void:
 	switch_screen(Screen.LOCAL_GAME)
@@ -106,12 +113,14 @@ func _on_playtak_game_started(game: PlaytakInterface.Game):
 	var game_control: PlaytakGame = preload("res://Scenes/playtak_game.tscn").instantiate()
 	game_control.setup(game, playtak, settings)
 	$Screens/Games.add_game(game_control)
+	if game.game_type == PlaytakInterface.GameType.TOURNAMENT:
+		_on_game_list_changed() # update game list badge color
 
 func _on_game_list_changed():
 	$TopBar/Watch.count = playtak.game_list.size()
 	var has_tournament_game = false
 	for game in playtak.game_list:
-		if game.game_type == PlaytakInterface.GameType.TOURNAMENT:
+		if game.game_type == PlaytakInterface.GameType.TOURNAMENT && $Screens/Games.find_game(game.id) == null:
 			has_tournament_game = true
 	$TopBar/Watch.red = has_tournament_game
 

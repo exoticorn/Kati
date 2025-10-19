@@ -18,11 +18,14 @@ var stream_player: AudioStreamPlayer = AudioStreamPlayer.new()
 var game_result := GameResult.new()
 var clocks: Array[Control]
 var game_actions
+var new_moves: int = 0
 
 var shown:
 	set(s):
 		visible = s
 		board.shown = s
+		if visible:
+			new_moves = 0
 	get():
 		return visible
 
@@ -67,12 +70,16 @@ func remote_move(move: Move):
 	update_clock_running()
 	if game_actions != null:
 		game_actions.reset()
+	if !visible:
+		new_moves += 1
 
 func undo_move():
 	move_list.pop_move(game_board)
 	update_clock_running()
 	if game_actions != null:
 		game_actions.reset()
+	if !visible:
+		new_moves += 1
 
 func update_clock(wtime: float, btime: float):
 	clocks[0].time = wtime
