@@ -1,0 +1,276 @@
+{
+	"connections": [
+		{
+			"from": "perlin_2",
+			"from_port": 0,
+			"to": "warp",
+			"to_port": 1
+		},
+		{
+			"from": "perlin_2",
+			"from_port": 0,
+			"to": "warp_2",
+			"to_port": 1
+		},
+		{
+			"from": "warp_2",
+			"from_port": 0,
+			"to": "normal_map2",
+			"to_port": 0
+		},
+		{
+			"from": "normal_map2",
+			"from_port": 0,
+			"to": "Material",
+			"to_port": 4
+		},
+		{
+			"from": "noise_anisotropic_2",
+			"from_port": 0,
+			"to": "colorize",
+			"to_port": 0
+		},
+		{
+			"from": "colorize",
+			"from_port": 0,
+			"to": "warp",
+			"to_port": 0
+		},
+		{
+			"from": "warp",
+			"from_port": 0,
+			"to": "Material",
+			"to_port": 0
+		},
+		{
+			"from": "wavelet_noise2",
+			"from_port": 0,
+			"to": "blend2",
+			"to_port": 0
+		},
+		{
+			"from": "perlin",
+			"from_port": 0,
+			"to": "blend2",
+			"to_port": 1
+		},
+		{
+			"from": "blend2",
+			"from_port": 0,
+			"to": "warp_2",
+			"to_port": 0
+		}
+	],
+	"label": "Graph",
+	"longdesc": "",
+	"name": "_Node_817",
+	"node_position": {
+		"x": 0.0,
+		"y": 0.0
+	},
+	"nodes": [
+		{
+			"export_paths": {
+
+			},
+			"name": "Material",
+			"node_position": {
+				"x": 692.678894042969,
+				"y": 256.651611328125
+			},
+			"parameters": {
+				"albedo_color": {
+					"a": 1.0,
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0,
+					"type": "Color"
+				},
+				"ao": 1.0,
+				"depth_scale": 0.5,
+				"emission_energy": 1.0,
+				"flags_transparent": true,
+				"metallic": 0.0,
+				"normal": 1.0,
+				"roughness": 0.82,
+				"size": 11.0,
+				"sss": 1.0
+			},
+			"seed_int": 0,
+			"type": "material"
+		},
+		{
+			"generic_size": 1,
+			"name": "warp",
+			"node_position": {
+				"x": 403.315643310547,
+				"y": 320.411590576172
+			},
+			"parameters": {
+				"amount": 0.17,
+				"eps": 0.1,
+				"mode": 0.0
+			},
+			"seed_int": 0,
+			"type": "warp"
+		},
+		{
+			"name": "perlin_2",
+			"node_position": {
+				"x": 36.980110168457,
+				"y": 418.754791259766
+			},
+			"parameters": {
+				"iterations": 4.0,
+				"persistence": 0.85,
+				"scale_x": 1.0,
+				"scale_y": 3.0
+			},
+			"seed_int": 433528576,
+			"type": "perlin"
+		},
+		{
+			"generic_size": 1,
+			"name": "warp_2",
+			"node_position": {
+				"x": 278.423828125,
+				"y": 532.556457519531
+			},
+			"parameters": {
+				"amount": 0.12,
+				"eps": 0.1,
+				"mode": 0.0
+			},
+			"seed_int": 0,
+			"type": "warp"
+		},
+		{
+			"name": "normal_map2",
+			"node_position": {
+				"x": 491.300262451172,
+				"y": 460.330718994141
+			},
+			"parameters": {
+				"buffer": 1.0,
+				"param2": 0.0,
+				"size": 10.0,
+				"strength": 0.1
+			},
+			"seed_int": 0,
+			"type": "normal_map2"
+		},
+		{
+			"name": "noise_anisotropic_2",
+			"node_position": {
+				"x": -132.590026855469,
+				"y": 174.895751953125
+			},
+			"parameters": {
+				"interpolation": 1.0,
+				"scale_x": 4.0,
+				"scale_y": 87.0,
+				"smoothness": 1.0
+			},
+			"seed_int": 0,
+			"type": "noise_anisotropic"
+		},
+		{
+			"name": "colorize",
+			"node_position": {
+				"x": 157.758850097656,
+				"y": 196.483261108398
+			},
+			"parameters": {
+				"gradient": {
+					"interpolation": 1,
+					"points": [
+						{
+							"a": 1.0,
+							"b": 0.0201803371310234,
+							"g": 0.101963214576244,
+							"pos": 0.0,
+							"r": 0.262499988079071
+						},
+						{
+							"a": 1.0,
+							"b": 0.0411521345376968,
+							"g": 0.15179406106472,
+							"pos": 0.447022651395196,
+							"r": 0.309374988079071
+						},
+						{
+							"a": 1.0,
+							"b": 0.11250901222229,
+							"g": 0.241424232721329,
+							"pos": 0.65807533628854,
+							"r": 0.431249976158142
+						},
+						{
+							"a": 1.0,
+							"b": 0.0389147289097309,
+							"g": 0.161404550075531,
+							"pos": 1.0,
+							"r": 0.349999964237213
+						}
+					],
+					"type": "Gradient"
+				}
+			},
+			"seed_int": 0,
+			"type": "colorize"
+		},
+		{
+			"name": "wavelet_noise2",
+			"node_position": {
+				"x": -207.292724609375,
+				"y": 503.371459960938
+			},
+			"parameters": {
+				"frequency": 1.4,
+				"iterations": 3.0,
+				"offset": 0.0,
+				"persistence": 1.58,
+				"scale_x": 2.0,
+				"scale_y": 17.0,
+				"type": 0.0
+			},
+			"seed_int": 169917496,
+			"type": "wavelet_noise2"
+		},
+		{
+			"name": "perlin",
+			"node_position": {
+				"x": -157.753631591797,
+				"y": 774.175598144531
+			},
+			"parameters": {
+				"iterations": 5.0,
+				"persistence": 1.0,
+				"scale_x": 5.0,
+				"scale_y": 31.0
+			},
+			"seed_int": 0,
+			"type": "perlin"
+		},
+		{
+			"generic_size": 1,
+			"name": "blend2",
+			"node_position": {
+				"x": 54.2091064453125,
+				"y": 625.461791992188
+			},
+			"parameters": {
+				"amount1": 0.35,
+				"blend_type1": 0.0
+			},
+			"seed_int": 0,
+			"type": "blend2"
+		}
+	],
+	"parameters": {
+
+	},
+	"seed_int": 0,
+	"shortdesc": "",
+	"type": "graph"
+}

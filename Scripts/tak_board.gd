@@ -126,6 +126,33 @@ func create_board():
 			square.exited.connect(square_exited)
 			square.clicked.connect(square_clicked)
 	
+	var border_mesh_original = preload("res://Assets/imported/border.res")
+	var tool = MeshDataTool.new()
+	tool.create_from_surface(border_mesh_original, 0)
+	var size_inc = (board_state.size - 1) * 0.5
+	for i in tool.get_vertex_count():
+		var vertex = tool.get_vertex(i)
+		if vertex.x < 0:
+			vertex.x -= size_inc
+		else:
+			vertex.x += size_inc
+		tool.set_vertex(i, vertex)
+		var uv = tool.get_vertex_uv(i)
+		uv.x = vertex.x * 0.25
+		tool.set_vertex_uv(i, uv)
+	var border_mesh = ArrayMesh.new()
+	tool.commit_to_surface(border_mesh, 0)
+	border_mesh.surface_set_material(0, border_mesh_original.surface_get_material(0))
+	for i in 4:
+		var border = MeshInstance3D.new()
+		var transform = Transform3D.IDENTITY
+		transform.origin = Vector3(0, 0, board_state.size * 0.5)
+		transform = transform.rotated(Vector3.UP, i * PI / 2)
+		transform = transform.translated(Vector3(size_inc, 0, -size_inc))
+		border.mesh = border_mesh
+		border.transform = transform
+		add_child(border)
+	
 	$Root3D/Camera.board_size = board_state.size
 	
 	update_board()

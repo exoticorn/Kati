@@ -15,9 +15,11 @@ dest_files=["res://.godot/imported/Assets.glb-97ada71b2a0aefa4a232d15d4aeb1ffa.s
 
 nodes/root_type=""
 nodes/root_name=""
+nodes/root_script=null
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
 nodes/use_node_type_suffixes=true
 meshes/ensure_tangents=true
 meshes/generate_lods=true
@@ -32,6 +34,9 @@ animation/trimming=false
 animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
 _subresources={
 "meshes": {
 "Assets_Cube": {
@@ -40,7 +45,8 @@ _subresources={
 "generate/shadow_meshes": 0,
 "lods/normal_merge_angle": 60.0,
 "save_to_file/enabled": true,
-"save_to_file/path": "res://Assets/imported/white capstone.res"
+"save_to_file/fallback_path": "res://Assets/imported/white capstone.res",
+"save_to_file/path": "uid://cnt817tmlromd"
 },
 "Assets_Cube_002": {
 "generate/lightmap_uv": 0,
@@ -48,7 +54,8 @@ _subresources={
 "generate/shadow_meshes": 0,
 "lods/normal_merge_angle": 60.0,
 "save_to_file/enabled": true,
-"save_to_file/path": "res://Assets/imported/black capstone.res"
+"save_to_file/fallback_path": "res://Assets/imported/black capstone.res",
+"save_to_file/path": "uid://wittpc8xl4wl"
 },
 "Assets_black flat_001": {
 "generate/lightmap_uv": 0,
@@ -56,7 +63,17 @@ _subresources={
 "generate/shadow_meshes": 0,
 "lods/normal_merge_angle": 60.0,
 "save_to_file/enabled": true,
-"save_to_file/path": "res://Assets/imported/black flat.res"
+"save_to_file/fallback_path": "res://Assets/imported/black flat.res",
+"save_to_file/path": "uid://b3vkf85inwx36"
+},
+"Assets_border_001": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://Assets/imported/border.res",
+"save_to_file/path": "uid://bix17rocsek4r"
 },
 "Assets_square": {
 "generate/lightmap_uv": 0,
@@ -64,7 +81,8 @@ _subresources={
 "generate/shadow_meshes": 0,
 "lods/normal_merge_angle": 60.0,
 "save_to_file/enabled": true,
-"save_to_file/path": "res://Assets/imported/square.res"
+"save_to_file/fallback_path": "res://Assets/imported/square.res",
+"save_to_file/path": "uid://jqlqaowxo5qp"
 },
 "Assets_white flat_001": {
 "generate/lightmap_uv": 0,
@@ -72,7 +90,8 @@ _subresources={
 "generate/shadow_meshes": 0,
 "lods/normal_merge_angle": 60.0,
 "save_to_file/enabled": true,
-"save_to_file/path": "res://Assets/imported/white flat.res"
+"save_to_file/fallback_path": "res://Assets/imported/white flat.res",
+"save_to_file/path": "uid://ct5wiwvoqq2c7"
 }
 }
 }

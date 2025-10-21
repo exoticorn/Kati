@@ -1,5 +1,6 @@
 Next steps:
 
+Handle abandoned game result
 Add missing sound effects
 Highlight side to move (at start of game before the clock is running)
 Display current move number (and last few moves)
