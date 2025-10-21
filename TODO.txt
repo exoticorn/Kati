@@ -5,9 +5,9 @@ Add missing sound effects
 Highlight side to move (at start of game before the clock is running)
 Display current move number (and last few moves)
 Add action buttons (Rematch, Open in ptn.ninja, etc..) to game over popup
-Finish board + table gfx (including coordinates)
 UI Polish pass
 Texture pieces
+Add table gfx
 
 Add more options when playing against engine
 Add support to load PTN files
