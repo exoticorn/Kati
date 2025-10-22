@@ -195,6 +195,15 @@ func _process(delta):
 					game_action.emit(id, GameAction.OFFER_DRAW)
 				["RemoveDraw"]:
 					game_action.emit(id, GameAction.REMOVE_DRAW)
+				["Abandoned.", var player, "quit"]:
+					var game_index = game_list.find_custom(func (g): return g.id == id)
+					if game_index >= 0:
+						var game = game_list[game_index]
+						if game.player_white == player:
+							game_result.emit(id, GameResult.new(GameResult.State.WIN_BLACK, GameResult.Reason.DEFAULT))
+						elif game.player_black == player:
+							game_result.emit(id, GameResult.new(GameResult.State.WIN_WHITE, GameResult.Reason.DEFAULT))
+					chat_message.emit(ChatWindow.Type.SYSTEM, "<system>", "<server>", "Player %s abandoned game" % player)
 		else:
 			match Array(line.split(" ")):
 				["Login", "or", "Register"] when state == State.CONNECTING:

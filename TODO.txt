@@ -1,8 +1,7 @@
 Next steps:
 
-Handle abandoned game result
 Add missing sound effects
-Highlight side to move (at start of game before the clock is running)
+Display full rules (komi, time settings) during game
 Display current move number (and last few moves)
 Add action buttons (Rematch, Open in ptn.ninja, etc..) to game over popup
 UI Polish pass

@@ -1,6 +1,7 @@
 class_name Common
 
 const StoneCounts = {
+	3: { "flats": 10, "caps": 0 },
 	4: { "flats": 15, "caps": 0 },
 	5: { "flats": 21, "caps": 1 },
 	6: { "flats": 30, "caps": 1 },
