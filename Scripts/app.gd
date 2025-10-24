@@ -202,8 +202,9 @@ func _on_chat_pressed() -> void:
 	switch_screen(Screen.CHAT)
 
 func _on_chat_received(type: ChatWindow.Type, room: String, user: String, text: String):
-	$Screens/Chat.add_message(type, room, user, text)
-	if user != playtak.username:
+	var from_remote = user != playtak.username
+	$Screens/Chat.add_message(type, room, user, text, from_remote)
+	if from_remote:
 		$Screens/Toasts.add_toast("%s: %s" % [user, text])
 
 

@@ -99,6 +99,7 @@ func update_transform(animate: bool, sfx: bool):
 		tween.kill()
 	var sample_options = samples[type]
 	$StreamPlayer.stream = sample_options[randi_range(0, sample_options.size()-1)]
+	$StreamPlayer.pitch_scale = randf_range(0.9, 1.1)
 	if animate:
 		if is_placed:
 			var duration = (target_pos - position).length() * 0.2

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://chsho2bb3oa4o"]
+[gd_scene load_steps=4 format=3 uid="uid://chsho2bb3oa4o"]
 
 [ext_resource type="Theme" uid="uid://d8am5lbm0wbt" path="res://ui/chat_theme.tres" id="1_tgqin"]
 [ext_resource type="Script" uid="uid://ocaa77dsf35h" path="res://Scripts/chat_window.gd" id="1_vvcln"]
+[ext_resource type="AudioStream" uid="uid://c6qehsreoclhs" path="res://sfx/chat.wav" id="3_7rqvx"]
 
 [node name="ChatWindow" type="PanelContainer"]
 anchors_preset = -1
@@ -42,6 +43,9 @@ columns = 3
 layout_mode = 2
 keep_editing_on_text_submit = true
 emoji_menu_enabled = false
+
+[node name="StreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_7rqvx")
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="tab_changed" from="Box/Tabs" to="." method="_on_tabs_tab_changed"]

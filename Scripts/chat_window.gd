@@ -53,7 +53,7 @@ func _on_visibility_changed() -> void:
 	if is_visible_in_tree():
 		$Box/Input.grab_focus()
 
-func add_message(type: Type, room_name: String, user: String, msg: String):
+func add_message(type: Type, room_name: String, user: String, msg: String, from_remote: bool):
 	var room_index = add_room(type, room_name)
 	var room = rooms[room_index]
 	var message = Message.new(user, msg)
@@ -63,6 +63,8 @@ func add_message(type: Type, room_name: String, user: String, msg: String):
 	if room_index == $Box/Tabs.current_tab:
 		add_message_to_chat(message)
 	emit_unread_count()
+	if type == Type.DIRECT && from_remote:
+		$StreamPlayer.play()
 
 func add_room(type, room) -> int:
 	for i in rooms.size():

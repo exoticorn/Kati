@@ -48,6 +48,8 @@ func _ready():
 		game_actions = preload("res://Scenes/game_actions.tscn").instantiate()
 		game_actions.send_action.connect(send_game_action)
 		board.add_ui(game_actions, game.color == PlaytakInterface.ColorChoice.BLACK, false)
+		stream_player.stream = load("res://sfx/start.wav")
+		stream_player.play.call_deferred()
 	for i in 2:
 		clocks.push_back(Clock.instantiate())
 		clocks[i].setup(playtak_interface, game.player_white if i == 0 else game.player_black, game.clock.time, game.color == i)
@@ -97,8 +99,10 @@ func set_result(result: GameResult):
 	game_result.set_flat_count(game_board.flat_count(), game_board.half_komi)
 	board.show_result(result)
 	var sample = null
-	if result.is_win():
-		if game.color == ColorChoice.NONE || game.color == result.winner():
+	if !result.is_ongoing():
+		if result.state == GameResult.State.DRAW:
+			sample = load("res://sfx/draw.wav")
+		elif game.color == ColorChoice.NONE || game.color == result.winner():
 			sample = load("res://sfx/win.wav")
 		else:
 			sample = load("res://sfx/loss.wav")
