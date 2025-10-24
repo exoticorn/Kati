@@ -10,6 +10,12 @@ var black_cap_mesh: Mesh = preload("res://Assets/imported/black capstone.res")
 var highlight_overlay_material: Material = preload("res://Shaders/highlight.tres")
 var ghost_material: Material = preload("res://Shaders/ghost.tres")
 
+var samples = [
+	[preload("res://sfx/flat1.wav"), preload("res://sfx/flat2.wav")],
+	[preload("res://sfx/wall1.wav"), preload("res://sfx/wall2.wav"), preload("res://sfx/wall3.wav")],
+	[preload("res://sfx/cap1.wav"), preload("res://sfx/cap2.wav")]
+]
+
 var flat_aabb: AABB
 var type: PieceType
 var color: PlayerColor
@@ -46,7 +52,7 @@ func setup(c: PlayerColor, t: PieceType):
 		var dir = 1 if color == PlayerColor.WHITE else -1
 		base_rotation = Quaternion.from_euler(Vector3(PI / 2, PI / 4 * dir, 0)) * base_rotation
 	if is_placed:
-		update_transform(true)
+		update_transform(true, false)
 	mesh_height = piece_height()
 
 func place(pos: Vector3i, animate: bool = true):
@@ -55,7 +61,7 @@ func place(pos: Vector3i, animate: bool = true):
 		temp_board_pos = null
 		return
 	temp_board_pos = null
-	update_transform(animate)
+	update_transform(animate, animate)
 
 func piece_height() -> float:
 	match type:
@@ -69,10 +75,10 @@ func piece_height() -> float:
 func top_height():
 	return board_pos.y * flat_aabb.size.y + piece_height()
 
-func set_temp_pos(pos):
+func set_temp_pos(pos, sfx: bool):
 	if temp_board_pos != pos:
 		temp_board_pos = pos
-		update_transform(true)
+		update_transform(true, sfx)
 
 func calc_target_pos():
 	var pos = temp_board_pos if temp_board_pos != null else board_pos
@@ -86,11 +92,13 @@ func calc_target_pos():
 		base_pos.y += flat_aabb.size.y * 0.5
 	return base_pos + Vector3(randf_range(-0.03, 0.03), offset, randf_range(-0.03, 0.03))
 
-func update_transform(animate: bool):
+func update_transform(animate: bool, sfx: bool):
 	var target_pos = calc_target_pos()
 	var target_quat = Quaternion.from_euler(Vector3(0, randf_range(-0.1, 0.1), 0)) * base_rotation
 	if tween != null:
 		tween.kill()
+	var sample_options = samples[type]
+	$StreamPlayer.stream = sample_options[randi_range(0, sample_options.size()-1)]
 	if animate:
 		if is_placed:
 			var duration = (target_pos - position).length() * 0.2
@@ -99,6 +107,9 @@ func update_transform(animate: bool):
 			tween.set_ease(Tween.EASE_OUT)
 			tween.tween_property(self, "position", target_pos, duration)
 			tween.parallel().tween_property(self, "quaternion", target_quat, duration)
+			if sfx:
+				tween.parallel().tween_interval(duration - randf_range(0, 0.1))
+				tween.tween_callback($StreamPlayer.play)
 		else:
 			position = target_pos + Vector3(0, 3, 0)
 			quaternion = target_quat
@@ -106,6 +117,8 @@ func update_transform(animate: bool):
 			tween.set_trans(Tween.TRANS_QUAD)
 			tween.set_ease(Tween.EASE_IN)
 			tween.tween_property(self, "position", target_pos, 0.2)
+			if sfx:
+				tween.tween_callback($StreamPlayer.play)
 	else:
 		position = target_pos
 		quaternion = target_quat
@@ -119,7 +132,7 @@ func can_be(c: PlayerColor, t: PieceType):
 func become(t: PieceType):
 	if t != type:
 		setup(color, t)
-		update_transform(true)
+		update_transform(true, false)
 
 func set_highlight(flag: bool):
 	material_overlay = highlight_overlay_material if flag else null

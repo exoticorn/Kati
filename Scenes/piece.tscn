@@ -4,3 +4,7 @@
 
 [node name="Piece" type="MeshInstance3D"]
 script = ExtResource("1_jf0mb")
+
+[node name="StreamPlayer" type="AudioStreamPlayer3D" parent="."]
+volume_db = 12.0
+unit_size = 5.0

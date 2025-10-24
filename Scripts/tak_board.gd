@@ -209,7 +209,7 @@ func update_board():
 				var existing = piece_map.get(board_pos)
 				if existing != null && existing.can_be(piece.color, piece.type):
 					existing.become(piece.type)
-					existing.set_temp_pos(null)
+					existing.set_temp_pos(null, false)
 					piece_map.erase(board_pos)
 				else:
 					pieces_to_place.push_back({"pos": board_pos, "piece": piece})
@@ -312,7 +312,7 @@ func square_entered(square):
 			sq.set_hover_highlight(Color(0.3, 0.6, 0.3))#, height)
 			var next_height = height + pending_move.drops_on(square) + 3
 			for piece in held_pieces:
-				piece.set_temp_pos(Vector3i(square.x, next_height, square.y))
+				piece.set_temp_pos(Vector3i(square.x, next_height, square.y), false)
 				next_height += 1
 		else:
 			sq.set_hover_highlight(Color(0.5, 0.2, 0.2))
@@ -347,13 +347,13 @@ func square_clicked(square):
 			if pending_move.drops.size() != 0 || pending_move.count <= 1:
 				cancel_stack_move()
 			else:
-				held_pieces.pop_front().set_temp_pos(null)
+				held_pieces.pop_front().set_temp_pos(null, true)
 				pending_move.count -= 1
 		elif pending_move.can_continue_on_square(board_state, square):
 			var dropped_piece = held_pieces.pop_front()
 			var height = stack.size() + pending_move.drops_on(square)
 			pending_move.add_drop(square)
-			dropped_piece.set_temp_pos(Vector3i(square.x, height, square.y))
+			dropped_piece.set_temp_pos(Vector3i(square.x, height, square.y), true)
 			if held_pieces.is_empty():
 				can_input_move = false
 				var move = pending_move
@@ -373,14 +373,14 @@ func square_clicked(square):
 		while held_pieces.size() > board_state.size:
 			held_pieces.pop_front()
 		for piece in held_pieces:
-			piece.set_temp_pos(piece.board_pos + Vector3i(0, 3, 0))
+			piece.set_temp_pos(piece.board_pos + Vector3i(0, 3, 0), false)
 		pending_move = Move.pending_stack(square, held_pieces.size())
 
 func cancel_stack_move():
 	pending_move = null
 	held_pieces = []
 	for piece in $Root3D/Pieces.get_children():
-		piece.set_temp_pos(null)
+		piece.set_temp_pos(null, false)
 
 func setup_quality():
 	var quality: String = config.get_value("display", "quality", "mid")
