@@ -44,6 +44,8 @@ func _ready():
 	add_child(engine)
 	
 	analysis = Analysis.instantiate()
+	var move_list_ui = preload("res://ui/move_list.tscn").instantiate()
+	move_list_ui.setup(move_list)
 	
 	board = TakBoard.instantiate()
 	board.config = config
@@ -51,6 +53,7 @@ func _ready():
 	board.move_input.connect(move_input)
 	board.step_move.connect(move_list.step_move)
 	board.add_ui(analysis, true)
+	board.add_ui(move_list_ui, false)
 	board.can_input_move = true
 	add_child(board)
 

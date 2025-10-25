@@ -52,6 +52,9 @@ func _ready():
 	board.board_state = move_list.display_board
 	board.move_input.connect(move_input)
 	board.step_move.connect(move_list.step_move)
+	var move_list_ui = preload("res://ui/move_list.tscn").instantiate()
+	move_list_ui.setup(move_list)
+	board.add_ui(move_list_ui, false, true)
 	add_child(board)
 	setup_move_input()
 	
