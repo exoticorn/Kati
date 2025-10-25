@@ -20,6 +20,10 @@ boot_splash/fullsize=false
 boot_splash/image="uid://cqdlvhj816ba7"
 config/icon="res://icon.svg"
 
+[audio]
+
+general/3d_panning_strength=1.0
+
 [debug]
 
 gdscript/warnings/integer_division=0

@@ -12,7 +12,7 @@ var ghost_material: Material = preload("res://Shaders/ghost.tres")
 
 var samples = [
 	[preload("res://sfx/flat1.wav"), preload("res://sfx/flat2.wav")],
-	[preload("res://sfx/wall1.wav"), preload("res://sfx/wall2.wav"), preload("res://sfx/wall3.wav")],
+	[preload("res://sfx/wall1.wav"), preload("res://sfx/wall2.wav")],
 	[preload("res://sfx/cap1.wav"), preload("res://sfx/cap2.wav")]
 ]
 
