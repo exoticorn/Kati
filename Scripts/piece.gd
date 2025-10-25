@@ -52,7 +52,7 @@ func setup(c: PlayerColor, t: PieceType):
 		var dir = 1 if color == PlayerColor.WHITE else -1
 		base_rotation = Quaternion.from_euler(Vector3(PI / 2, PI / 4 * dir, 0)) * base_rotation
 	if is_placed:
-		update_transform(true, false)
+		update_transform(!is_ghost, false)
 	mesh_height = piece_height()
 
 func place(pos: Vector3i, animate: bool = true):
