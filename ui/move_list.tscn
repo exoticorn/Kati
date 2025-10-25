@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://dvco8mjrdwjsh"]
+
+[ext_resource type="Theme" uid="uid://dpbxvmjve7tki" path="res://ui/move_list_theme.tres" id="1_607kh"]
+[ext_resource type="Script" uid="uid://bgq15rg18f2rm" path="res://ui/move_list_ui.gd" id="1_r4mea"]
+
+[node name="MoveList" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_607kh")
+script = ExtResource("1_r4mea")
+
+[node name="Grid" type="GridContainer" parent="."]
+layout_mode = 2
+columns = 3

@@ -50,6 +50,12 @@ func _ready():
 		board.add_ui(game_actions, game.color == PlaytakInterface.ColorChoice.BLACK, false)
 		stream_player.stream = load("res://sfx/start.wav")
 		stream_player.play.call_deferred()
+	var game_rules = preload("res://ui/game_rules.tscn").instantiate()
+	game_rules.setup(game.rules, game.clock)
+	board.add_ui(game_rules, game.color != PlaytakInterface.ColorChoice.WHITE, false)
+	var move_list_ui = preload("res://ui/move_list.tscn").instantiate()
+	move_list_ui.setup(move_list)
+	board.add_ui(move_list_ui, game.color == PlaytakInterface.ColorChoice.WHITE, false)
 	for i in 2:
 		clocks.push_back(Clock.instantiate())
 		clocks[i].setup(playtak_interface, game.player_white if i == 0 else game.player_black, game.clock.time, game.color == i)

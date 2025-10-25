@@ -151,7 +151,7 @@ func create_board():
 		transform = transform.translated(Vector3(size_inc, 0, -size_inc))
 		border.mesh = border_mesh
 		border.transform = transform
-		add_child(border)
+		$Root3D/Board.add_child(border)
 	for i in board_state.size:
 		var color = Color(0.635, 0.603, 0.593, 1.0)
 		var label = Label3D.new()
@@ -161,7 +161,7 @@ func create_board():
 		label.rotate_x(-PI / 2)
 		label.modulate = color
 		label.shaded = true
-		add_child(label)
+		$Root3D/Board.add_child(label)
 		label = Label3D.new()
 		label.outline_size = 4
 		label.text = char(97 + i)
@@ -169,7 +169,7 @@ func create_board():
 		label.rotate_x(-PI / 2)
 		label.modulate = color
 		label.shaded = true
-		add_child(label)
+		$Root3D/Board.add_child(label)
 		label = Label3D.new()
 		label.outline_size = 4
 		label.text = str(i + 1)
@@ -178,7 +178,7 @@ func create_board():
 		label.rotate_y(PI)
 		label.modulate = color
 		label.shaded = true
-		add_child(label)
+		$Root3D/Board.add_child(label)
 		label = Label3D.new()
 		label.outline_size = 4
 		label.text = char(97 + i)
@@ -187,7 +187,7 @@ func create_board():
 		label.rotate_y(PI)
 		label.modulate = color
 		label.shaded = true
-		add_child(label)
+		$Root3D/Board.add_child(label)
 	
 	$Root3D/Camera.board_size = board_state.size
 	

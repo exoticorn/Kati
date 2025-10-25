@@ -102,7 +102,7 @@ func update_transform(animate: bool, sfx: bool):
 	$StreamPlayer.pitch_scale = randf_range(0.9, 1.1)
 	if animate:
 		if is_placed:
-			var duration = (target_pos - position).length() * 0.2
+			var duration = max(1.0, (target_pos - position).length()) * 0.2
 			tween = create_tween()
 			tween.set_trans(Tween.TRANS_CUBIC)
 			tween.set_ease(Tween.EASE_OUT)
