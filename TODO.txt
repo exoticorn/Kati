@@ -1,6 +1,7 @@
 Next steps:
 
-Add action buttons (Rematch, Open in ptn.ninja, etc..) to game over popup
+Add Players Screen
+Test if Seeks/Watch/Players screens work with >20 entries (in case Tak explodes in popularity)
 UI Polish pass
 Texture pieces
 Add table gfx

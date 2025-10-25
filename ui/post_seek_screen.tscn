@@ -133,7 +133,7 @@ popup/item_8/id = 8
 
 [node name="TimeLabel" type="Label" parent="VBox/Grid"]
 layout_mode = 2
-text = "Tme:"
+text = "Time:"
 
 [node name="Time" type="SpinBox" parent="VBox/Grid"]
 unique_name_in_owner = true

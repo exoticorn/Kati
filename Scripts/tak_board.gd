@@ -41,6 +41,7 @@ var move_infos_changed = false
 
 signal move_input(move: Move)
 signal step_move(by: int)
+signal rematch
 
 func _ready():
 	setup_quality()
@@ -287,8 +288,9 @@ func update_board():
 	if current_hover_square != null:
 		square_entered(current_hover_square)
 
-func show_result(result: GameResult):
+func show_result(result: GameResult, playtak_game = null):
 	if !result.is_ongoing():
+		$UI/GameOver.playtak_game = playtak_game
 		$UI/GameOver.result = result
 		$UI/GameOver.show()
 	else:
@@ -422,3 +424,6 @@ func update_analysis():
 			square.set_move_infos(square_infos[sq], best_move)
 		else:
 			square.clear_move_infos()
+
+func _on_rematch_pressed() -> void:
+	rematch.emit()

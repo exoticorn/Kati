@@ -251,6 +251,8 @@ func _process(delta):
 					if index >= 0:
 						seeks.remove_at(index)
 						seeks_changed.emit()
+				["Accept", "Rematch", var id]:
+					accept_seek(id.to_int())
 				["Game", "Start", var id, var player_white, "vs", var player_black, var color, var size, var time, var inc, var half_komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var is_bot]:
 					var game := Game.new()
 					game.id = id.to_int()
@@ -354,6 +356,19 @@ func leave_room(room: String):
 
 func send_seek(seek: Seek):
 	send("Seek %d %d %d %s %d %d %d %d %d %d %d %s" % [
+		seek.rules.size,
+		seek.clock.time, seek.clock.increment,
+		"W" if seek.color == ColorChoice.WHITE else "B" if seek.color == ColorChoice.BLACK else "A",
+		seek.rules.half_komi, seek.rules.flats, seek.rules.caps,
+		1 if seek.game_type == GameType.UNRATED else 0,
+		1 if seek.game_type == GameType.TOURNAMENT else 0,
+		seek.clock.extra_time_move, seek.clock.extra_time,
+		seek.user
+	])
+
+func send_rematch(seek: Seek):
+	send("Rematch %d %d %d %d %s %d %d %d %d %d %d %d %s" % [
+		seek.id,
 		seek.rules.size,
 		seek.clock.time, seek.clock.increment,
 		"W" if seek.color == ColorChoice.WHITE else "B" if seek.color == ColorChoice.BLACK else "A",

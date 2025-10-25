@@ -44,6 +44,7 @@ func _ready():
 	board.board_state = move_list.display_board
 	board.move_input.connect(move_input)
 	board.step_move.connect(move_list.step_move)
+	board.rematch.connect(rematch)
 	if game.color != PlaytakInterface.ColorChoice.NONE:
 		game_actions = preload("res://Scenes/game_actions.tscn").instantiate()
 		game_actions.send_action.connect(send_game_action)
@@ -103,7 +104,7 @@ func update_clock_running():
 func set_result(result: GameResult):
 	game_result = result
 	game_result.set_flat_count(game_board.flat_count(), game_board.half_komi)
-	board.show_result(result)
+	board.show_result(result, game)
 	var sample = null
 	if !result.is_ongoing():
 		if result.state == GameResult.State.DRAW:
@@ -137,3 +138,13 @@ func receive_game_action(action: GameAction):
 
 func is_observe() -> bool:
 	return game.color == ColorChoice.NONE
+
+func rematch():
+	var seek = PlaytakInterface.Seek.new()
+	seek.id = game.id
+	seek.rules = game.rules
+	seek.clock = game.clock
+	seek.color = ColorChoice.WHITE if game.color == ColorChoice.BLACK else ColorChoice.BLACK
+	seek.game_type = game.game_type
+	seek.user = game.player_black if game.color == ColorChoice.WHITE else game.player_white
+	playtak_interface.send_rematch(seek)

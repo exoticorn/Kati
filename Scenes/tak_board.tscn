@@ -83,6 +83,27 @@ size_flags_horizontal = 4
 text = "Result"
 horizontal_alignment = 1
 
+[node name="Rematch" type="Button" parent="UI/GameOver/Box"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Rematch"
+
+[node name="CopyId" type="Button" parent="UI/GameOver/Box"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Copy Game ID"
+
+[node name="Actions" type="HBoxContainer" parent="UI/GameOver/Box"]
+layout_mode = 2
+
+[node name="OpenPlaytak" type="Button" parent="UI/GameOver/Box/Actions"]
+layout_mode = 2
+text = "Open on playtak.com"
+
+[node name="OpenPtnNinja" type="Button" parent="UI/GameOver/Box/Actions"]
+layout_mode = 2
+text = "Open in ptn.ninja"
+
 [node name="LeftBox" type="VBoxContainer" parent="UI"]
 layout_mode = 1
 anchors_preset = -1
@@ -175,3 +196,8 @@ text = "Cap Stones:"
 [node name="Count" type="Label" parent="UI/RightBox/Reserves/CapsBlack/Box"]
 layout_mode = 2
 text = "0"
+
+[connection signal="pressed" from="UI/GameOver/Box/Rematch" to="." method="_on_rematch_pressed"]
+[connection signal="pressed" from="UI/GameOver/Box/CopyId" to="UI/GameOver" method="_on_copy_id_pressed"]
+[connection signal="pressed" from="UI/GameOver/Box/Actions/OpenPlaytak" to="UI/GameOver" method="_on_open_playtak_pressed"]
+[connection signal="pressed" from="UI/GameOver/Box/Actions/OpenPtnNinja" to="UI/GameOver" method="_on_open_ptn_ninja_pressed"]
