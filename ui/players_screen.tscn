@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://biueljud648q"]
+
+[ext_resource type="Script" uid="uid://3ux23fp5n1en" path="res://ui/players_screen.gd" id="1_kld47"]
+
+[node name="PlayersScreen" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -85.0
+offset_top = -60.5
+offset_right = 85.0
+offset_bottom = 60.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_kld47")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBox"]
+layout_mode = 2
+theme_type_variation = &"MenuTitle"
+text = "Players"
+
+[node name="Grid" type="GridContainer" parent="VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+columns = 3

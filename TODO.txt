@@ -1,7 +1,8 @@
 Next steps:
 
-Add Players Screen
+Add sfx for new direct challenge
 Test if Seeks/Watch/Players screens work with >20 entries (in case Tak explodes in popularity)
+Clean up code according to GDScript style guide
 UI Polish pass
 Texture pieces
 Add table gfx

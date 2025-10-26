@@ -60,6 +60,10 @@ func _ready():
 	for preset in PRESETS:
 		%Preset.add_item(preset)
 
+
+func set_opponent(player: String):
+	%Opponent.text = player
+
 func _on_preset_item_selected(_index: int) -> void:
 	update()
 
@@ -128,21 +132,17 @@ func _on_opponent_text_changed(_new_text: String) -> void:
 	update()
 
 func _on_confirm_button_pressed() -> void:
-	var seek := PlaytakInterface.Seek.new()
 	if _has_seek:
-		seek.user = "0"
-		seek.rules = Common.GameRules.new(0, 0, 0, 0)
-		seek.clock = Common.ClockSettings.new(0, 0)
-		seek.color = PlaytakInterface.ColorChoice.NONE
-		seek.game_type = PlaytakInterface.GameType.RATED
+		_playtak.cancel_seek()
 	else:
-		seek.user = %Opponent.text
-		if seek.user.is_empty():
-			seek.user = "0"
+		var seek := PlaytakInterface.Seek.new()
+		seek.opponent = %Opponent.text
+		if seek.opponent.is_empty():
+			seek.opponent = null
 		seek.rules = Common.GameRules.new(%Size.selected + 3, %Komi.selected)
 		seek.clock = Common.ClockSettings.new(%Time.value * 60, %Increment.value, %ExtraMove.value, %ExtraTime.value * 60)
 		seek.color = %Color.selected
 		seek.game_type = %GameType.selected
-	_playtak.send_seek(seek)
+		_playtak.send_seek(seek)
 	_has_seek = !_has_seek
 	update()

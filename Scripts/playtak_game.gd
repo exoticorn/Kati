@@ -146,5 +146,5 @@ func rematch():
 	seek.clock = game.clock
 	seek.color = ColorChoice.WHITE if game.color == ColorChoice.BLACK else ColorChoice.BLACK
 	seek.game_type = game.game_type
-	seek.user = game.player_black if game.color == ColorChoice.WHITE else game.player_white
+	seek.opponent = game.player_black if game.color == ColorChoice.WHITE else game.player_white
 	playtak_interface.send_rematch(seek)

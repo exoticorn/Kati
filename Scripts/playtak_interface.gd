@@ -44,6 +44,7 @@ class Seek:
 	var color: ColorChoice
 	var game_type: GameType
 	var bot: bool
+	var opponent: Variant
 
 class Game:
 	var id
@@ -54,6 +55,17 @@ class Game:
 	var clock: Common.ClockSettings
 	var game_type: GameType
 	var bot: bool
+	
+	func chat_room() -> String:
+		match color:
+			ColorChoice.WHITE:
+				return player_black
+			ColorChoice.BLACK:
+				return player_white
+			_:
+				var players = [player_white, player_black]
+				players.sort()
+				return "%s-%s" % [players[0], players[1]]
 
 var seeks: Array[Seek] = []
 var online_players: Array[String] = []
@@ -92,7 +104,20 @@ func login(lgn: Login):
 	state_changed.emit()
 
 func accept_seek(id: int):
-	send("Accept %d" % id)
+	var index = seeks.find_custom(func (s): return s.id == id)
+	if index >= 0 && seeks[index].user == username:
+		cancel_seek()
+	else:
+		send("Accept %d" % id)
+
+func cancel_seek():
+	var seek := PlaytakInterface.Seek.new()
+	seek.user = "0"
+	seek.rules = Common.GameRules.new(0, 0, 0, 0)
+	seek.clock = Common.ClockSettings.new(0, 0)
+	seek.color = PlaytakInterface.ColorChoice.NONE
+	seek.game_type = PlaytakInterface.GameType.RATED
+	send_seek(seek)
 
 func observe(id: int):
 	send("Observe %d" % id)
@@ -231,7 +256,7 @@ func _process(delta):
 					_login.save()
 					state_changed.emit()
 				["Seek", "new", var id, var user, var size, var time, var inc, var color, var half_komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time, var opp, var bot_seek]:
-					if opp != "0" && opp.to_lower() != username.to_lower():
+					if opp != "0" && opp.to_lower() != username.to_lower() && user != username:
 						return
 					var seek := Seek.new()
 					seek.id = id.to_int()
@@ -242,6 +267,7 @@ func _process(delta):
 					seek.color = ColorChoice.WHITE if color == "W" else ColorChoice.BLACK if color == "B" else ColorChoice.NONE
 					seek.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
 					seek.bot = bot_seek == "1"
+					seek.opponent = opp if opp != "0" else null
 					seeks.push_back(seek)
 					seeks_changed.emit()
 					fetch_rating(user)
@@ -264,24 +290,24 @@ func _process(delta):
 					game.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
 					game.bot = is_bot == "1"
 					game_started.emit(game)
-					var opponent = game.player_black if game.color == ColorChoice.WHITE else game.player_white
-					add_chat_room.emit(ChatWindow.Type.DIRECT, opponent)
+					add_chat_room.emit(ChatWindow.Type.DIRECT, game.chat_room())
 					fetch_rating(player_white)
 					fetch_rating(player_black)
 				["GameList", "Add", var id, var player_white, var player_black, var size, var time, var inc, var half_komi, var flat_count, var capstone_count, var unrated, var tournament, var extra_time_move, var extra_time]:
-					var game := Game.new()
-					game.id = id.to_int()
-					game.player_white = player_white
-					game.player_black = player_black
-					game.color = ColorChoice.NONE
-					game.rules = Common.GameRules.new(size.to_int(), half_komi.to_int(), flat_count.to_int(), capstone_count.to_int())
-					game.clock = Common.ClockSettings.new(time.to_int(), inc.to_int(), extra_time_move.to_int(), extra_time.to_int())
-					game.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
-					game.bot = false
-					game_list.push_back(game)
-					game_list_changed.emit()
-					fetch_rating(player_white)
-					fetch_rating(player_black)
+					if player_white != username && player_black != username:
+						var game := Game.new()
+						game.id = id.to_int()
+						game.player_white = player_white
+						game.player_black = player_black
+						game.color = ColorChoice.NONE
+						game.rules = Common.GameRules.new(size.to_int(), half_komi.to_int(), flat_count.to_int(), capstone_count.to_int())
+						game.clock = Common.ClockSettings.new(time.to_int(), inc.to_int(), extra_time_move.to_int(), extra_time.to_int())
+						game.game_type = GameType.TOURNAMENT if tournament == "1" else GameType.UNRATED if unrated == "1" else GameType.RATED
+						game.bot = false
+						game_list.push_back(game)
+						game_list_changed.emit()
+						fetch_rating(player_white)
+						fetch_rating(player_black)
 				["GameList", "Remove", var id, ..]:
 					var int_id = id.to_int()
 					var index = game_list.find_custom(func (g): return g.id == int_id)
@@ -301,7 +327,7 @@ func _process(delta):
 					game_started.emit(game)
 					var players = [player_white, player_black]
 					players.sort()
-					send("JoinRoom %s-%s" % [players[0], players[1]])
+					send("JoinRoom " + game.chat_room())
 					fetch_rating(player_white)
 					fetch_rating(player_black)
 				["OnlinePlayers", ..]:
@@ -310,6 +336,7 @@ func _process(delta):
 					online_players = []
 					for player in json.get_data():
 						online_players.push_back(player)
+						fetch_rating(player)
 					players_changed.emit()
 				["Tell", var user, ..]:
 					var cleaned_user = user.trim_prefix("<").trim_suffix(">")
@@ -363,7 +390,7 @@ func send_seek(seek: Seek):
 		1 if seek.game_type == GameType.UNRATED else 0,
 		1 if seek.game_type == GameType.TOURNAMENT else 0,
 		seek.clock.extra_time_move, seek.clock.extra_time,
-		seek.user
+		seek.opponent if seek.opponent != null else "0"
 	])
 
 func send_rematch(seek: Seek):
@@ -376,7 +403,7 @@ func send_rematch(seek: Seek):
 		1 if seek.game_type == GameType.UNRATED else 0,
 		1 if seek.game_type == GameType.TOURNAMENT else 0,
 		seek.clock.extra_time_move, seek.clock.extra_time,
-		seek.user
+		seek.opponent
 	])
 
 func send(line: String):

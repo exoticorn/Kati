@@ -76,6 +76,13 @@ func add_room(type, room) -> int:
 	$Box/Tabs.current_tab = room_index
 	return room_index
 
+
+func select_room(room: String) -> void:
+	var index = rooms.find_custom(func (r): return r.name == room)
+	if index >= 0:
+		$Box/Tabs.current_tab = index
+
+
 func add_message_to_chat(message):
 	var grid = $Box/Panel/Chat/Grid
 	var time_label = Label.new()

@@ -41,7 +41,7 @@ func sync_seeks():
 			var s = SeekRow.new()
 			s.seek = seek
 			var name_ = LinkButton.new()
-			var name_str = seek.user
+			var name_str = seek.user if seek.user != playtak.username else "-> " + seek.opponent
 			if seek.bot:
 				name_str = " " + name_str
 			if seek.game_type == PlaytakInterface.GameType.TOURNAMENT:

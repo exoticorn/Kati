@@ -17,7 +17,8 @@ enum Screen {
 	HELP,
 	SETTINGS,
 	CHAT,
-	LOG
+	PLAYERS,
+	LOG,
 }
 
 var active_screen := Screen.NONE
@@ -32,8 +33,11 @@ func _ready():
 	playtak.add_chat_room.connect($Screens/Chat.add_room)
 	playtak.game_list_changed.connect(_on_game_list_changed)
 	playtak.seeks_changed.connect(_on_seeks_changed)
+	playtak.players_changed.connect(_on_players_changed)
 	$Screens/Chat.send_message.connect(playtak.send_chat_message)
 	$Screens/Chat.leave_room.connect(playtak.leave_room)
+	%Players.challenge_pressed.connect(_on_players_challenge_pressed)
+	%Players.chat_pressed.connect(_on_players_chat_pressed)
 	add_child(playtak)
 	login = Login.load()
 	%PostSeek.setup(playtak)
@@ -42,6 +46,7 @@ func _ready():
 	$Screens/Watch.setup(playtak)
 	$Screens/Settings.setup(settings)
 	$Screens/LocalGameScreen.setup(settings)
+	$Screens/Players.setup(playtak)
 	$TopBar/Username.setup(playtak)
 	switch_screen(Screen.MAIN_MENU)
 	if OS.has_feature("web"):
@@ -60,7 +65,7 @@ func _process(_delta: float):
 func _input(event: InputEvent):
 	if event is InputEventKey:
 		if event.pressed == true && event.keycode == KEY_TAB && active_screen == Screen.NONE:
-			%Screens/Games.switch_game()
+			_cycle_game()
 
 func _on_local_game_pressed() -> void:
 	switch_screen(Screen.LOCAL_GAME)
@@ -99,6 +104,7 @@ func _on_playtak_state_changed():
 	$TopBar/CreateGame.visible = is_online
 	$TopBar/Seeks.visible = is_online
 	$TopBar/Watch.visible = is_online
+	$TopBar/Players.visible = is_online
 	$TopBar/Chat.visible = is_online
 	$TopBar/Username.visible = is_online || is_disconnected
 	$TopBar/ReconnectButton.visible = is_disconnected
@@ -128,7 +134,7 @@ func _on_seeks_changed():
 	$TopBar/Seeks.count = playtak.seeks.size()
 	var has_direct = false
 	for seek in playtak.seeks:
-		if seek.direct:
+		if seek.direct && seek.user != playtak.username:
 			has_direct = true
 	$TopBar/Seeks.red = has_direct
 
@@ -142,13 +148,14 @@ func switch_screen(screen: Screen):
 	%Screens/Watch.visible = screen == Screen.WATCH
 	%Screens/Help.visible = screen == Screen.HELP
 	%Screens/Settings.visible = screen == Screen.SETTINGS
+	%Players.visible = screen == Screen.PLAYERS
 	%Screens/Chat.visible = screen == Screen.CHAT
 	%Screens/ConnectionLog.visible = screen == Screen.LOG
 	active_screen = screen
 
 func _on_games_pressed() -> void:
 	if active_screen == Screen.NONE:
-		%Screens/Games.switch_game()
+		_cycle_game()
 	else:
 		switch_screen(Screen.NONE)
 
@@ -177,6 +184,13 @@ func apply_settings():
 			viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
 			viewport.scaling_3d_scale = 0.5
 	$WorldEnvironment.environment = env
+
+
+func _cycle_game():
+	%Screens/Games.switch_game()
+	var game = %Screens/Games.current_game()
+	if game != null:
+		$Screens/Chat.select_room(game.chat_room())
 
 
 func _on_help_pressed() -> void:
@@ -221,9 +235,28 @@ func _on_log_out_pressed() -> void:
 func _on_create_game_pressed() -> void:
 	switch_screen(Screen.CREATE_GAME)
 
+
 func _on_help_meta_clicked(meta: Variant) -> void:
 	if meta == "show_log":
 		$Screens/ConnectionLog/VBox/Log.text = playtak.get_log()
 		switch_screen(Screen.LOG)
 	else:
 		OS.shell_open(str(meta))
+
+
+func _on_players_changed() -> void:
+	$TopBar/Players.count = playtak.online_players.size()
+
+
+func _on_players_pressed() -> void:
+	switch_screen(Screen.PLAYERS)
+
+
+func _on_players_challenge_pressed(player: String) -> void:
+	%PostSeek.set_opponent(player)
+	switch_screen(Screen.CREATE_GAME)
+
+
+func _on_players_chat_pressed(player: String) -> void:
+	$Screens/Chat.add_room(ChatWindow.Type.DIRECT, player)
+	switch_screen(Screen.CHAT)

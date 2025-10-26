@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bct47lm2yejq8"]
+[gd_scene load_steps=19 format=3 uid="uid://bct47lm2yejq8"]
 
 [ext_resource type="Script" uid="uid://b6ftb44rorpa" path="res://Scripts/app.gd" id="1_nmq3k"]
 [ext_resource type="Theme" uid="uid://bkrs4n0b5x0vf" path="res://ui/topbar_theme.tres" id="2_fel14"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://chsho2bb3oa4o" path="res://Scenes/chat_window.tscn" id="8_cdfq8"]
 [ext_resource type="Theme" uid="uid://4w0nwl75r20n" path="res://ui/toasts_theme.tres" id="9_vl6qb"]
 [ext_resource type="Script" uid="uid://d00iwy70rhjso" path="res://Scripts/toasts.gd" id="10_bypbs"]
+[ext_resource type="PackedScene" uid="uid://biueljud648q" path="res://ui/players_screen.tscn" id="12_015p0"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_sb7qb"]
 
@@ -61,6 +62,10 @@ text = "Seeks"
 visible = false
 layout_mode = 2
 text = "Watch"
+
+[node name="Players" parent="TopBar" instance=ExtResource("3_76bsv")]
+layout_mode = 2
+text = "Players"
 
 [node name="CenterSpacer" type="Control" parent="TopBar"]
 layout_mode = 2
@@ -361,6 +366,13 @@ offset_top = -79.5
 offset_right = 116.5
 offset_bottom = 79.5
 
+[node name="Players" parent="Screens" instance=ExtResource("12_015p0")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+offset_top = -62.5
+offset_bottom = 62.5
+
 [node name="Help" type="PanelContainer" parent="Screens"]
 visible = false
 layout_mode = 1
@@ -619,6 +631,7 @@ environment = ExtResource("7_patxt")
 [connection signal="pressed" from="TopBar/Games" to="." method="_on_games_pressed"]
 [connection signal="pressed" from="TopBar/Seeks" to="." method="_on_seeks_pressed"]
 [connection signal="pressed" from="TopBar/Watch" to="." method="_on_watch_pressed"]
+[connection signal="pressed" from="TopBar/Players" to="." method="_on_players_pressed"]
 [connection signal="pressed" from="TopBar/Chat" to="." method="_on_chat_pressed"]
 [connection signal="pressed" from="TopBar/ReconnectButton" to="." method="_on_reconnect_button_pressed"]
 [connection signal="pressed" from="TopBar/Help" to="." method="_on_help_pressed"]
