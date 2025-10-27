@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dmsyb2bnskjyj"]
+[gd_scene load_steps=3 format=3 uid="uid://dmsyb2bnskjyj"]
 
 [ext_resource type="Script" uid="uid://c43nj0jgrp3mh" path="res://ui/seeks_screen.gd" id="1_248ti"]
+[ext_resource type="AudioStream" uid="uid://djv00lhxoglwl" path="res://sfx/challenge.wav" id="2_qtkr5"]
 
 [node name="SeeksScreen" type="PanelContainer"]
 anchors_preset = 8
@@ -51,3 +52,6 @@ text = "Your color"
 [node name="Mode" type="Label" parent="MainBox/Seeks"]
 layout_mode = 2
 text = "Mode"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_qtkr5")

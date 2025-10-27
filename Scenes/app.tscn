@@ -63,13 +63,13 @@ visible = false
 layout_mode = 2
 text = "Watch"
 
-[node name="Players" parent="TopBar" instance=ExtResource("3_76bsv")]
-layout_mode = 2
-text = "Players"
-
 [node name="CenterSpacer" type="Control" parent="TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="Players" parent="TopBar" instance=ExtResource("3_76bsv")]
+layout_mode = 2
+text = "Players"
 
 [node name="Chat" parent="TopBar" instance=ExtResource("3_76bsv")]
 visible = false

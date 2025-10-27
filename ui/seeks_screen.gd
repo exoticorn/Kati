@@ -66,8 +66,11 @@ func sync_seeks():
 			seeks.push_back(s)
 			for c in s.controls:
 				$MainBox/Seeks.add_child(c)
+			
+			if seek.direct && seek.user != playtak.username:
+				$AudioStreamPlayer.play()
 
-			update_ratings()
+	update_ratings()
 
 func update_ratings():
 	var ratings = playtak.ratings

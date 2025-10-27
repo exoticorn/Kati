@@ -64,6 +64,10 @@ func add_message(type: Type, room_name: String, user: String, msg: String, from_
 		add_message_to_chat(message)
 	emit_unread_count()
 	if type == Type.DIRECT && from_remote:
+		$StreamPlayer.stream = preload("res://sfx/chat.wav")
+		$StreamPlayer.play()
+	elif type == Type.GROUP && from_remote:
+		$StreamPlayer.stream = preload("res://sfx/groupchat.wav")
 		$StreamPlayer.play()
 
 func add_room(type, room) -> int:
