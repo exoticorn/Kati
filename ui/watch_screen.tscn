@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://bf18o4ey614js" path="res://ui/watch_screen.gd" id="1_bi31n"]
 
 [node name="Watch" type="PanelContainer"]
-visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -25,18 +24,24 @@ layout_mode = 2
 theme_type_variation = &"MenuTitle"
 text = "Watch"
 
-[node name="Games" type="GridContainer" parent="Box"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Box"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Games" type="GridContainer" parent="Box/ScrollContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 columns = 3
 
-[node name="Players" type="Label" parent="Box/Games"]
+[node name="Players" type="Label" parent="Box/ScrollContainer/Games"]
 layout_mode = 2
 text = "Players"
 
-[node name="Rules" type="Label" parent="Box/Games"]
+[node name="Rules" type="Label" parent="Box/ScrollContainer/Games"]
 layout_mode = 2
 text = "Rules"
 
-[node name="Time" type="Label" parent="Box/Games"]
+[node name="Time" type="Label" parent="Box/ScrollContainer/Games"]
 layout_mode = 2
 text = "Time"

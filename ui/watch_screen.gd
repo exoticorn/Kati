@@ -50,7 +50,7 @@ func sync_games():
 
 			rows.push_back(row)
 			for c in row.controls:
-				$Box/Games.add_child(c)
+				%Games.add_child(c)
 			
 			update_ratings()
 
@@ -85,4 +85,4 @@ func update_ratings():
 				var row = rows.pop_at(j)
 				rows.insert(i, row)
 				for k in row.controls.size():
-					$Box/Games.move_child(row.controls[k], (i + 1) * 3 + k)
+					%Games.move_child(row.controls[k], (i + 1) * 3 + k)

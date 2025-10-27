@@ -25,31 +25,37 @@ layout_mode = 2
 theme_type_variation = &"MenuTitle"
 text = "Seeks:"
 
-[node name="Seeks" type="GridContainer" parent="MainBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MainBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Seeks" type="GridContainer" parent="MainBox/ScrollContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 columns = 6
 
-[node name="Name" type="Label" parent="MainBox/Seeks"]
+[node name="Name" type="Label" parent="MainBox/ScrollContainer/Seeks"]
 layout_mode = 2
 text = "Name "
 
-[node name="Rating" type="Label" parent="MainBox/Seeks"]
+[node name="Rating" type="Label" parent="MainBox/ScrollContainer/Seeks"]
 layout_mode = 2
 text = "Rating"
 
-[node name="Rules" type="Label" parent="MainBox/Seeks"]
+[node name="Rules" type="Label" parent="MainBox/ScrollContainer/Seeks"]
 layout_mode = 2
 text = "Rules "
 
-[node name="Time" type="Label" parent="MainBox/Seeks"]
+[node name="Time" type="Label" parent="MainBox/ScrollContainer/Seeks"]
 layout_mode = 2
 text = "Time "
 
-[node name="Color" type="Label" parent="MainBox/Seeks"]
+[node name="Color" type="Label" parent="MainBox/ScrollContainer/Seeks"]
 layout_mode = 2
 text = "Your color"
 
-[node name="Mode" type="Label" parent="MainBox/Seeks"]
+[node name="Mode" type="Label" parent="MainBox/ScrollContainer/Seeks"]
 layout_mode = 2
 text = "Mode"
 

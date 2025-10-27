@@ -65,7 +65,7 @@ func sync_seeks():
 
 			seeks.push_back(s)
 			for c in s.controls:
-				$MainBox/Seeks.add_child(c)
+				%Seeks.add_child(c)
 			
 			if seek.direct && seek.user != playtak.username:
 				$AudioStreamPlayer.play()
@@ -86,4 +86,4 @@ func update_ratings():
 				var seek = seeks.pop_at(j)
 				seeks.insert(i, seek)
 				for k in seek.controls.size():
-					$MainBox/Seeks.move_child(seek.controls[k], (i + 1) * 6 + k)
+					%Seeks.move_child(seek.controls[k], (i + 1) * 6 + k)
