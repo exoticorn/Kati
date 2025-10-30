@@ -116,9 +116,11 @@ func setup_move_preview():
 
 func create_board():
 	squares = {}
+	var rings = (board_state.size + 1) / 2
 	for x in range(board_state.size):
 		for y in range(board_state.size):
 			var square := square_scene.instantiate()
+			square.set_ring(rings - 1 - min(min(x, board_state.size - 1 - x), (min(y, board_state.size - 1 - y))))
 			square.position = Vector3(x, 0, -y)
 			square.square = Vector2i(x, y)
 			$Root3D/Board.add_child(square)

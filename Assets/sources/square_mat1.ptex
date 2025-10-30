@@ -1,0 +1,293 @@
+{
+	"connections": [
+		{
+			"from": "noise_anisotropic",
+			"from_port": 0,
+			"to": "gaussian_blur",
+			"to_port": 0
+		},
+		{
+			"from": "gaussian_blur",
+			"from_port": 0,
+			"to": "warp",
+			"to_port": 0
+		},
+		{
+			"from": "perlin",
+			"from_port": 0,
+			"to": "warp",
+			"to_port": 1
+		},
+		{
+			"from": "warp",
+			"from_port": 0,
+			"to": "colorize",
+			"to_port": 0
+		},
+		{
+			"from": "colorize",
+			"from_port": 0,
+			"to": "blend2",
+			"to_port": 0
+		},
+		{
+			"from": "blend2",
+			"from_port": 0,
+			"to": "Material",
+			"to_port": 0
+		},
+		{
+			"from": "directional_noise",
+			"from_port": 0,
+			"to": "normal_map2",
+			"to_port": 0
+		},
+		{
+			"from": "normal_map2",
+			"from_port": 0,
+			"to": "Material",
+			"to_port": 4
+		},
+		{
+			"from": "wavelet_noise2",
+			"from_port": 0,
+			"to": "colorize_2",
+			"to_port": 0
+		},
+		{
+			"from": "colorize_2",
+			"from_port": 0,
+			"to": "blend2",
+			"to_port": 1
+		}
+	],
+	"label": "Graph",
+	"longdesc": "",
+	"name": "_Node_29128",
+	"node_position": {
+		"x": 0.0,
+		"y": 0.0
+	},
+	"nodes": [
+		{
+			"export_last_target": "Godot/Godot 4 ORM",
+			"export_paths": {
+				"Godot/Godot 4 ORM": "/home/dranke/projects/Kati/Assets/square1"
+			},
+			"name": "Material",
+			"node_position": {
+				"x": 188.78239440918,
+				"y": -61.6281929016113
+			},
+			"parameters": {
+				"albedo_color": {
+					"a": 1.0,
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0,
+					"type": "Color"
+				},
+				"ao": 1.0,
+				"depth_scale": 0.5,
+				"emission_energy": 1.0,
+				"flags_transparent": true,
+				"metallic": 0.0,
+				"normal": 1.0,
+				"roughness": 1.0,
+				"size": 9.0,
+				"sss": 1.0
+			},
+			"seed_int": 0,
+			"type": "material"
+		},
+		{
+			"name": "noise_anisotropic",
+			"node_position": {
+				"x": -663.438903808594,
+				"y": -660.824462890625
+			},
+			"parameters": {
+				"interpolation": 1.0,
+				"scale_x": 4.0,
+				"scale_y": 40.0,
+				"smoothness": 1.0
+			},
+			"seed_int": 0,
+			"type": "noise_anisotropic"
+		},
+		{
+			"name": "gaussian_blur",
+			"node_position": {
+				"x": -381.088592529297,
+				"y": -644.833740234375
+			},
+			"parameters": {
+				"param0": 8.0,
+				"param1": 1.4,
+				"param2": 0.0,
+				"param3": false
+			},
+			"seed_int": 0,
+			"type": "gaussian_blur"
+		},
+		{
+			"generic_size": 1,
+			"name": "warp",
+			"node_position": {
+				"x": -109.936294555664,
+				"y": -519.306274414062
+			},
+			"parameters": {
+				"amount": 0.21,
+				"eps": 0.1,
+				"mode": 0.0
+			},
+			"seed_int": 0,
+			"type": "warp"
+		},
+		{
+			"name": "perlin",
+			"node_position": {
+				"x": -636.243774414062,
+				"y": -433.755737304688
+			},
+			"parameters": {
+				"iterations": 2.0,
+				"persistence": 0.5,
+				"scale_x": 3.0,
+				"scale_y": 13.0
+			},
+			"seed_int": 0,
+			"type": "perlin"
+		},
+		{
+			"name": "colorize",
+			"node_position": {
+				"x": 207.607772827148,
+				"y": -492.921508789062
+			},
+			"parameters": {
+				"gradient": {
+					"interpolation": 1,
+					"points": [
+						{
+							"a": 1.0,
+							"b": 0.134654998779297,
+							"g": 0.226957619190216,
+							"pos": 0.0,
+							"r": 0.393750011920929
+						},
+						{
+							"a": 1.0,
+							"b": 0.312214404344559,
+							"g": 0.617968201637268,
+							"pos": 1.0,
+							"r": 0.778124988079071
+						}
+					],
+					"type": "Gradient"
+				}
+			},
+			"seed_int": 0,
+			"type": "colorize"
+		},
+		{
+			"name": "wavelet_noise2",
+			"node_position": {
+				"x": -661.039367675781,
+				"y": -224.276794433594
+			},
+			"parameters": {
+				"frequency": 2.0,
+				"iterations": 2.0,
+				"offset": 0.0,
+				"persistence": 0.5,
+				"scale_x": 1.0,
+				"scale_y": 1.0,
+				"type": 0.0
+			},
+			"seed_int": 169917496,
+			"type": "wavelet_noise2"
+		},
+		{
+			"generic_size": 1,
+			"name": "blend2",
+			"node_position": {
+				"x": -44.347900390625,
+				"y": -189.896682739258
+			},
+			"parameters": {
+				"amount1": 1.0,
+				"blend_type1": 2.0
+			},
+			"seed_int": 0,
+			"type": "blend2"
+		},
+		{
+			"name": "directional_noise",
+			"node_position": {
+				"x": -580.253601074219,
+				"y": 69.1535263061523
+			},
+			"parameters": {
+				"n_scale": 1.0,
+				"param0": 0.0,
+				"param1": 9.0
+			},
+			"seed_int": 0,
+			"type": "directional_noise"
+		},
+		{
+			"name": "normal_map2",
+			"node_position": {
+				"x": -253.910995483398,
+				"y": 66.7549743652344
+			},
+			"parameters": {
+				"buffer": 1.0,
+				"param2": 0.0,
+				"size": 9.0,
+				"strength": 0.19
+			},
+			"seed_int": 0,
+			"type": "normal_map2"
+		},
+		{
+			"name": "colorize_2",
+			"node_position": {
+				"x": -334.69677734375,
+				"y": -237.868896484375
+			},
+			"parameters": {
+				"gradient": {
+					"interpolation": 1,
+					"points": [
+						{
+							"a": 1.0,
+							"b": 0.284375011920929,
+							"g": 0.244236022233963,
+							"pos": 0.0,
+							"r": 0.158448815345764
+						},
+						{
+							"a": 1.0,
+							"b": 0.358604520559311,
+							"g": 0.358604520559311,
+							"pos": 1.0,
+							"r": 0.59375
+						}
+					],
+					"type": "Gradient"
+				}
+			},
+			"seed_int": 0,
+			"type": "colorize"
+		}
+	],
+	"parameters": {
+
+	},
+	"seed_int": 0,
+	"shortdesc": "",
+	"type": "graph"
+}

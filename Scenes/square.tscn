@@ -1,13 +1,13 @@
 [gd_scene load_steps=4 format=3 uid="uid://c8u4rgsbtnlkc"]
 
-[ext_resource type="ArrayMesh" uid="uid://jqlqaowxo5qp" path="res://Assets/imported/square.res" id="1_7naj2"]
+[ext_resource type="PlaneMesh" uid="uid://cx56dig3gyfdd" path="res://Assets/square1_mesh.tres" id="1_mu0s7"]
 [ext_resource type="Script" uid="uid://dgn643qf7qhxf" path="res://Scripts/square.gd" id="2_2jr70"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2jr70"]
 size = Vector3(1, 0.1, 1)
 
 [node name="Square" type="MeshInstance3D"]
-mesh = ExtResource("1_7naj2")
+mesh = ExtResource("1_mu0s7")
 script = ExtResource("2_2jr70")
 
 [node name="Area3D" type="Area3D" parent="."]

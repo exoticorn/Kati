@@ -1,0 +1,9 @@
+[gd_resource type="ORMMaterial3D" load_steps=3 format=3 uid="uid://c7j1fc7insfut"]
+
+[ext_resource type="Texture2D" uid="uid://bd2tbv7wc0edc" path="res://Assets/grid_albedo.png" id="1"]
+[ext_resource type="Texture2D" uid="uid://bixd5stl3l4i4" path="res://Assets/grid_normal.png" id="3"]
+
+[resource]
+albedo_texture = ExtResource("1")
+normal_enabled = true
+normal_texture = ExtResource("3")
