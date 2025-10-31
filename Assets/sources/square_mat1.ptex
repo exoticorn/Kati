@@ -1,39 +1,9 @@
 {
 	"connections": [
 		{
-			"from": "noise_anisotropic",
-			"from_port": 0,
-			"to": "gaussian_blur",
-			"to_port": 0
-		},
-		{
-			"from": "gaussian_blur",
-			"from_port": 0,
-			"to": "warp",
-			"to_port": 0
-		},
-		{
-			"from": "perlin",
-			"from_port": 0,
-			"to": "warp",
-			"to_port": 1
-		},
-		{
-			"from": "warp",
-			"from_port": 0,
-			"to": "colorize",
-			"to_port": 0
-		},
-		{
 			"from": "colorize",
 			"from_port": 0,
 			"to": "blend2",
-			"to_port": 0
-		},
-		{
-			"from": "blend2",
-			"from_port": 0,
-			"to": "Material",
 			"to_port": 0
 		},
 		{
@@ -41,12 +11,6 @@
 			"from_port": 0,
 			"to": "normal_map2",
 			"to_port": 0
-		},
-		{
-			"from": "normal_map2",
-			"from_port": 0,
-			"to": "Material",
-			"to_port": 4
 		},
 		{
 			"from": "wavelet_noise2",
@@ -59,6 +23,60 @@
 			"from_port": 0,
 			"to": "blend2",
 			"to_port": 1
+		},
+		{
+			"from": "warp",
+			"from_port": 0,
+			"to": "colorize",
+			"to_port": 0
+		},
+		{
+			"from": "voronoi2",
+			"from_port": 2,
+			"to": "fill_to_random_grey",
+			"to_port": 0
+		},
+		{
+			"from": "fill_to_random_grey",
+			"from_port": 0,
+			"to": "gaussian_blur",
+			"to_port": 0
+		},
+		{
+			"from": "voronoi2_2",
+			"from_port": 0,
+			"to": "blend2_2",
+			"to_port": 0
+		},
+		{
+			"from": "gaussian_blur",
+			"from_port": 0,
+			"to": "blend2_2",
+			"to_port": 1
+		},
+		{
+			"from": "blend2_2",
+			"from_port": 0,
+			"to": "warp",
+			"to_port": 0
+		},
+		{
+			"from": "fbm3_2",
+			"from_port": 0,
+			"to": "warp",
+			"to_port": 1
+		},
+		{
+			"from": "normal_map2",
+			"from_port": 0,
+			"to": "Material",
+			"to_port": 4
+		},
+		{
+			"from": "blend2",
+			"from_port": 0,
+			"to": "Material",
+			"to_port": 0
 		}
 	],
 	"label": "Graph",
@@ -101,29 +119,14 @@
 			"type": "material"
 		},
 		{
-			"name": "noise_anisotropic",
-			"node_position": {
-				"x": -663.438903808594,
-				"y": -660.824462890625
-			},
-			"parameters": {
-				"interpolation": 1.0,
-				"scale_x": 4.0,
-				"scale_y": 40.0,
-				"smoothness": 1.0
-			},
-			"seed_int": 0,
-			"type": "noise_anisotropic"
-		},
-		{
 			"name": "gaussian_blur",
 			"node_position": {
-				"x": -381.088592529297,
-				"y": -644.833740234375
+				"x": -317.899719238281,
+				"y": -672.817565917969
 			},
 			"parameters": {
 				"param0": 8.0,
-				"param1": 1.4,
+				"param1": 5.2,
 				"param2": 0.0,
 				"param3": false
 			},
@@ -134,31 +137,16 @@
 			"generic_size": 1,
 			"name": "warp",
 			"node_position": {
-				"x": -109.936294555664,
-				"y": -519.306274414062
+				"x": 18.8410491943359,
+				"y": -540.09423828125
 			},
 			"parameters": {
-				"amount": 0.21,
+				"amount": 0.63,
 				"eps": 0.1,
 				"mode": 0.0
 			},
 			"seed_int": 0,
 			"type": "warp"
-		},
-		{
-			"name": "perlin",
-			"node_position": {
-				"x": -636.243774414062,
-				"y": -433.755737304688
-			},
-			"parameters": {
-				"iterations": 2.0,
-				"persistence": 0.5,
-				"scale_x": 3.0,
-				"scale_y": 13.0
-			},
-			"seed_int": 0,
-			"type": "perlin"
 		},
 		{
 			"name": "colorize",
@@ -172,17 +160,17 @@
 					"points": [
 						{
 							"a": 1.0,
-							"b": 0.134654998779297,
-							"g": 0.226957619190216,
+							"b": 0.758258700370789,
+							"g": 0.84215247631073,
 							"pos": 0.0,
-							"r": 0.393750011920929
+							"r": 0.993749976158142
 						},
 						{
 							"a": 1.0,
-							"b": 0.312214404344559,
-							"g": 0.617968201637268,
+							"b": 0.288099735975266,
+							"g": 0.47637802362442,
 							"pos": 1.0,
-							"r": 0.778124988079071
+							"r": 0.574999988079071
 						}
 					],
 					"type": "Gradient"
@@ -194,8 +182,8 @@
 		{
 			"name": "wavelet_noise2",
 			"node_position": {
-				"x": -661.039367675781,
-				"y": -224.276794433594
+				"x": -797.815246582031,
+				"y": -236.269866943359
 			},
 			"parameters": {
 				"frequency": 2.0,
@@ -230,7 +218,7 @@
 				"y": 69.1535263061523
 			},
 			"parameters": {
-				"n_scale": 1.0,
+				"n_scale": 0.25,
 				"param0": 0.0,
 				"param1": 9.0
 			},
@@ -255,8 +243,8 @@
 		{
 			"name": "colorize_2",
 			"node_position": {
-				"x": -334.69677734375,
-				"y": -237.868896484375
+				"x": -384.288055419922,
+				"y": -227.474899291992
 			},
 			"parameters": {
 				"gradient": {
@@ -264,17 +252,17 @@
 					"points": [
 						{
 							"a": 1.0,
-							"b": 0.284375011920929,
-							"g": 0.244236022233963,
+							"b": 0.266865789890289,
+							"g": 0.226525694131851,
 							"pos": 0.0,
-							"r": 0.158448815345764
+							"r": 0.321874976158142
 						},
 						{
 							"a": 1.0,
-							"b": 0.358604520559311,
-							"g": 0.358604520559311,
+							"b": 0.565684258937836,
+							"g": 0.565684258937836,
 							"pos": 1.0,
-							"r": 0.59375
+							"r": 0.890625
 						}
 					],
 					"type": "Gradient"
@@ -282,6 +270,102 @@
 			},
 			"seed_int": 0,
 			"type": "colorize"
+		},
+		{
+			"name": "voronoi2",
+			"node_position": {
+				"x": -782.58056640625,
+				"y": -715.067077636719
+			},
+			"parameters": {
+				"intensity": 1.0,
+				"randomness": 0.85,
+				"scale_x": 4.0,
+				"scale_y": 4.0,
+				"stretch_x": 1.0,
+				"stretch_y": 1.0
+			},
+			"seed_int": 0,
+			"type": "voronoi2"
+		},
+		{
+			"name": "fill_to_random_grey",
+			"node_position": {
+				"x": -577.016662597656,
+				"y": -671.092651367188
+			},
+			"parameters": {
+				"edgecolor": 1.0
+			},
+			"seed_int": 0,
+			"type": "fill_to_random_grey2"
+		},
+		{
+			"name": "voronoi2_2",
+			"node_position": {
+				"x": -580.216064453125,
+				"y": -854.186645507812
+			},
+			"parameters": {
+				"intensity": 1.0,
+				"randomness": 0.85,
+				"scale_x": 4.0,
+				"scale_y": 4.0,
+				"stretch_x": 1.0,
+				"stretch_y": 1.0
+			},
+			"seed_int": 1784547712,
+			"type": "voronoi2"
+		},
+		{
+			"generic_size": 1,
+			"name": "blend2_2",
+			"node_position": {
+				"x": 17.2787475585938,
+				"y": -801.417175292969
+			},
+			"parameters": {
+				"amount1": 0.35,
+				"blend_type1": 0.0
+			},
+			"seed_int": 0,
+			"type": "blend2"
+		},
+		{
+			"name": "fbm3",
+			"node_position": {
+				"x": -394.648834228516,
+				"y": -500.790924072266
+			},
+			"parameters": {
+				"folds": 0.0,
+				"iterations": 5.0,
+				"noise": 2.0,
+				"offset": 0.0,
+				"persistence": 0.5,
+				"scale_x": 2.0,
+				"scale_y": 2.0
+			},
+			"seed_int": 0,
+			"type": "fbm3"
+		},
+		{
+			"name": "fbm3_2",
+			"node_position": {
+				"x": -664.201293945312,
+				"y": -470.408508300781
+			},
+			"parameters": {
+				"folds": 0.0,
+				"iterations": 5.0,
+				"noise": 2.0,
+				"offset": 0.0,
+				"persistence": 0.5,
+				"scale_x": 2.0,
+				"scale_y": 2.0
+			},
+			"seed_int": 0,
+			"type": "fbm3"
 		}
 	],
 	"parameters": {
