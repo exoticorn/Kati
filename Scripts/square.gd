@@ -4,9 +4,10 @@ var white_flat_mesh: Mesh = preload("res://Assets/imported/white flat.res")
 var highlight_scene = preload("res://Scenes/square_highlight.tscn")
 
 var meshes = [
-	preload("res://Assets/square2_mesh.tres"),
 	preload("res://Assets/square1_mesh.tres"),
+	preload("res://Assets/square2_mesh.tres"),
 	preload("res://Assets/square3_mesh.tres"),
+	preload("res://Assets/square4_mesh.tres"),
 ]
 
 var tween: Tween

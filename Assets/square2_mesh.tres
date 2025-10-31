@@ -15,7 +15,7 @@ shader_parameter/grid_normal_tex = ExtResource("3_diwcu")
 shader_parameter/grid_orm_tex = ExtResource("4_i4gde")
 shader_parameter/square_albedo_tex = ExtResource("4_gsg32")
 shader_parameter/square_normal_tex = ExtResource("5_10orc")
-shader_parameter/square_modulate = Color(0.9614422, 0.6171837, 0.6103237, 1)
+shader_parameter/square_modulate = Color(0.77391756, 0.70232964, 0.7427302, 1)
 
 [resource]
 material = SubResource("ShaderMaterial_64tuj")

@@ -81,7 +81,7 @@ func switch_game() -> void:
 
 func current_game() -> Variant:
 	for game in get_children():
-		if game.visible:
+		if game.visible && game is PlaytakGame:
 			return game.game
 	return null
 
