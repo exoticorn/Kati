@@ -81,7 +81,7 @@ func switch_game() -> void:
 
 func current_game() -> Variant:
 	for game in get_children():
-		if game.visible:
+		if game.visible and game is PlaytakGame:
 			return game.game
 	return null
 
@@ -91,6 +91,11 @@ func apply_settings():
 
 func game_count() -> int:
 	return get_children().size()
+
+func remove_game(game):
+	if game.shown:
+		switch_game()
+	game.queue_free()
 
 func has_new_moves() -> bool:
 	for game in get_children():

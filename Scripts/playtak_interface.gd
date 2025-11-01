@@ -122,6 +122,9 @@ func cancel_seek():
 func observe(id: int):
 	send("Observe %d" % id)
 
+func unobserve(id: int):
+	send("Unobserve %d" % id)
+
 func send_move(game_id: int, move: Move):
 	var move_string = "Game#%d " % game_id
 
