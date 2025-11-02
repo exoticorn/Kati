@@ -51,6 +51,11 @@ func _ready():
 		board.add_ui(game_actions, game.color == PlaytakInterface.ColorChoice.BLACK, false)
 		stream_player.stream = load("res://sfx/start.wav")
 		stream_player.play.call_deferred()
+	else:
+		var close_button = Button.new()
+		close_button.text = "Close game"
+		close_button.pressed.connect(unobserve_game)
+		board.add_ui(close_button, true, false)
 	var game_rules = preload("res://ui/game_rules.tscn").instantiate()
 	game_rules.setup(game.rules, game.clock)
 	board.add_ui(game_rules, game.color != PlaytakInterface.ColorChoice.WHITE, false)
@@ -148,3 +153,7 @@ func rematch():
 	seek.game_type = game.game_type
 	seek.opponent = game.player_black if game.color == ColorChoice.WHITE else game.player_white
 	playtak_interface.send_rematch(seek)
+
+func unobserve_game():
+	playtak_interface.unobserve(game.id)
+	get_parent().remove_game(self)

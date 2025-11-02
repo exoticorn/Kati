@@ -52,8 +52,12 @@ func _ready():
 	board.board_state = move_list.display_board
 	board.move_input.connect(move_input)
 	board.step_move.connect(move_list.step_move)
-	board.add_ui(analysis, true)
 	board.add_ui(move_list_ui, false)
+	var close_button = Button.new()
+	close_button.text = "Close analysis"
+	close_button.pressed.connect(get_parent().remove_game.bind(self))
+	board.add_ui(close_button, true)
+	board.add_ui(analysis, true)
 	board.can_input_move = true
 	add_child(board)
 

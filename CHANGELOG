@@ -1,0 +1,15 @@
+v0.2:
+
+* playing and observing games on playtak.com is now essentially feture-complete
+* add border with coordinate lettering around board
+* add more sound effects for moves, start of game, chat message, etc...
+* add a simple move list to the game
+* display game rules during game (komi, clock settings)
+* add players screen, for easier challenge and direct chat
+* add number badges for count of seeks / games / players / unread chat messages
+* various smaller UI improvements
+
+v0.1:
+
+* first public release
+* playing and observing games on playtak.com works, but still some missing features

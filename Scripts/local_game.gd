@@ -55,6 +55,10 @@ func _ready():
 	var move_list_ui = preload("res://ui/move_list.tscn").instantiate()
 	move_list_ui.setup(move_list)
 	board.add_ui(move_list_ui, false, true)
+	var close_button = Button.new()
+	close_button.text = "Close game"
+	close_button.pressed.connect(get_parent().remove_game.bind(self))
+	board.add_ui(close_button, true)
 	add_child(board)
 	setup_move_input()
 	
