@@ -2,21 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4quigyp8rxho"
-path.s3tc="res://.godot/imported/Assets_square_material_normal.png-6ba34bc8261454eeb1cb118d70551c65.s3tc.ctex"
-path.etc2="res://.godot/imported/Assets_square_material_normal.png-6ba34bc8261454eeb1cb118d70551c65.etc2.ctex"
+uid="uid://q33k8rdvvikj"
+path.s3tc="res://.godot/imported/Assets_wood1_normal.png-bb5fca36e49bdf5e98021829b1947819.s3tc.ctex"
+path.etc2="res://.godot/imported/Assets_wood1_normal.png-bb5fca36e49bdf5e98021829b1947819.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "6ad7d3e12dd04567d979d95369f71226"
+"md5": "4eb8a4ecd88c1b230d37a9a2ee3db68e"
 }
 
 [deps]
 
-source_file="res://Assets/Assets_square_material_normal.png"
-dest_files=["res://.godot/imported/Assets_square_material_normal.png-6ba34bc8261454eeb1cb118d70551c65.s3tc.ctex", "res://.godot/imported/Assets_square_material_normal.png-6ba34bc8261454eeb1cb118d70551c65.etc2.ctex"]
+source_file="res://Assets/sources/Assets_wood1_normal.png"
+dest_files=["res://.godot/imported/Assets_wood1_normal.png-bb5fca36e49bdf5e98021829b1947819.s3tc.ctex", "res://.godot/imported/Assets_wood1_normal.png-bb5fca36e49bdf5e98021829b1947819.etc2.ctex"]
 
 [params]
 
@@ -31,7 +31,7 @@ compress/channel_pack=0
 mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=1
-roughness/src_normal="res://Assets/Assets_square_material_normal.png"
+roughness/src_normal="res://Assets/sources/Assets_wood1_normal.png"
 process/channel_remap/red=0
 process/channel_remap/green=1
 process/channel_remap/blue=2
@@ -41,5 +41,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=512
+process/size_limit=0
 detect_3d/compress_to=0

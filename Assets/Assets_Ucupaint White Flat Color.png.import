@@ -2,21 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1hh082nmbkvl"
-path.s3tc="res://.godot/imported/Assets_square_material_rough.png-7344771786f5b5ee4dea89d8d483e5c4.s3tc.ctex"
-path.etc2="res://.godot/imported/Assets_square_material_rough.png-7344771786f5b5ee4dea89d8d483e5c4.etc2.ctex"
+uid="uid://cr28bhbjbkrw2"
+path.s3tc="res://.godot/imported/Assets_Ucupaint White Flat Color.png-aee1df09d424055d31928e84ece7c0d3.s3tc.ctex"
+path.etc2="res://.godot/imported/Assets_Ucupaint White Flat Color.png-aee1df09d424055d31928e84ece7c0d3.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "e1451cb03e2f10cfe749a018bcdbb69f"
+"md5": "b1c418d2e68213b0932927d6e5384494"
 }
 
 [deps]
 
-source_file="res://Assets/Assets_square_material_rough.png"
-dest_files=["res://.godot/imported/Assets_square_material_rough.png-7344771786f5b5ee4dea89d8d483e5c4.s3tc.ctex", "res://.godot/imported/Assets_square_material_rough.png-7344771786f5b5ee4dea89d8d483e5c4.etc2.ctex"]
+source_file="res://Assets/Assets_Ucupaint White Flat Color.png"
+dest_files=["res://.godot/imported/Assets_Ucupaint White Flat Color.png-aee1df09d424055d31928e84ece7c0d3.s3tc.ctex", "res://.godot/imported/Assets_Ucupaint White Flat Color.png-aee1df09d424055d31928e84ece7c0d3.etc2.ctex"]
 
 [params]
 
@@ -41,5 +41,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=512
+process/size_limit=0
 detect_3d/compress_to=0

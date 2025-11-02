@@ -2,21 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dow8ld8ys515l"
-path.s3tc="res://.godot/imported/Assets_square_material_albedo.png-f923626e9df98cea573b5b9d45b533df.s3tc.ctex"
-path.etc2="res://.godot/imported/Assets_square_material_albedo.png-f923626e9df98cea573b5b9d45b533df.etc2.ctex"
+uid="uid://cojdh6c26kcv7"
+path.s3tc="res://.godot/imported/Assets_wood1_albedo.png-f51230b850fbc76ddfd933968472cb06.s3tc.ctex"
+path.etc2="res://.godot/imported/Assets_wood1_albedo.png-f51230b850fbc76ddfd933968472cb06.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "5a27ecfba59c24f498a55db5dd70767a"
+"md5": "091d04f7e59e5b7b430026691b86e30f"
 }
 
 [deps]
 
-source_file="res://Assets/Assets_square_material_albedo.png"
-dest_files=["res://.godot/imported/Assets_square_material_albedo.png-f923626e9df98cea573b5b9d45b533df.s3tc.ctex", "res://.godot/imported/Assets_square_material_albedo.png-f923626e9df98cea573b5b9d45b533df.etc2.ctex"]
+source_file="res://Assets/sources/Assets_wood1_albedo.png"
+dest_files=["res://.godot/imported/Assets_wood1_albedo.png-f51230b850fbc76ddfd933968472cb06.s3tc.ctex", "res://.godot/imported/Assets_wood1_albedo.png-f51230b850fbc76ddfd933968472cb06.etc2.ctex"]
 
 [params]
 
@@ -41,5 +41,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=512
+process/size_limit=0
 detect_3d/compress_to=0

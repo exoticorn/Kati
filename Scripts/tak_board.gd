@@ -388,7 +388,7 @@ func cancel_stack_move():
 
 func setup_quality():
 	var quality: String = config.get_value("display", "quality", "mid")
-	var light_energy := 2.0 if quality == "low" else 6.0
+	var light_energy := 2.0 if quality == "low" else 2.0
 	$Root3D/Light.light_energy = light_energy
 
 func add_ui(control: Control, right: bool, end: bool = true):
