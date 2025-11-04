@@ -2,21 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dj7f6h4bxa1kf"
-path.s3tc="res://.godot/imported/Assets_Ucupaint White Flat Color.png-c7a344c91939b587bdfe7d005feec3ce.s3tc.ctex"
-path.etc2="res://.godot/imported/Assets_Ucupaint White Flat Color.png-c7a344c91939b587bdfe7d005feec3ce.etc2.ctex"
+uid="uid://d02062fiok534"
+path.s3tc="res://.godot/imported/Assets_Ucupaint Black Flat Color.png-d3ec5646a34e19165eddf67869a74dae.s3tc.ctex"
+path.etc2="res://.godot/imported/Assets_Ucupaint Black Flat Color.png-d3ec5646a34e19165eddf67869a74dae.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "b1c418d2e68213b0932927d6e5384494"
+"md5": "487f4ae753c75e1df009d96bdbb4bcf7"
 }
 
 [deps]
 
-source_file="res://Assets/sources/Assets_Ucupaint White Flat Color.png"
-dest_files=["res://.godot/imported/Assets_Ucupaint White Flat Color.png-c7a344c91939b587bdfe7d005feec3ce.s3tc.ctex", "res://.godot/imported/Assets_Ucupaint White Flat Color.png-c7a344c91939b587bdfe7d005feec3ce.etc2.ctex"]
+source_file="res://Assets/sources/Assets_Ucupaint Black Flat Color.png"
+dest_files=["res://.godot/imported/Assets_Ucupaint Black Flat Color.png-d3ec5646a34e19165eddf67869a74dae.s3tc.ctex", "res://.godot/imported/Assets_Ucupaint Black Flat Color.png-d3ec5646a34e19165eddf67869a74dae.etc2.ctex"]
 
 [params]
 
