@@ -30,7 +30,6 @@ void fragment() {
 	
 	ALBEDO = mix(square_albedo, grid_albedo.xyz, albedo_alpha);
 	NORMAL_MAP = mix(square_normal, grid_normal, normal_alpha);
-	NORMAL_MAP.x = 1.0 - NORMAL_MAP.x;
-	NORMAL_MAP.z = 1.0 - NORMAL_MAP.z;
+	NORMAL_MAP.xy = 1.0 - NORMAL_MAP.xy;
 	ROUGHNESS = mix(0.7, grid_orm.y, albedo_alpha);
 }
