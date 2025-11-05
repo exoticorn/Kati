@@ -30,7 +30,7 @@ script = ExtResource("3_yhhd6")
 [node name="Pieces" type="Node3D" parent="Root3D"]
 
 [node name="Light" type="DirectionalLight3D" parent="Root3D"]
-transform = Transform3D(0.234704, 0.84393823, -0.4823715, -0.0625096, 0.5083092, 0.858903, 0.970055, -0.1714351, 0.17205644, 0, 1.41202, 0)
+transform = Transform3D(0.785221, 0.5349354, -0.3118847, -0.20592275, 0.7005967, 0.6831985, 0.5839724, -0.4722376, 0.6602787, 0, 1.41202, 0)
 light_energy = 6.0
 shadow_enabled = true
 
