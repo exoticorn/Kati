@@ -1,9 +1,9 @@
 shader_type spatial;
 
-uniform sampler2D grid_albedo_tex;
+uniform sampler2D grid_albedo_tex : source_color;
 uniform sampler2D grid_normal_tex;
 uniform sampler2D grid_orm_tex;
-uniform sampler2D square_albedo_tex;
+uniform sampler2D square_albedo_tex : source_color;
 uniform sampler2D square_normal_tex;
 uniform vec3 square_modulate: source_color = vec3(0.7, 0.6, 0.6);
 
