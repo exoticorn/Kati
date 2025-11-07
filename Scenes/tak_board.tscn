@@ -14,6 +14,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+focus_behavior_recursive = 1
 mouse_filter = 1
 script = ExtResource("1_1wqm5")
 
@@ -30,7 +31,7 @@ script = ExtResource("3_yhhd6")
 [node name="Pieces" type="Node3D" parent="Root3D"]
 
 [node name="Light" type="DirectionalLight3D" parent="Root3D"]
-transform = Transform3D(0.785221, 0.5349354, -0.3118847, -0.20592275, 0.7005967, 0.6831985, 0.5839724, -0.4722376, 0.6602787, 0, 1.41202, 0)
+transform = Transform3D(0.27014872, 0.76131487, -0.5894231, -0.13070649, 0.6355161, 0.76094353, 0.95390546, -0.12852651, 0.27119267, 0, 1.41202, 0)
 light_energy = 6.0
 shadow_enabled = true
 
