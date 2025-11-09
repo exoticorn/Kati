@@ -11,7 +11,6 @@ sky_material = SubResource("PanoramaSkyMaterial_3dryh")
 [resource]
 background_mode = 2
 sky = SubResource("Sky_wowpa")
-sky_rotation = Vector3(0, 1.0471976, 0)
 tonemap_mode = 1
 tonemap_exposure = 1.5
 tonemap_white = 6.0
