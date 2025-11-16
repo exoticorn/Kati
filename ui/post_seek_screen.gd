@@ -46,6 +46,12 @@ const PRESETS = {
 		"time": 15,
 		"inc": 10,
 		"tournament": true
+	},
+	"Tak Open": {
+		"size": 6,
+		"time": 15,
+		"inc": 15,
+		"tournament": true
 	}
 }
 
