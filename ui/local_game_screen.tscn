@@ -1,0 +1,162 @@
+[gd_scene load_steps=4 format=3 uid="uid://833uvx2m3md7"]
+
+[ext_resource type="Script" uid="uid://872wvye2kvm2" path="res://Scripts/local_game_menu.gd" id="1_vclwr"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_sb7qb"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_nmq3k"]
+
+[node name="LocalGameScreen" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -251.0
+offset_top = -114.0
+offset_right = 251.0
+offset_bottom = 114.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vclwr")
+
+[node name="Rows" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Rows"]
+layout_mode = 2
+
+[node name="Grid" type="GridContainer" parent="."]
+layout_mode = 2
+columns = 2
+
+[node name="Size" type="Label" parent="Grid"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Board size: "
+
+[node name="Sizes" type="HBoxContainer" parent="Grid"]
+layout_mode = 2
+
+[node name="Five" type="CheckBox" parent="Grid/Sizes"]
+layout_mode = 2
+size_flags_vertical = 8
+button_group = SubResource("ButtonGroup_sb7qb")
+text = "5x5"
+
+[node name="Six" type="CheckBox" parent="Grid/Sizes"]
+layout_mode = 2
+size_flags_vertical = 8
+button_pressed = true
+button_group = SubResource("ButtonGroup_sb7qb")
+text = "6x6
+"
+
+[node name="Seven" type="CheckBox" parent="Grid/Sizes"]
+layout_mode = 2
+size_flags_vertical = 8
+button_group = SubResource("ButtonGroup_sb7qb")
+text = "7x7
+"
+
+[node name="Komi" type="Label" parent="Grid"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Komi: "
+
+[node name="Komis" type="OptionButton" parent="Grid"]
+layout_mode = 2
+selected = 4
+item_count = 5
+popup/item_0/text = "0"
+popup/item_0/id = 0
+popup/item_1/text = "0.5"
+popup/item_1/id = 1
+popup/item_2/text = "1"
+popup/item_2/id = 2
+popup/item_3/text = "1.5"
+popup/item_3/id = 3
+popup/item_4/text = "2"
+popup/item_4/id = 4
+
+[node name="YouPlay" type="Label" parent="Grid"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "You play: "
+
+[node name="Colors" type="HBoxContainer" parent="Grid"]
+layout_mode = 2
+
+[node name="White" type="CheckBox" parent="Grid/Colors"]
+layout_mode = 2
+size_flags_vertical = 8
+button_pressed = true
+button_group = SubResource("ButtonGroup_nmq3k")
+text = "White"
+
+[node name="Black" type="CheckBox" parent="Grid/Colors"]
+layout_mode = 2
+size_flags_vertical = 8
+button_group = SubResource("ButtonGroup_nmq3k")
+text = "Black
+"
+
+[node name="Both" type="CheckBox" parent="Grid/Colors"]
+layout_mode = 2
+size_flags_vertical = 8
+button_group = SubResource("ButtonGroup_nmq3k")
+text = "Both
+"
+
+[node name="Analyze" type="CheckBox" parent="Grid/Colors"]
+layout_mode = 2
+size_flags_vertical = 8
+button_group = SubResource("ButtonGroup_nmq3k")
+text = "Analyze
+"
+
+[node name="EngineLabel" type="Label" parent="Grid"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Engine:"
+
+[node name="Engine" type="OptionButton" parent="Grid"]
+layout_mode = 2
+
+[node name="NodesLabel" type="Label" parent="Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Nodes"
+
+[node name="NodesBox" type="HBoxContainer" parent="Grid"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="NodesSlider" type="HSlider" parent="Grid/NodesBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 100.0
+max_value = 1000000.0
+value = 100.0
+exp_edit = true
+
+[node name="NodesCount" type="Label" parent="Grid/NodesBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "100"
+
+[node name="Control" type="Control" parent="Grid"]
+layout_mode = 2
+
+[node name="Play" type="Button" parent="Grid"]
+layout_mode = 2
+text = "Play"
+
+[connection signal="pressed" from="Grid/Colors/White" to="." method="_on_color_changed"]
+[connection signal="pressed" from="Grid/Colors/Black" to="." method="_on_color_changed"]
+[connection signal="pressed" from="Grid/Colors/Both" to="." method="_on_color_changed"]
+[connection signal="pressed" from="Grid/Colors/Analyze" to="." method="_on_color_changed"]
+[connection signal="value_changed" from="Grid/NodesBox/NodesSlider" to="." method="_on_nodes_slider_value_changed"]
+[connection signal="pressed" from="Grid/Play" to="." method="_on_play_pressed"]

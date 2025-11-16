@@ -1,8 +1,7 @@
-[gd_scene load_steps=19 format=3 uid="uid://bct47lm2yejq8"]
+[gd_scene load_steps=17 format=3 uid="uid://bct47lm2yejq8"]
 
 [ext_resource type="Script" uid="uid://b6ftb44rorpa" path="res://Scripts/app.gd" id="1_nmq3k"]
 [ext_resource type="Theme" uid="uid://bkrs4n0b5x0vf" path="res://ui/topbar_theme.tres" id="2_fel14"]
-[ext_resource type="Script" uid="uid://872wvye2kvm2" path="res://Scripts/local_game_menu.gd" id="2_sb7qb"]
 [ext_resource type="PackedScene" uid="uid://c44b8ks63tvgq" path="res://ui/badge_button.tscn" id="3_76bsv"]
 [ext_resource type="Script" uid="uid://didjayc8ohs03" path="res://Scripts/games.gd" id="3_fdjpt"]
 [ext_resource type="PackedScene" uid="uid://dvr4sw18454lb" path="res://ui/player_name.tscn" id="4_85vr7"]
@@ -10,15 +9,12 @@
 [ext_resource type="PackedScene" uid="uid://dmsyb2bnskjyj" path="res://ui/seeks_screen.tscn" id="7_85vr7"]
 [ext_resource type="Script" uid="uid://c8h2aqg2cdt8q" path="res://Scripts/settings.gd" id="7_jgaas"]
 [ext_resource type="Environment" uid="uid://gio35wn5euew" path="res://Scenes/env_low.tres" id="7_patxt"]
+[ext_resource type="PackedScene" uid="uid://833uvx2m3md7" path="res://ui/local_game_screen.tscn" id="8_015p0"]
 [ext_resource type="PackedScene" uid="uid://ca4yqv7jv3jad" path="res://ui/watch_screen.tscn" id="8_85vr7"]
 [ext_resource type="PackedScene" uid="uid://chsho2bb3oa4o" path="res://Scenes/chat_window.tscn" id="8_cdfq8"]
 [ext_resource type="Theme" uid="uid://4w0nwl75r20n" path="res://ui/toasts_theme.tres" id="9_vl6qb"]
 [ext_resource type="Script" uid="uid://d00iwy70rhjso" path="res://Scripts/toasts.gd" id="10_bypbs"]
 [ext_resource type="PackedScene" uid="uid://biueljud648q" path="res://ui/players_screen.tscn" id="12_015p0"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_sb7qb"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_nmq3k"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_patxt"]
 
@@ -214,132 +210,13 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Settings"
 
-[node name="LocalGameScreen" type="PanelContainer" parent="Screens"]
+[node name="LocalGameScreen" parent="Screens" instance=ExtResource("8_015p0")]
 unique_name_in_owner = true
-visible = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -251.0
-offset_top = -114.0
-offset_right = 251.0
-offset_bottom = 114.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("2_sb7qb")
-
-[node name="Rows" type="VBoxContainer" parent="Screens/LocalGameScreen"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Screens/LocalGameScreen/Rows"]
-layout_mode = 2
-
-[node name="Grid" type="GridContainer" parent="Screens/LocalGameScreen"]
-layout_mode = 2
-columns = 2
-
-[node name="Size" type="Label" parent="Screens/LocalGameScreen/Grid"]
-layout_mode = 2
-size_flags_horizontal = 8
-text = "Board size: "
-
-[node name="Sizes" type="HBoxContainer" parent="Screens/LocalGameScreen/Grid"]
-layout_mode = 2
-
-[node name="Five" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Sizes"]
-layout_mode = 2
-size_flags_vertical = 8
-button_group = SubResource("ButtonGroup_sb7qb")
-text = "5x5"
-
-[node name="Six" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Sizes"]
-layout_mode = 2
-size_flags_vertical = 8
-button_pressed = true
-button_group = SubResource("ButtonGroup_sb7qb")
-text = "6x6
-"
-
-[node name="Seven" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Sizes"]
-layout_mode = 2
-size_flags_vertical = 8
-button_group = SubResource("ButtonGroup_sb7qb")
-text = "7x7
-"
-
-[node name="Komi" type="Label" parent="Screens/LocalGameScreen/Grid"]
-layout_mode = 2
-size_flags_horizontal = 8
-text = "Komi: "
-
-[node name="Komis" type="OptionButton" parent="Screens/LocalGameScreen/Grid"]
-layout_mode = 2
-selected = 4
-item_count = 5
-popup/item_0/text = "0"
-popup/item_0/id = 0
-popup/item_1/text = "0.5"
-popup/item_1/id = 1
-popup/item_2/text = "1"
-popup/item_2/id = 2
-popup/item_3/text = "1.5"
-popup/item_3/id = 3
-popup/item_4/text = "2"
-popup/item_4/id = 4
-
-[node name="YouPlay" type="Label" parent="Screens/LocalGameScreen/Grid"]
-layout_mode = 2
-size_flags_horizontal = 8
-text = "You play: "
-
-[node name="Colors" type="HBoxContainer" parent="Screens/LocalGameScreen/Grid"]
-layout_mode = 2
-
-[node name="White" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Colors"]
-layout_mode = 2
-size_flags_vertical = 8
-button_pressed = true
-button_group = SubResource("ButtonGroup_nmq3k")
-text = "White"
-
-[node name="Black" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Colors"]
-layout_mode = 2
-size_flags_vertical = 8
-button_group = SubResource("ButtonGroup_nmq3k")
-text = "Black
-"
-
-[node name="Both" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Colors"]
-layout_mode = 2
-size_flags_vertical = 8
-button_group = SubResource("ButtonGroup_nmq3k")
-text = "Both
-"
-
-[node name="Analyze" type="CheckBox" parent="Screens/LocalGameScreen/Grid/Colors"]
-layout_mode = 2
-size_flags_vertical = 8
-button_group = SubResource("ButtonGroup_nmq3k")
-text = "Analyze
-"
-
-[node name="EngineLabel" type="Label" parent="Screens/LocalGameScreen/Grid"]
-layout_mode = 2
-size_flags_horizontal = 8
-text = "Engine:"
-
-[node name="Engine" type="OptionButton" parent="Screens/LocalGameScreen/Grid"]
-layout_mode = 2
-
-[node name="Control" type="Control" parent="Screens/LocalGameScreen/Grid"]
-layout_mode = 2
-
-[node name="Play" type="Button" parent="Screens/LocalGameScreen/Grid"]
-layout_mode = 2
-text = "Play"
+offset_left = -266.5
+offset_top = -141.0
+offset_right = 266.5
+offset_bottom = 141.0
 
 [node name="PostSeek" parent="Screens" instance=ExtResource("7_3lsve")]
 unique_name_in_owner = true
@@ -647,11 +524,6 @@ environment = ExtResource("7_patxt")
 [connection signal="pressed" from="Screens/MainMenu/Box/LocalGame" to="." method="_on_local_game_pressed"]
 [connection signal="pressed" from="Screens/MainMenu/Box/Settings" to="." method="_on_settings_pressed"]
 [connection signal="start_game" from="Screens/LocalGameScreen" to="." method="_on_local_game_start_game"]
-[connection signal="pressed" from="Screens/LocalGameScreen/Grid/Colors/White" to="Screens/LocalGameScreen" method="_on_color_changed"]
-[connection signal="pressed" from="Screens/LocalGameScreen/Grid/Colors/Black" to="Screens/LocalGameScreen" method="_on_color_changed"]
-[connection signal="pressed" from="Screens/LocalGameScreen/Grid/Colors/Both" to="Screens/LocalGameScreen" method="_on_color_changed"]
-[connection signal="pressed" from="Screens/LocalGameScreen/Grid/Colors/Analyze" to="Screens/LocalGameScreen" method="_on_color_changed"]
-[connection signal="pressed" from="Screens/LocalGameScreen/Grid/Play" to="Screens/LocalGameScreen" method="_on_play_pressed"]
 [connection signal="meta_clicked" from="Screens/Help/Box/HelpText" to="." method="_on_help_meta_clicked"]
 [connection signal="settings_changed" from="Screens/Settings" to="." method="_on_settings_settings_changed"]
 [connection signal="pressed" from="Screens/Settings/Box/AddEngine" to="Screens/Settings" method="_on_add_engine_pressed"]

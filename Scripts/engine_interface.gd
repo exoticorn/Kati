@@ -171,8 +171,8 @@ func _process(_delta):
 						move_info.pv = pv
 						info.emit(move_info)
 
-func go(pos: Position):
-	go_cmd(pos, "go nodes 100")
+func go(pos: Position, node_count: int):
+	go_cmd(pos, "go nodes %d" % node_count)
 
 func go_infinite(pos: Position):
 	go_cmd(pos, "go infinite")

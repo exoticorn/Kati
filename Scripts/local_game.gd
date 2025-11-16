@@ -79,7 +79,7 @@ func setup_move_input():
 				board.can_input_move = true
 		else:
 			if engine.is_ready():
-				engine.go(engine_position())
+				engine.go(engine_position(), settings.node_count)
 
 func engine_position() -> EngineInterface.Position:
 	return EngineInterface.Position.new(move_list.display_board.size, move_list.display_board.half_komi, move_list.moves)
