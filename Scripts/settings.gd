@@ -8,6 +8,11 @@ signal settings_changed
 
 func setup(c: ConfigFile):
 	config = c
+	if OS.has_feature("web"):
+		%Quality.hide()
+		%Engines.hide()
+		%EngineGrid.hide()
+		%AddEngine.hide()
 	match config.get_value("display", "quality", "low"):
 		"mid": $Box/Quality/Mid.button_pressed = true
 		"high": $Box/Quality/High.button_pressed = true
@@ -15,6 +20,7 @@ func setup(c: ConfigFile):
 	$Box/Quality/Low.pressed.connect(change_quality.bind("low"))
 	$Box/Quality/Mid.pressed.connect(change_quality.bind("mid"))
 	$Box/Quality/High.pressed.connect(change_quality.bind("high"))
+	%BoardStyles.selected = config.get_value("theme", "board", 0)
 	setup_engine_grid()
 
 func change_quality(quality: String):
@@ -80,3 +86,8 @@ func _on_ok_pressed() -> void:
 
 func _on_cancel_pressed() -> void:
 	$EnginePopup.hide()
+
+
+func _on_board_styles_item_selected(index: int) -> void:
+	config.set_value("theme", "board", index)
+	settings_changed.emit()

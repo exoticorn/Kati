@@ -102,6 +102,13 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_UP: step_move.emit(-1000)
 				KEY_DOWN: step_move.emit(1000)
 
+
+func apply_settings():
+	setup_quality()
+	for square in squares:
+		squares[square].apply_settings()
+
+
 func setup_move_preview():
 	if board_state.is_setup_turn():
 		selected_piece_type = PieceType.FLAT
@@ -116,13 +123,13 @@ func setup_move_preview():
 
 func create_board():
 	squares = {}
-	var rings = (board_state.size + 1) / 2
 	for x in range(board_state.size):
 		for y in range(board_state.size):
 			var square := square_scene.instantiate()
-			square.set_ring(rings - 1 - min(min(x, board_state.size - 1 - x), (min(y, board_state.size - 1 - y))))
 			square.position = Vector3(x, 0, -y)
 			square.square = Vector2i(x, y)
+			square.config = config
+			square.board_size = board_state.size
 			$Root3D/Board.add_child(square)
 			squares[Vector2i(x, y)] = square
 			square.entered.connect(square_entered)

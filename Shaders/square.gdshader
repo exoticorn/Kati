@@ -6,6 +6,7 @@ uniform sampler2D grid_orm_tex;
 uniform sampler2D square_albedo_tex : source_color;
 uniform sampler2D square_normal_tex;
 uniform vec3 square_modulate: source_color = vec3(0.7, 0.6, 0.6);
+uniform float gamma = 1.0;
 
 varying vec2 uv_offset;
 varying float brightness;
@@ -14,7 +15,7 @@ void vertex() {
 	vec2 seed2d = fract(sin(NODE_POSITION_WORLD.xz) * 1000.0);
 	float seed = seed2d.x + seed2d.y * 5.0;
 	uv_offset = vec2(fract(sin(seed * 5.0) * 100.0), fract(sin(seed * 9.0) * 273.0));
-	brightness = fract(sin(seed * 13.0) * 175.0) * 0.5 + 0.5;
+	brightness = pow(fract(sin(seed * 13.0) * 175.0) * 0.5 + 0.5, 1.0 / gamma);
 }
 
 void fragment() {

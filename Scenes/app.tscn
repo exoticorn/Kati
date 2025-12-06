@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bct47lm2yejq8"]
+[gd_scene load_steps=16 format=3 uid="uid://bct47lm2yejq8"]
 
 [ext_resource type="Script" uid="uid://b6ftb44rorpa" path="res://Scripts/app.gd" id="1_nmq3k"]
 [ext_resource type="Theme" uid="uid://bkrs4n0b5x0vf" path="res://ui/topbar_theme.tres" id="2_fel14"]
@@ -7,7 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://dvr4sw18454lb" path="res://ui/player_name.tscn" id="4_85vr7"]
 [ext_resource type="PackedScene" uid="uid://kprx4qv0rpon" path="res://ui/post_seek_screen.tscn" id="7_3lsve"]
 [ext_resource type="PackedScene" uid="uid://dmsyb2bnskjyj" path="res://ui/seeks_screen.tscn" id="7_85vr7"]
-[ext_resource type="Script" uid="uid://c8h2aqg2cdt8q" path="res://Scripts/settings.gd" id="7_jgaas"]
 [ext_resource type="Environment" uid="uid://gio35wn5euew" path="res://Scenes/env_low.tres" id="7_patxt"]
 [ext_resource type="PackedScene" uid="uid://833uvx2m3md7" path="res://ui/local_game_screen.tscn" id="8_015p0"]
 [ext_resource type="PackedScene" uid="uid://ca4yqv7jv3jad" path="res://ui/watch_screen.tscn" id="8_85vr7"]
@@ -15,8 +14,7 @@
 [ext_resource type="Theme" uid="uid://4w0nwl75r20n" path="res://ui/toasts_theme.tres" id="9_vl6qb"]
 [ext_resource type="Script" uid="uid://d00iwy70rhjso" path="res://Scripts/toasts.gd" id="10_bypbs"]
 [ext_resource type="PackedScene" uid="uid://biueljud648q" path="res://ui/players_screen.tscn" id="12_015p0"]
-
-[sub_resource type="ButtonGroup" id="ButtonGroup_patxt"]
+[ext_resource type="PackedScene" uid="uid://d02my2b6pp7bc" path="res://ui/settings.tscn" id="13_015p0"]
 
 [node name="App" type="VBoxContainer"]
 anchors_preset = 15
@@ -370,115 +368,12 @@ Kati is licensed as MIT for the source code, SIL for the fonts and CC0 for the o
 
 In case the client misbehaves on playtak.com, you can [url=show_log]click here to show the connection log[/url]. (Login password is removed from the log.)"
 
-[node name="Settings" type="PanelContainer" parent="Screens"]
-visible = false
+[node name="Settings" parent="Screens" instance=ExtResource("13_015p0")]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -32.0
-offset_top = -32.0
-offset_right = 32.0
-offset_bottom = 32.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("7_jgaas")
-
-[node name="Box" type="VBoxContainer" parent="Screens/Settings"]
-layout_mode = 2
-
-[node name="Title" type="Label" parent="Screens/Settings/Box"]
-layout_mode = 2
-theme_type_variation = &"MenuTitle"
-text = "Settings"
-
-[node name="Quality" type="HBoxContainer" parent="Screens/Settings/Box"]
-layout_mode = 2
-
-[node name="Quality" type="Label" parent="Screens/Settings/Box/Quality"]
-layout_mode = 2
-text = "Quality:"
-
-[node name="Low" type="CheckBox" parent="Screens/Settings/Box/Quality"]
-layout_mode = 2
-button_pressed = true
-button_group = SubResource("ButtonGroup_patxt")
-text = "Low"
-
-[node name="Mid" type="CheckBox" parent="Screens/Settings/Box/Quality"]
-layout_mode = 2
-button_group = SubResource("ButtonGroup_patxt")
-text = "Mid "
-
-[node name="High" type="CheckBox" parent="Screens/Settings/Box/Quality"]
-layout_mode = 2
-button_group = SubResource("ButtonGroup_patxt")
-text = "High"
-
-[node name="Engines" type="Label" parent="Screens/Settings/Box"]
-layout_mode = 2
-text = "TEI Engines:"
-
-[node name="EngineGrid" type="GridContainer" parent="Screens/Settings/Box"]
-layout_mode = 2
-columns = 3
-
-[node name="AddEngine" type="Button" parent="Screens/Settings/Box"]
-layout_mode = 2
-size_flags_horizontal = 8
-text = "Add..."
-
-[node name="EnginePopup" type="PopupPanel" parent="Screens/Settings"]
-oversampling_override = 1.0
-size = Vector2i(720, 180)
-
-[node name="Box" type="VBoxContainer" parent="Screens/Settings/EnginePopup"]
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 716.0
-offset_bottom = 176.0
-
-[node name="Grid" type="GridContainer" parent="Screens/Settings/EnginePopup/Box"]
-layout_mode = 2
-columns = 2
-
-[node name="NameLabel" type="Label" parent="Screens/Settings/EnginePopup/Box/Grid"]
-layout_mode = 2
-text = "Name:"
-
-[node name="Name" type="LineEdit" parent="Screens/Settings/EnginePopup/Box/Grid"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="PathLabel" type="Label" parent="Screens/Settings/EnginePopup/Box/Grid"]
-layout_mode = 2
-text = "Path:"
-
-[node name="Path" type="LineEdit" parent="Screens/Settings/EnginePopup/Box/Grid"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ParametersLabel" type="Label" parent="Screens/Settings/EnginePopup/Box/Grid"]
-layout_mode = 2
-text = "Parameters:"
-
-[node name="Parameters" type="LineEdit" parent="Screens/Settings/EnginePopup/Box/Grid"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Buttons" type="HBoxContainer" parent="Screens/Settings/EnginePopup/Box"]
-layout_mode = 2
-size_flags_horizontal = 8
-
-[node name="Cancel" type="Button" parent="Screens/Settings/EnginePopup/Box/Buttons"]
-layout_mode = 2
-text = "Cancel"
-
-[node name="Ok" type="Button" parent="Screens/Settings/EnginePopup/Box/Buttons"]
-layout_mode = 2
-text = "Ok"
+offset_left = -180.5
+offset_top = -127.5
+offset_right = 180.5
+offset_bottom = 127.5
 
 [node name="Chat" parent="Screens" instance=ExtResource("8_cdfq8")]
 visible = false
@@ -526,7 +421,4 @@ environment = ExtResource("7_patxt")
 [connection signal="start_game" from="Screens/LocalGameScreen" to="." method="_on_local_game_start_game"]
 [connection signal="meta_clicked" from="Screens/Help/Box/HelpText" to="." method="_on_help_meta_clicked"]
 [connection signal="settings_changed" from="Screens/Settings" to="." method="_on_settings_settings_changed"]
-[connection signal="pressed" from="Screens/Settings/Box/AddEngine" to="Screens/Settings" method="_on_add_engine_pressed"]
-[connection signal="pressed" from="Screens/Settings/EnginePopup/Box/Buttons/Cancel" to="Screens/Settings" method="_on_cancel_pressed"]
-[connection signal="pressed" from="Screens/Settings/EnginePopup/Box/Buttons/Ok" to="Screens/Settings" method="_on_ok_pressed"]
 [connection signal="unread_count" from="Screens/Chat" to="." method="_on_chat_unread_count"]

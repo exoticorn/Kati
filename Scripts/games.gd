@@ -87,7 +87,7 @@ func current_game() -> Variant:
 
 func apply_settings():
 	for game in get_children():
-		game.board.setup_quality()
+		game.board.apply_settings()
 
 func game_count() -> int:
 	return get_children().size()

@@ -49,8 +49,6 @@ func _ready():
 	$Screens/Players.setup(playtak)
 	$TopBar/Username.setup(playtak)
 	switch_screen(Screen.MAIN_MENU)
-	if OS.has_feature("web"):
-		%MainMenu/Box/Settings.hide()
 	if login.is_valid() && !login.is_guest():
 		playtak.login(login)
 

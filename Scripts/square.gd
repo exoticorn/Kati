@@ -14,6 +14,8 @@ var tween: Tween
 var flat_aabb: AABB
 
 var square: Vector2i
+var board_size: int
+var config: ConfigFile
 
 var has_move_highlight := false
 var move_highlight_color: Color
@@ -34,8 +36,23 @@ signal clicked(Vector2i)
 func _init():
 	flat_aabb = white_flat_mesh.get_aabb()
 
-func set_ring(ring: int):
-	mesh = meshes[ring % meshes.size()]
+func _ready():
+	_setup_gfx()
+
+func apply_settings():
+	_setup_gfx()
+
+func _setup_gfx():
+	var rings := (board_size + 1) / 2
+	var ring = rings - 1 - min(min(square.x, board_size - 1 - square.x), (min(square.y, board_size - 1 - square.y)))
+	match config.get_value("theme", "board", 0):
+		0: mesh = meshes[ring % meshes.size()]
+		1: mesh = meshes[1]
+		2: mesh = meshes[3]
+		3: mesh = meshes[((square.x ^ square.y) & 1) * 2 + 1]
+		_: mesh = meshes[0]
+	var gamma = 2.0 if OS.has_feature('web') else 1.0
+	mesh.surface_get_material(0).set_shader_parameter("gamma", gamma)
 
 var highlight_color: Color:
 	get: return _highlight_color
