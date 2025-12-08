@@ -1,0 +1,23 @@
+[gd_resource type="PlaneMesh" load_steps=8 format=3 uid="uid://b0tqicu46w57d"]
+
+[ext_resource type="Shader" uid="uid://msqyga6y02ii" path="res://Shaders/square.gdshader" id="1_sabgn"]
+[ext_resource type="Texture2D" uid="uid://bd2tbv7wc0edc" path="res://Assets/grid_albedo.png" id="2_yjquc"]
+[ext_resource type="Texture2D" uid="uid://bixd5stl3l4i4" path="res://Assets/grid_normal.png" id="3_prbgu"]
+[ext_resource type="Texture2D" uid="uid://btgno47ecx5vu" path="res://Assets/grid_orm.png" id="4_q86vy"]
+[ext_resource type="Texture2D" uid="uid://dx0qbvy7tm36d" path="res://Assets/square1_albedo.png" id="5_l638d"]
+[ext_resource type="Texture2D" uid="uid://c104ljpq47f5f" path="res://Assets/square1_normal.png" id="6_ihq52"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_64tuj"]
+render_priority = 0
+shader = ExtResource("1_sabgn")
+shader_parameter/grid_albedo_tex = ExtResource("2_yjquc")
+shader_parameter/grid_normal_tex = ExtResource("3_prbgu")
+shader_parameter/grid_orm_tex = ExtResource("4_q86vy")
+shader_parameter/square_albedo_tex = ExtResource("5_l638d")
+shader_parameter/square_normal_tex = ExtResource("6_ihq52")
+shader_parameter/square_modulate = Color(1.3172923, 1.442175, 1.2718803, 1)
+shader_parameter/gamma = 1.0
+
+[resource]
+material = SubResource("ShaderMaterial_64tuj")
+size = Vector2(1, 1)

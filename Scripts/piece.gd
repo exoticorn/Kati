@@ -9,6 +9,13 @@ var white_cap_mesh: Mesh = preload("res://Assets/imported/white capstone.res")
 var black_cap_mesh: Mesh = preload("res://Assets/imported/black capstone.res")
 var highlight_overlay_material: Material = preload("res://Shaders/highlight.tres")
 var ghost_material: Material = preload("res://Shaders/ghost.tres")
+var flat_white_material: Material = preload("res://Assets/flat_piece_white_material.tres")
+var flat_black_material: Material = preload("res://Assets/flat_piece_black_material.tres")
+
+static var white_flat_material
+static var black_flat_material
+static var white_cap_material
+static var black_cap_material
 
 var samples = [
 	[preload("res://sfx/flat1.wav"), preload("res://sfx/flat2.wav")],
@@ -25,11 +32,17 @@ var temp_board_pos
 var is_placed := false
 var is_ghost := false
 var mesh_height: float
+var config: ConfigFile
 
 var tween: Tween
 
 func _init():
 	flat_aabb = white_flat_mesh.get_aabb()
+	if white_flat_material == null:
+		white_flat_material = white_flat_mesh.surface_get_material(0)
+		black_flat_material = black_flat_mesh.surface_get_material(0)
+		white_cap_material = white_cap_mesh.surface_get_material(0)
+		black_cap_material = black_cap_mesh.surface_get_material(0)
 
 func setup(c: PlayerColor, t: PieceType):
 	color = c
@@ -54,6 +67,7 @@ func setup(c: PlayerColor, t: PieceType):
 	if is_placed:
 		update_transform(!is_ghost, false)
 	mesh_height = piece_height()
+	_setup_material()
 
 func place(pos: Vector3i, animate: bool = true):
 	board_pos = pos
@@ -146,3 +160,20 @@ func move_off():
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "position", calc_target_pos() + Vector3.UP * 10, 0.4)
 	tween.tween_callback(self.queue_free)
+
+
+func apply_settings():
+	_setup_material()
+
+
+func _setup_material():
+	var material: Material
+	match config.get_value("theme", "pieces", 0):
+		1:
+			material = flat_white_material if color == PlayerColor.WHITE else flat_black_material
+		_:
+			if type == PieceType.CAP:
+				material = white_cap_material if color == PlayerColor.WHITE else black_cap_material
+			else:
+				material = white_flat_material if color == PlayerColor.WHITE else black_flat_material
+	mesh.surface_set_material(0, material)

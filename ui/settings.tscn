@@ -38,7 +38,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 selected = 0
-item_count = 4
+item_count = 5
 popup/item_0/text = "Rings"
 popup/item_0/id = 0
 popup/item_1/text = "Bright"
@@ -47,6 +47,26 @@ popup/item_2/text = "Dark"
 popup/item_2/id = 2
 popup/item_3/text = "Checkered"
 popup/item_3/id = 3
+popup/item_4/text = "Flat"
+popup/item_4/id = 4
+
+[node name="Pieces" type="HBoxContainer" parent="Box"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Box/Pieces"]
+layout_mode = 2
+text = "Pieces:"
+
+[node name="PieceStyles" type="OptionButton" parent="Box/Pieces"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+selected = 0
+item_count = 2
+popup/item_0/text = "Stone"
+popup/item_0/id = 0
+popup/item_1/text = "Flat"
+popup/item_1/id = 1
 
 [node name="Quality" type="HBoxContainer" parent="Box"]
 unique_name_in_owner = true
@@ -139,6 +159,7 @@ layout_mode = 2
 text = "Ok"
 
 [connection signal="item_selected" from="Box/Board/BoardStyles" to="." method="_on_board_styles_item_selected"]
+[connection signal="item_selected" from="Box/Pieces/PieceStyles" to="." method="_on_piece_styles_item_selected"]
 [connection signal="pressed" from="Box/AddEngine" to="." method="_on_add_engine_pressed"]
 [connection signal="pressed" from="EnginePopup/Box/Buttons/Cancel" to="." method="_on_cancel_pressed"]
 [connection signal="pressed" from="EnginePopup/Box/Buttons/Ok" to="." method="_on_ok_pressed"]

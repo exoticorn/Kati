@@ -4,10 +4,15 @@ var white_flat_mesh: Mesh = preload("res://Assets/imported/white flat.res")
 var highlight_scene = preload("res://Scenes/square_highlight.tscn")
 
 var meshes = [
-	preload("res://Assets/square1_mesh.tres"),
-	preload("res://Assets/square2_mesh.tres"),
-	preload("res://Assets/square3_mesh.tres"),
-	preload("res://Assets/square4_mesh.tres"),
+	"res://Assets/square1_mesh.tres",
+	"res://Assets/square2_mesh.tres",
+	"res://Assets/square3_mesh.tres",
+	"res://Assets/square4_mesh.tres",
+	"res://Assets/square_light_mesh.tres",
+	"res://Assets/square_flat1_mesh.tres",
+	"res://Assets/square_flat2_mesh.tres",
+	"res://Assets/square_flat3_mesh.tres",
+	"res://Assets/square_flat4_mesh.tres",
 ]
 
 var tween: Tween
@@ -45,12 +50,15 @@ func apply_settings():
 func _setup_gfx():
 	var rings := (board_size + 1) / 2
 	var ring = rings - 1 - min(min(square.x, board_size - 1 - square.x), (min(square.y, board_size - 1 - square.y)))
+	var mesh_path: String
 	match config.get_value("theme", "board", 0):
-		0: mesh = meshes[ring % meshes.size()]
-		1: mesh = meshes[1]
-		2: mesh = meshes[3]
-		3: mesh = meshes[((square.x ^ square.y) & 1) * 2 + 1]
-		_: mesh = meshes[0]
+		0: mesh_path = meshes[ring % 4]
+		1: mesh_path = meshes[4]
+		2: mesh_path = meshes[3]
+		3: mesh_path = meshes[((square.x ^ square.y) & 1) * 2 + 1]
+		4: mesh_path = meshes[5 + ring % 4]
+		_: mesh_path = meshes[0]
+	mesh = load(mesh_path)
 	var gamma = 2.0 if OS.has_feature('web') else 1.0
 	mesh.surface_get_material(0).set_shader_parameter("gamma", gamma)
 

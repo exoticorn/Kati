@@ -47,6 +47,7 @@ func _ready():
 	setup_quality()
 	create_board()
 	board_state.changed.connect(update_board)
+	$Root3D/MovePreview.config = config
 	$Root3D/MovePreview.is_ghost = true
 
 func _process(_delta: float):
@@ -107,6 +108,8 @@ func apply_settings():
 	setup_quality()
 	for square in squares:
 		squares[square].apply_settings()
+	for piece in $Root3D/Pieces.get_children():
+		piece.apply_settings()
 
 
 func setup_move_preview():
@@ -255,6 +258,7 @@ func update_board():
 	for to_place in pieces_to_place:
 		var piece_node = piece_scene.instantiate()
 		var piece = to_place.piece
+		piece_node.config = config
 		piece_node.setup(piece.color, piece.type)
 		$Root3D/Pieces.add_child(piece_node)
 		piece_node.place(to_place.pos)
