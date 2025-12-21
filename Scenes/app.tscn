@@ -352,6 +352,8 @@ At the moment, when playing against an engine, it is always limited to 100 nodes
 
 [b]Settings[/b]
 
+Here you can select from a small number of board themes, as well as between textured and flat pieces.
+
 In the native version, you can select the rendering quality. (Work in progress)
 The default 'Low' setting is best for laptops/PCs with an integrated GPU.
 'Mid' might be best for high-end integrated GPUs or old/low-end gaming GPUs.

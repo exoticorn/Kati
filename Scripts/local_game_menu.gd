@@ -15,6 +15,8 @@ func _ready():
 		$Grid/Colors.hide()
 		$Grid/EngineLabel.hide()
 		$Grid/Engine.hide()
+		%NodesLabel.hide()
+		%NodesBox.hide()
 
 func _on_play_pressed() -> void:
 	var board_size := 5

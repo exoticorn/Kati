@@ -19,7 +19,7 @@ There is an overview of the UI and the controls to be found by clicking the '?' 
 
 ## Screenshot
 
-![A game against IntutionBot](https://kati.exoticorn.de/screenshot01.png)
+![Observing a tournament game](https://kati.exoticorn.de/screenshot02.png)
 
 ## Development
 
