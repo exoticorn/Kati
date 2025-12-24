@@ -218,3 +218,7 @@ func step_move(by: int):
 func truncate_moves():
 	if moves.size() > display_move:
 		moves = moves.slice(0, display_move)
+
+
+func clock_side_to_run() -> BoardState.PlayerColor:
+	return (moves.size() % 2) as BoardState.PlayerColor

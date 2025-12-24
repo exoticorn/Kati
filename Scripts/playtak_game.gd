@@ -102,7 +102,7 @@ func update_clock(wtime: float, btime: float):
 
 func update_clock_running():
 	var running = game_result.is_ongoing()
-	var white_to_move = move_list.display_board.side_to_move() == PlayerColor.WHITE
+	var white_to_move = move_list.clock_side_to_run() == PlayerColor.WHITE
 	clocks[0].running = running && white_to_move
 	clocks[1].running = running && !white_to_move
 
