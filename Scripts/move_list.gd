@@ -84,6 +84,9 @@ class Move:
 				return drops[d-1]
 		return 0
 	
+	func is_same_move(o: Move) -> bool:
+		return square == o.square && count == o.count && direction == o.direction && drops == o.drops && type == o.type && smash == o.smash
+	
 	const PTN_TO_DIR = {
 		">": Direction.RIGHT,
 		"-": Direction.DOWN,
@@ -179,6 +182,14 @@ var moves: Array[Move] = []
 var display_move: int = 0
 var display_board: BoardState
 
+var _parent_moves
+var parent_moves:
+	set(ml):
+		_parent_moves = ml
+		ml.changed.connect(parent_changed)
+var branch_move: int = 0
+var is_diverging: bool = false
+
 signal changed
 
 func _init(rules: Common.GameRules):
@@ -190,6 +201,7 @@ func push_move(move: Move):
 		display_move += 1
 		display_board.apply_move(move)
 	changed.emit()
+	update_branch()
 
 func pop_move(board: BoardState = null):
 	var prev_move = moves[-2] if moves.size() > 1 else null
@@ -200,9 +212,14 @@ func pop_move(board: BoardState = null):
 		display_move -= 1
 	moves.pop_back()
 	changed.emit()
+	update_branch()
 
 func step_move(by: int):
 	var old = display_move
+	var truncate = false
+	if by == 0 && _parent_moves != null:
+		by = branch_move - 1 - display_move
+		truncate = true
 	while by > 0 && display_move < moves.size():
 		display_board.apply_move(moves[display_move])
 		display_move += 1
@@ -212,6 +229,9 @@ func step_move(by: int):
 		var prev_move = moves[display_move - 1] if display_move > 0 else null
 		display_board.unapply_move(prev_move)
 		by += 1
+	if truncate:
+		truncate_moves()
+		update_branch()
 	if display_move != old:
 		changed.emit()
 
@@ -220,5 +240,35 @@ func truncate_moves():
 		moves = moves.slice(0, display_move)
 
 
-func clock_side_to_run() -> BoardState.PlayerColor:
-	return (moves.size() % 2) as BoardState.PlayerColor
+func update_branch():
+	if _parent_moves == null:
+		branch_move = moves.size() + 1
+		changed.emit()
+		return
+	var old_branch_move = branch_move
+	var was_diverging = is_diverging
+	var is_changed = false
+	branch_move = 0
+	while branch_move < moves.size() && branch_move < _parent_moves.moves.size() && moves[branch_move].is_same_move(_parent_moves.moves[branch_move]):
+		branch_move += 1
+	if branch_move == moves.size():
+		while branch_move < _parent_moves.moves.size():
+			moves.push_back(_parent_moves.moves[branch_move])
+			is_changed = true
+			branch_move += 1
+	is_diverging = branch_move < moves.size() && branch_move < _parent_moves.moves.size()
+	branch_move += 1
+	if is_changed || old_branch_move != branch_move || was_diverging != is_diverging:
+		changed.emit()
+
+
+func parent_changed():
+	var was_diverging = is_diverging
+	var prev_branch_move = branch_move
+	update_branch()
+	if !was_diverging && branch_move < prev_branch_move:
+		# undo
+		step_move(0)
+	if !is_diverging:
+		if display_move + 1 >= prev_branch_move && display_move < branch_move:
+			step_move(branch_move - display_move)

@@ -35,6 +35,8 @@ func update():
 				var move_index = i * 2 + j
 				if move_index < _move_list.moves.size():
 					var move = Label.new()
+					if move_index + 1 >= _move_list.branch_move:
+						move.add_theme_color_override("font_color", Color.RED if _move_list.is_diverging else Color.CORAL)
 					move.text = _move_list.moves[move_index].to_ptn()
 					if move_index + 1 == _move_list.display_move:
 						move.theme_type_variation = "CurrentMoveLabel"

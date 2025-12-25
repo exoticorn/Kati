@@ -13,6 +13,7 @@ var config: ConfigFile
 var game: PlaytakInterface.Game
 var game_board: BoardState
 var move_list: MoveList
+var clean_move_list: MoveList
 var board: Node
 var stream_player: AudioStreamPlayer = AudioStreamPlayer.new()
 var game_result := GameResult.new()
@@ -36,6 +37,11 @@ func setup(g: PlaytakInterface.Game, i: PlaytakInterface, c: ConfigFile):
 
 func _ready():
 	move_list = MoveList.new(game.rules)
+	if is_observe():
+		clean_move_list = MoveList.new(game.rules)
+		move_list.parent_moves = clean_move_list
+	else:
+		clean_move_list = move_list
 	game_board = BoardState.new(game.rules)
 	move_list.changed.connect(setup_move_input)
 	
@@ -71,15 +77,18 @@ func _ready():
 	setup_move_input()
 
 func move_input(move: Move):
+	if is_observe():
+		move_list.truncate_moves()
+	else:
+		game_board.apply_move(move)
+		playtak_interface.send_move(game.id, move)
+		update_clock_running()
+		if game_actions != null:
+			game_actions.reset()
 	move_list.push_move(move)
-	game_board.apply_move(move)
-	playtak_interface.send_move(game.id, move)
-	update_clock_running()
-	if game_actions != null:
-		game_actions.reset()
 
 func remote_move(move: Move):
-	move_list.push_move(move)
+	clean_move_list.push_move(move)
 	game_board.apply_move(move)
 	update_clock_running()
 	if game_actions != null:
@@ -88,7 +97,7 @@ func remote_move(move: Move):
 		new_moves += 1
 
 func undo_move():
-	move_list.pop_move(game_board)
+	clean_move_list.pop_move(game_board)
 	update_clock_running()
 	if game_actions != null:
 		game_actions.reset()
@@ -102,7 +111,7 @@ func update_clock(wtime: float, btime: float):
 
 func update_clock_running():
 	var running = game_result.is_ongoing()
-	var white_to_move = move_list.clock_side_to_run() == PlayerColor.WHITE
+	var white_to_move = game_board.side_to_move() == PlayerColor.WHITE
 	clocks[0].running = running && white_to_move
 	clocks[1].running = running && !white_to_move
 
@@ -126,13 +135,16 @@ func set_result(result: GameResult):
 
 func setup_move_input():
 	var can_move = false
-	if move_list.display_move == move_list.moves.size():
-		if game_result.is_ongoing() && move_list.display_board.game_result().is_ongoing():
-			var side_to_move = move_list.display_board.side_to_move()
-			if side_to_move == PlayerColor.WHITE && game.color == PlaytakInterface.ColorChoice.WHITE:
-				can_move = true
-			elif side_to_move == PlayerColor.BLACK && game.color == PlaytakInterface.ColorChoice.BLACK:
-				can_move = true
+	if is_observe():
+		can_move = move_list.display_board.game_result().is_ongoing()
+	else:
+		if move_list.display_move == move_list.moves.size():
+			if game_result.is_ongoing() && move_list.display_board.game_result().is_ongoing():
+				var side_to_move = move_list.display_board.side_to_move()
+				if side_to_move == PlayerColor.WHITE && game.color == PlaytakInterface.ColorChoice.WHITE:
+					can_move = true
+				elif side_to_move == PlayerColor.BLACK && game.color == PlaytakInterface.ColorChoice.BLACK:
+					can_move = true
 	board.can_input_move = can_move
 
 func send_game_action(action: GameAction):

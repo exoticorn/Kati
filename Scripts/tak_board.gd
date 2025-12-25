@@ -102,6 +102,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_RIGHT: step_move.emit(1)
 				KEY_UP: step_move.emit(-1000)
 				KEY_DOWN: step_move.emit(1000)
+				KEY_BACKSPACE: step_move.emit(0)
 
 
 func apply_settings():
