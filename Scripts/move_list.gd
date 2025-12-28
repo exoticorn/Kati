@@ -272,3 +272,18 @@ func parent_changed():
 	if !is_diverging:
 		if display_move + 1 >= prev_branch_move && display_move < branch_move:
 			step_move(branch_move - display_move)
+
+
+func branch_ptn() -> String:
+	var ptn = ""
+	var index = max(0, branch_move - 1)
+	while index < moves.size():
+		if !ptn.is_empty():
+			ptn += " "
+		if index % 2 == 0:
+			ptn += "%d. " % (index / 2)
+		elif ptn.is_empty():
+			ptn += "%d.. " % (index / 2 + 1)
+		ptn += moves[index].to_ptn()
+		index += 1
+	return ptn

@@ -76,6 +76,17 @@ func _ready():
 	add_child(stream_player)
 	setup_move_input()
 
+
+func _unhandled_input(event: InputEvent) -> void:
+	if !is_visible_in_tree():
+		return
+	if event is InputEventKey:
+		if event.is_pressed() && event.ctrl_pressed:
+			match event.keycode:
+				KEY_Y:
+					DisplayServer.clipboard_set(move_list.branch_ptn())
+
+
 func move_input(move: Move):
 	if is_observe():
 		move_list.truncate_moves()
