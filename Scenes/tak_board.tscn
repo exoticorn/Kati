@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://ckm3kb4aosxb4"]
+[gd_scene format=3 uid="uid://ckm3kb4aosxb4"]
 
 [ext_resource type="Script" uid="uid://dgduyultasupv" path="res://Scripts/tak_board.gd" id="1_1wqm5"]
 [ext_resource type="CameraAttributesPractical" uid="uid://gtybhomfgbns" path="res://Scenes/cam_attr_normal.tres" id="2_la2l8"]
@@ -7,7 +7,7 @@
 [ext_resource type="Theme" uid="uid://je1ecuklaqff" path="res://ui/board_ui_theme.tres" id="6_la2l8"]
 [ext_resource type="Script" uid="uid://fn28utmhgstd" path="res://ui/game_over.gd" id="6_yhhd6"]
 
-[node name="TakBoard" type="Control"]
+[node name="TakBoard" type="Control" unique_id=1538098237]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,28 +18,28 @@ focus_behavior_recursive = 1
 mouse_filter = 1
 script = ExtResource("1_1wqm5")
 
-[node name="Root3D" type="Node3D" parent="."]
+[node name="Root3D" type="Node3D" parent="." unique_id=1943051060]
 
-[node name="Camera" type="Camera3D" parent="Root3D"]
+[node name="Camera" type="Camera3D" parent="Root3D" unique_id=258436554]
 attributes = ExtResource("2_la2l8")
 current = true
 fov = 45.0
 script = ExtResource("3_yhhd6")
 
-[node name="Board" type="Node3D" parent="Root3D"]
+[node name="Board" type="Node3D" parent="Root3D" unique_id=1683452167]
 
-[node name="Pieces" type="Node3D" parent="Root3D"]
+[node name="Pieces" type="Node3D" parent="Root3D" unique_id=1803134450]
 
-[node name="Light" type="DirectionalLight3D" parent="Root3D"]
+[node name="Light" type="DirectionalLight3D" parent="Root3D" unique_id=667480481]
 transform = Transform3D(0.27014872, 0.76131487, -0.5894231, -0.13070649, 0.6355161, 0.76094353, 0.95390546, -0.12852651, 0.27119267, 0, 1.41202, 0)
 light_energy = 6.0
 shadow_enabled = true
 
-[node name="MovePreview" parent="Root3D" instance=ExtResource("5_63v3t")]
+[node name="MovePreview" parent="Root3D" unique_id=512194410 instance=ExtResource("5_63v3t")]
 visible = false
 skeleton = NodePath("../..")
 
-[node name="UI" type="Control" parent="."]
+[node name="UI" type="Control" parent="." unique_id=1146218158]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -49,7 +49,7 @@ grow_vertical = 2
 mouse_filter = 1
 theme = ExtResource("6_la2l8")
 
-[node name="GameOver" type="PanelContainer" parent="UI"]
+[node name="GameOver" type="PanelContainer" parent="UI" unique_id=54761058]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -65,11 +65,11 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("6_yhhd6")
 
-[node name="Box" type="VBoxContainer" parent="UI/GameOver"]
+[node name="Box" type="VBoxContainer" parent="UI/GameOver" unique_id=1998701034]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Title" type="Label" parent="UI/GameOver/Box"]
+[node name="Title" type="Label" parent="UI/GameOver/Box" unique_id=1415451485]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -77,35 +77,35 @@ size_flags_horizontal = 4
 theme_type_variation = &"MenuTitle"
 text = "Game Over!"
 
-[node name="Result" type="Label" parent="UI/GameOver/Box"]
+[node name="Result" type="Label" parent="UI/GameOver/Box" unique_id=1722332089]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Result"
 horizontal_alignment = 1
 
-[node name="Rematch" type="Button" parent="UI/GameOver/Box"]
+[node name="Rematch" type="Button" parent="UI/GameOver/Box" unique_id=911498957]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Rematch"
 
-[node name="CopyId" type="Button" parent="UI/GameOver/Box"]
+[node name="CopyId" type="Button" parent="UI/GameOver/Box" unique_id=606428227]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Copy Game ID"
 
-[node name="Actions" type="HBoxContainer" parent="UI/GameOver/Box"]
+[node name="Actions" type="HBoxContainer" parent="UI/GameOver/Box" unique_id=1861334321]
 layout_mode = 2
 
-[node name="OpenPlaytak" type="Button" parent="UI/GameOver/Box/Actions"]
+[node name="OpenPlaytak" type="Button" parent="UI/GameOver/Box/Actions" unique_id=685986714]
 layout_mode = 2
 text = "Open on playtak.com"
 
-[node name="OpenPtnNinja" type="Button" parent="UI/GameOver/Box/Actions"]
+[node name="OpenPtnNinja" type="Button" parent="UI/GameOver/Box/Actions" unique_id=421614523]
 layout_mode = 2
 text = "Open in ptn.ninja"
 
-[node name="LeftBox" type="VBoxContainer" parent="UI"]
+[node name="LeftBox" type="VBoxContainer" parent="UI" unique_id=2088568303]
 layout_mode = 1
 anchors_preset = -1
 offset_left = 16.0
@@ -114,43 +114,43 @@ offset_right = 40.0
 offset_bottom = 40.0
 theme_override_constants/separation = 12
 
-[node name="Reserves" type="VBoxContainer" parent="UI/LeftBox"]
+[node name="Reserves" type="VBoxContainer" parent="UI/LeftBox" unique_id=1175284411]
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="FlatsWhite" type="PanelContainer" parent="UI/LeftBox/Reserves"]
+[node name="FlatsWhite" type="PanelContainer" parent="UI/LeftBox/Reserves" unique_id=1733242001]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="Box" type="HBoxContainer" parent="UI/LeftBox/Reserves/FlatsWhite"]
+[node name="Box" type="HBoxContainer" parent="UI/LeftBox/Reserves/FlatsWhite" unique_id=1130466306]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="UI/LeftBox/Reserves/FlatsWhite/Box"]
+[node name="Label" type="Label" parent="UI/LeftBox/Reserves/FlatsWhite/Box" unique_id=1046505482]
 layout_mode = 2
 text = "Flats:"
 
-[node name="Count" type="Label" parent="UI/LeftBox/Reserves/FlatsWhite/Box"]
+[node name="Count" type="Label" parent="UI/LeftBox/Reserves/FlatsWhite/Box" unique_id=258347550]
 layout_mode = 2
 text = "0"
 
-[node name="CapsWhite" type="PanelContainer" parent="UI/LeftBox/Reserves"]
+[node name="CapsWhite" type="PanelContainer" parent="UI/LeftBox/Reserves" unique_id=356521594]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="Box" type="HBoxContainer" parent="UI/LeftBox/Reserves/CapsWhite"]
+[node name="Box" type="HBoxContainer" parent="UI/LeftBox/Reserves/CapsWhite" unique_id=245440908]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="UI/LeftBox/Reserves/CapsWhite/Box"]
+[node name="Label" type="Label" parent="UI/LeftBox/Reserves/CapsWhite/Box" unique_id=1116864512]
 layout_mode = 2
 text = "Cap Stones:"
 
-[node name="Count" type="Label" parent="UI/LeftBox/Reserves/CapsWhite/Box"]
+[node name="Count" type="Label" parent="UI/LeftBox/Reserves/CapsWhite/Box" unique_id=1957786303]
 layout_mode = 2
 text = "0"
 
-[node name="RightBox" type="VBoxContainer" parent="UI"]
+[node name="RightBox" type="VBoxContainer" parent="UI" unique_id=2107730608]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
@@ -162,39 +162,39 @@ offset_bottom = 94.0
 grow_horizontal = 0
 theme_override_constants/separation = 12
 
-[node name="Reserves" type="VBoxContainer" parent="UI/RightBox"]
+[node name="Reserves" type="VBoxContainer" parent="UI/RightBox" unique_id=561641495]
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="FlatsBlack" type="PanelContainer" parent="UI/RightBox/Reserves"]
+[node name="FlatsBlack" type="PanelContainer" parent="UI/RightBox/Reserves" unique_id=146690143]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="Box" type="HBoxContainer" parent="UI/RightBox/Reserves/FlatsBlack"]
+[node name="Box" type="HBoxContainer" parent="UI/RightBox/Reserves/FlatsBlack" unique_id=342940389]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="UI/RightBox/Reserves/FlatsBlack/Box"]
+[node name="Label" type="Label" parent="UI/RightBox/Reserves/FlatsBlack/Box" unique_id=1046485450]
 layout_mode = 2
 text = "Flats:"
 
-[node name="Count" type="Label" parent="UI/RightBox/Reserves/FlatsBlack/Box"]
+[node name="Count" type="Label" parent="UI/RightBox/Reserves/FlatsBlack/Box" unique_id=875801204]
 layout_mode = 2
 text = "0"
 
-[node name="CapsBlack" type="PanelContainer" parent="UI/RightBox/Reserves"]
+[node name="CapsBlack" type="PanelContainer" parent="UI/RightBox/Reserves" unique_id=434505639]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 
-[node name="Box" type="HBoxContainer" parent="UI/RightBox/Reserves/CapsBlack"]
+[node name="Box" type="HBoxContainer" parent="UI/RightBox/Reserves/CapsBlack" unique_id=2108377339]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="UI/RightBox/Reserves/CapsBlack/Box"]
+[node name="Label" type="Label" parent="UI/RightBox/Reserves/CapsBlack/Box" unique_id=496796562]
 layout_mode = 2
 text = "Cap Stones:"
 
-[node name="Count" type="Label" parent="UI/RightBox/Reserves/CapsBlack/Box"]
+[node name="Count" type="Label" parent="UI/RightBox/Reserves/CapsBlack/Box" unique_id=995186344]
 layout_mode = 2
 text = "0"
 
